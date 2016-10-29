@@ -4,18 +4,18 @@ $(() =>{
 
   $('.register').on('click', showRegisterForm);
   $('.login').on('click', showLoginForm);
-  $('.pubs').on('click', getPubs);
+  $('.friends').on('click', getFriends);
   $('.logout').on('click', logout);
   $main.on('submit', 'form', handleForm);
-  $main.on('click', 'button.delete', deletePub);
-  $main.on('click', 'button.edit', getPub);
+  $main.on('click', 'button.delete', deleteFriend);
+  $main.on('click', 'button.edit', getFriend);
 
   function isLoggedIn() {
     return !!localStorage.getItem('token');
   }
 
   if(isLoggedIn()) {
-    getPubs();
+    getFriends();
   } else {
     showLoginForm();
   }
@@ -58,18 +58,18 @@ $(() =>{
     `);
   }
 
-  function showEditForm(pub) {
+  function showEditForm(friend) {
     if(event) event.preventDefault();
     $main.html(`
-      <h2>Edit Pub</h2>
-      <form method="put" action="/api/pubs/${pub._id}">
+      <h2>Edit Friend</h2>
+      <form method="put" action="/api/friends/${friend._id}">
         <div class="form-group">
           <label for="name">
-          <input class="form-control" name="name" value="${pub.name}">
+          <input class="form-control" name="name" value="${friend.name}">
           <label for="location">
-          <input class="form-control" name="name" value="${pub.location}">
+          <input class="form-control" name="name" value="${friend.location}">
           <label for="rating">
-          <input class="form-control" name="name" value="${pub.rating}">
+          <input class="form-control" name="name" value="${friend.rating}">
         </div>
         <button class="btn btn-primary">Update</button>
       </form>
@@ -94,38 +94,38 @@ $(() =>{
       }
     }).done((data) => {
       if(data.token) localStorage.setItem('token', data.token);
-      getPubs();
+      getFriends();
     }).fail(showLoginForm);
   }
 
-  function getPubs() {
+  function getFriends() {
     if(event) event.preventDefault();
 
     let token = localStorage.getItem('token');
     $.ajax({
-      url: '/api/pubs',
+      url: '/api/friends',
       method: "GET",
       beforeSend: function(jqXHR) {
         if(token) return jqXHR.setRequestHeader('Authorization', `Bearer ${token}`);
       }
     })
-    .done(showPubs)
+    .done(showFriends)
     .fail(showLoginForm);
   }
 
-  function showPubs(pubs) {
+  function showFriends(friends) {
     let $row = $('<div class="row"></div>');
-    pubs.forEach((pub) => {
+    friends.forEach((friend) => {
       $row.append(`
         <div class="col-md-4">
           <div class="card">
             <img class="card-img-top" src="http://fillmurray.com/300/300" alt="Card image cap">
             <div class="card-block">
-              <h4 class="card-title">${pub.name}</h4>
+              <h4 class="card-title">${friend.name}</h4>
             </div>
           </div>
-          <button class="btn btn-danger delete" data-id="${pub._id}">Delete</button>
-          <button class="btn btn-primary edit" data-id="${pub._id}">Edit</button>
+          <button class="btn btn-danger delete" data-id="${friend._id}">Delete</button>
+          <button class="btn btn-primary edit" data-id="${friend._id}">Edit</button>
         </div>
       `);
     });
@@ -133,27 +133,27 @@ $(() =>{
     $main.html($row);
   }
 
-  function deletePub() {
+  function deleteFriend() {
     let id = $(this).data('id');
     let token = localStorage.getItem('token');
 
     $.ajax({
-      url: `/api/pubs/${id}`,
+      url: `/api/friends/${id}`,
       method: "DELETE",
       beforeSend: function(jqXHR) {
         if(token) return jqXHR.setRequestHeader('Authorization', `Bearer ${token}`);
       }
     })
-    .done(getPubs)
+    .done(getFriends)
     .fail(showLoginForm);
   }
 
-  function getPub() {
+  function getFriend() {
     let id = $(this).data('id');
     let token = localStorage.getItem('token');
 
     $.ajax({
-      url: `/api/pubs/${id}`,
+      url: `/api/friends/${id}`,
       method: "GET",
       beforeSend: function(jqXHR) {
         if(token) return jqXHR.setRequestHeader('Authorization', `Bearer ${token}`);

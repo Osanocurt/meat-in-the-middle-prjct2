@@ -6,18 +6,18 @@ $(function () {
 
   $('.register').on('click', showRegisterForm);
   $('.login').on('click', showLoginForm);
-  $('.pubs').on('click', getPubs);
+  $('.friends').on('click', getFriends);
   $('.logout').on('click', logout);
   $main.on('submit', 'form', handleForm);
-  $main.on('click', 'button.delete', deletePub);
-  $main.on('click', 'button.edit', getPub);
+  $main.on('click', 'button.delete', deleteFriend);
+  $main.on('click', 'button.edit', getFriend);
 
   function isLoggedIn() {
     return !!localStorage.getItem('token');
   }
 
   if (isLoggedIn()) {
-    getPubs();
+    getFriends();
   } else {
     showLoginForm();
   }
@@ -32,9 +32,9 @@ $(function () {
     $main.html('\n      <h2>Login</h2>\n      <form method="post" action="/api/login">\n        <div class="form-group">\n          <input class="form-control" name="email" placeholder="Email">\n        </div>\n        <div class="form-group">\n          <input class="form-control" type="password" name="password" placeholder="Password">\n        </div>\n        <button class="btn btn-primary">Login</button>\n      </form>\n    ');
   }
 
-  function showEditForm(pub) {
+  function showEditForm(friend) {
     if (event) event.preventDefault();
-    $main.html('\n      <h2>Edit Pub</h2>\n      <form method="put" action="/api/pubs/' + pub._id + '">\n        <div class="form-group">\n          <label for="name">\n          <input class="form-control" name="name" value="' + pub.name + '">\n          <label for="location">\n          <input class="form-control" name="name" value="' + pub.location + '">\n          <label for="rating">\n          <input class="form-control" name="name" value="' + pub.rating + '">\n        </div>\n        <button class="btn btn-primary">Update</button>\n      </form>\n    ');
+    $main.html('\n      <h2>Edit Friend</h2>\n      <form method="put" action="/api/friends/' + friend._id + '">\n        <div class="form-group">\n          <label for="name">\n          <input class="form-control" name="name" value="' + friend.name + '">\n          <label for="location">\n          <input class="form-control" name="name" value="' + friend.location + '">\n          <label for="rating">\n          <input class="form-control" name="name" value="' + friend.rating + '">\n        </div>\n        <button class="btn btn-primary">Update</button>\n      </form>\n    ');
   }
 
   function handleForm() {
@@ -55,51 +55,51 @@ $(function () {
       }
     }).done(function (data) {
       if (data.token) localStorage.setItem('token', data.token);
-      getPubs();
+      getFriends();
     }).fail(showLoginForm);
   }
 
-  function getPubs() {
+  function getFriends() {
     if (event) event.preventDefault();
 
     var token = localStorage.getItem('token');
     $.ajax({
-      url: '/api/pubs',
+      url: '/api/friends',
       method: "GET",
       beforeSend: function beforeSend(jqXHR) {
         if (token) return jqXHR.setRequestHeader('Authorization', 'Bearer ' + token);
       }
-    }).done(showPubs).fail(showLoginForm);
+    }).done(showFriends).fail(showLoginForm);
   }
 
-  function showPubs(pubs) {
+  function showFriends(friends) {
     var $row = $('<div class="row"></div>');
-    pubs.forEach(function (pub) {
-      $row.append('\n        <div class="col-md-4">\n          <div class="card">\n            <img class="card-img-top" src="http://fillmurray.com/300/300" alt="Card image cap">\n            <div class="card-block">\n              <h4 class="card-title">' + pub.name + '</h4>\n            </div>\n          </div>\n          <button class="btn btn-danger delete" data-id="' + pub._id + '">Delete</button>\n          <button class="btn btn-primary edit" data-id="' + pub._id + '">Edit</button>\n        </div>\n      ');
+    friends.forEach(function (friend) {
+      $row.append('\n        <div class="col-md-4">\n          <div class="card">\n            <img class="card-img-top" src="http://fillmurray.com/300/300" alt="Card image cap">\n            <div class="card-block">\n              <h4 class="card-title">' + friend.name + '</h4>\n            </div>\n          </div>\n          <button class="btn btn-danger delete" data-id="' + friend._id + '">Delete</button>\n          <button class="btn btn-primary edit" data-id="' + friend._id + '">Edit</button>\n        </div>\n      ');
     });
 
     $main.html($row);
   }
 
-  function deletePub() {
+  function deleteFriend() {
     var id = $(this).data('id');
     var token = localStorage.getItem('token');
 
     $.ajax({
-      url: '/api/pubs/' + id,
+      url: '/api/friends/' + id,
       method: "DELETE",
       beforeSend: function beforeSend(jqXHR) {
         if (token) return jqXHR.setRequestHeader('Authorization', 'Bearer ' + token);
       }
-    }).done(getPubs).fail(showLoginForm);
+    }).done(getFriends).fail(showLoginForm);
   }
 
-  function getPub() {
+  function getFriend() {
     var id = $(this).data('id');
     var token = localStorage.getItem('token');
 
     $.ajax({
-      url: '/api/pubs/' + id,
+      url: '/api/friends/' + id,
       method: "GET",
       beforeSend: function beforeSend(jqXHR) {
         if (token) return jqXHR.setRequestHeader('Authorization', 'Bearer ' + token);

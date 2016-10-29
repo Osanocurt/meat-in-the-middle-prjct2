@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const pubsController = require("../controllers/pubs");
+const friendsController = require("../controllers/friends");
 const authController = require("../controllers/auth");
 const users = require("../controllers/users");
 const jwt = require("jsonwebtoken");
@@ -25,15 +25,15 @@ router.route("/register")
 router.route("/login")
   .post(authController.login);
 
-router.route("/pubs")
+router.route("/friends")
   .all(secureRoute)
-  .get(pubsController.index)
-  .post(pubsController.create);
+  .get(friendsController.index)
+  .post(friendsController.create);
 
-router.route("/pubs/:id")
+router.route("/friends/:id")
   .all(secureRoute)
-  .get(pubsController.show)
-  .put(pubsController.update)
-  .delete(pubsController.delete);
+  .get(friendsController.show)
+  .put(friendsController.update)
+  .delete(friendsController.delete);
 
 module.exports = router;
