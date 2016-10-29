@@ -7,32 +7,47 @@ $(() =>{
   $('.login').on('click', showLoginForm);
   $('.friends').on('click', getFriends);
   $('.logout').on('click', logout);
+  $('.go').on('click', calculateMidPoint);
   $main.on('submit', 'form', handleForm);
   $main.on('click', 'button.delete', deleteFriend);
   $main.on('click', 'button.edit', getFriend);
 
   let map;
   let center = { lat: 51.5074, lng: -0.1278 };
-  let user = { lat: 51.5074, lng: -0.1278 };
-  let friend1 = { lat: 52.1074, lng: -1.8278 };
+  let people = [];
 
   function mapInit(){
     map = new google.maps.Map($mapDiv[0], {
       center,
-      zoom: 13
+      zoom: 7
     });
-
-    addMarker(user);
-    addMarker(friend1);
-    calculateMidPoint();
+    markerInit();
   }
   mapInit();
 
-  function addMarker(location){
+  function markerInit(){
 
+    let user = { lat: 51.5074, lng: -0.1278 };
+    addMarker(user);
+    people = [user];
+
+    let friends = [
+      { lat: 53.1074, lng: -1.8278 },
+      { lat: 52.9074, lng: -3.3278 },
+      { lat: 52.6074, lng: 1.2278 },
+      { lat: 52.8074, lng: -1.2278 }
+    ];
+
+    friends.forEach((friend) => {
+      people.push(friend);
+      addMarker(friend);
+    });
+  }
+
+  function addMarker(location){
     let position = {
       lat: location.lat,
-      lng : location.lng
+      lng: location.lng
     };
 
     let marker = new google.maps.Marker({
@@ -43,17 +58,28 @@ $(() =>{
 
   function calculateMidPoint(){
 
-      let midLat = (user.lat + friend1.lat)/2;
-      let midLng = (user.lng + friend1.lng)/2;
+    let midLatSum = 0;
+    let midLngSum = 0;
 
-      let midPoint = {
-        lat: midLat,
-        lng: midLng
-      };
-      addMarker(midPoint);
+    people.forEach((person) => {
+      midLatSum += person.lat;
+    });
 
-      map.panTo(midPoint);
-      map.zoom=8;
+    people.forEach((person) => {
+      midLngSum += person.lng;
+    });
+
+    let midLat = midLatSum/people.length;
+    let midLng = midLngSum/people.length;
+
+    let midPoint = {
+      lat: midLat,
+      lng: midLng
+    };
+    addMarker(midPoint);
+
+    map.panTo(midPoint);
+    map.zoom= 8;
   }
 
   function isLoggedIn() {

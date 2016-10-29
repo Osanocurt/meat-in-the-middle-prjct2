@@ -9,29 +9,39 @@ $(function () {
   $('.login').on('click', showLoginForm);
   $('.friends').on('click', getFriends);
   $('.logout').on('click', logout);
+  $('.go').on('click', calculateMidPoint);
   $main.on('submit', 'form', handleForm);
   $main.on('click', 'button.delete', deleteFriend);
   $main.on('click', 'button.edit', getFriend);
 
   var map = void 0;
   var center = { lat: 51.5074, lng: -0.1278 };
-  var user = { lat: 51.5074, lng: -0.1278 };
-  var friend1 = { lat: 52.1074, lng: -1.8278 };
+  var people = [];
 
   function mapInit() {
     map = new google.maps.Map($mapDiv[0], {
       center: center,
-      zoom: 13
+      zoom: 7
     });
-
-    addMarker(user);
-    addMarker(friend1);
-    calculateMidPoint();
+    markerInit();
   }
   mapInit();
 
-  function addMarker(location) {
+  function markerInit() {
 
+    var user = { lat: 51.5074, lng: -0.1278 };
+    addMarker(user);
+    people = [user];
+
+    var friends = [{ lat: 53.1074, lng: -1.8278 }, { lat: 52.9074, lng: -3.3278 }, { lat: 52.6074, lng: 1.2278 }, { lat: 52.8074, lng: -1.2278 }];
+
+    friends.forEach(function (friend) {
+      people.push(friend);
+      addMarker(friend);
+    });
+  }
+
+  function addMarker(location) {
     var position = {
       lat: location.lat,
       lng: location.lng
@@ -45,8 +55,19 @@ $(function () {
 
   function calculateMidPoint() {
 
-    var midLat = (user.lat + friend1.lat) / 2;
-    var midLng = (user.lng + friend1.lng) / 2;
+    var midLatSum = 0;
+    var midLngSum = 0;
+
+    people.forEach(function (person) {
+      midLatSum += person.lat;
+    });
+
+    people.forEach(function (person) {
+      midLngSum += person.lng;
+    });
+
+    var midLat = midLatSum / people.length;
+    var midLng = midLngSum / people.length;
 
     var midPoint = {
       lat: midLat,
