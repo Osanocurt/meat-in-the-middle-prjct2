@@ -1,7 +1,7 @@
 const Pub = require('../models/pub');
 
 function pubsIndex(req, res) {
-  Pub.find((err, pubs) => {
+  Pub.find((err, pub) => {
     if(err) return res.status(500).json({ error: "500: Server Error" });
     res.json(pub);
   });

@@ -6,35 +6,35 @@ $(function () {
 
   $('.register').on('click', showRegisterForm);
   $('.login').on('click', showLoginForm);
-  $main.on('submit', 'form', handleForm);
-  $main.on('click', 'button.delete', deleteUser);
-  $main.on('click', 'button.edit', getUser);
-  $('.usersIndex').on('click', getUsers);
+  $('.pubs').on('click', getPubs);
   $('.logout').on('click', logout);
+  $main.on('submit', 'form', handleForm);
+  $main.on('click', 'button.delete', deletePub);
+  $main.on('click', 'button.edit', getPub);
 
   function isLoggedIn() {
     return !!localStorage.getItem('token');
   }
 
   if (isLoggedIn()) {
-    getUsers();
+    getPubs();
   } else {
     showLoginForm();
   }
 
   function showRegisterForm() {
     if (event) event.preventDefault();
-    $main.html('\n      <h2>Register</h2>\n      <form method="post" action="/register">\n        <div class="form-group">\n          <input class="form-control" name="username" placeholder="Username">\n        </div>\n        <div class="form-group">\n          <input class="form-control" name="email" placeholder="Email">\n        </div>\n        <div class="form-group">\n          <input class="form-control" type="password" name="password" placeholder="Password">\n        </div>\n        <div class="form-group">\n          <input class="form-control" type="password" name="passwordConfirmation" placeholder="Password Confirmation">\n        </div>\n        <button class="btn btn-primary">Register</button>\n      </form>\n    ');
+    $main.html('\n      <h2>Register</h2>\n      <form method="post" action="/api/register">\n        <div class="form-group">\n          <input class="form-control" name="user[username]" placeholder="Username">\n        </div>\n        <div class="form-group">\n          <input class="form-control" name="user[email]" placeholder="Email">\n        </div>\n        <div class="form-group">\n          <input class="form-control" type="password" name="user[password]" placeholder="Password">\n        </div>\n        <div class="form-group">\n          <input class="form-control" type="password" name="user[passwordConfirmation]" placeholder="Password Confirmation">\n        </div>\n        <button class="btn btn-primary">Register</button>\n      </form>\n    ');
   }
 
   function showLoginForm() {
     if (event) event.preventDefault();
-    $main.html('\n      <h2>Login</h2>\n      <form method="post" action="/login">\n        <div class="form-group">\n          <input class="form-control" name="email" placeholder="Email">\n        </div>\n        <div class="form-group">\n          <input class="form-control" type="password" name="password" placeholder="Password">\n        </div>\n        <button class="btn btn-primary">Register</button>\n      </form>\n    ');
+    $main.html('\n      <h2>Login</h2>\n      <form method="post" action="/api/login">\n        <div class="form-group">\n          <input class="form-control" name="email" placeholder="Email">\n        </div>\n        <div class="form-group">\n          <input class="form-control" type="password" name="password" placeholder="Password">\n        </div>\n        <button class="btn btn-primary">Login</button>\n      </form>\n    ');
   }
 
-  function showEditForm(user) {
+  function showEditForm(pub) {
     if (event) event.preventDefault();
-    $main.html('\n      <h2>Edit User</h2>\n      <form method="put" action="/api/users/' + user._id + '">\n        <div class="form-group">\n          <input class="form-control" name="username" placeholder="Username" value="' + user.username + '">\n        </div>\n        <button class="btn btn-primary">Update</button>\n      </form>\n    ');
+    $main.html('\n      <h2>Edit Pub</h2>\n      <form method="put" action="/api/pubs/' + pub._id + '">\n        <div class="form-group">\n          <label for="name">\n          <input class="form-control" name="name" value="' + pub.name + '">\n          <label for="location">\n          <input class="form-control" name="name" value="' + pub.location + '">\n          <label for="rating">\n          <input class="form-control" name="name" value="' + pub.rating + '">\n        </div>\n        <button class="btn btn-primary">Update</button>\n      </form>\n    ');
   }
 
   function handleForm() {
@@ -55,51 +55,51 @@ $(function () {
       }
     }).done(function (data) {
       if (data.token) localStorage.setItem('token', data.token);
-      getUsers();
+      getPubs();
     }).fail(showLoginForm);
   }
 
-  function getUsers() {
+  function getPubs() {
     if (event) event.preventDefault();
 
     var token = localStorage.getItem('token');
     $.ajax({
-      url: '/users',
+      url: '/api/pubs',
       method: "GET",
       beforeSend: function beforeSend(jqXHR) {
         if (token) return jqXHR.setRequestHeader('Authorization', 'Bearer ' + token);
       }
-    }).done(showUsers).fail(showLoginForm);
+    }).done(showPubs).fail(showLoginForm);
   }
 
-  function showUsers(users) {
+  function showPubs(pubs) {
     var $row = $('<div class="row"></div>');
-    users.forEach(function (user) {
-      $row.append('\n        <div class="col-md-4">\n          <div class="card">\n            <img class="card-img-top" src="http://fillmurray.com/300/300" alt="Card image cap">\n            <div class="card-block">\n              <h4 class="card-title">' + user.username + '</h4>\n            </div>\n          </div>\n          <button class="btn btn-danger delete" data-id="' + user._id + '">Delete</button>\n          <button class="btn btn-primary edit" data-id="' + user._id + '">Edit</button>\n        </div>\n      ');
+    pubs.forEach(function (pub) {
+      $row.append('\n        <div class="col-md-4">\n          <div class="card">\n            <img class="card-img-top" src="http://fillmurray.com/300/300" alt="Card image cap">\n            <div class="card-block">\n              <h4 class="card-title">' + pub.name + '</h4>\n            </div>\n          </div>\n          <button class="btn btn-danger delete" data-id="' + pub._id + '">Delete</button>\n          <button class="btn btn-primary edit" data-id="' + pub._id + '">Edit</button>\n        </div>\n      ');
     });
 
     $main.html($row);
   }
 
-  function deleteUser() {
+  function deletePub() {
     var id = $(this).data('id');
     var token = localStorage.getItem('token');
 
     $.ajax({
-      url: '/api/users/' + id,
+      url: '/api/pubs/' + id,
       method: "DELETE",
       beforeSend: function beforeSend(jqXHR) {
         if (token) return jqXHR.setRequestHeader('Authorization', 'Bearer ' + token);
       }
-    }).done(getUsers).fail(showLoginForm);
+    }).done(getPubs).fail(showLoginForm);
   }
 
-  function getUser() {
+  function getPub() {
     var id = $(this).data('id');
     var token = localStorage.getItem('token');
 
     $.ajax({
-      url: '/api/users/' + id,
+      url: '/api/pubs/' + id,
       method: "GET",
       beforeSend: function beforeSend(jqXHR) {
         if (token) return jqXHR.setRequestHeader('Authorization', 'Bearer ' + token);

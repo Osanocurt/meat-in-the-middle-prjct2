@@ -20,6 +20,6 @@ mongoose.connect(mongoUri);
 
 app.use(express.static(`${__dirname}/public`));
 
-app.use('/',router);
+app.use('/api',router);
 
 app.listen(port, () => { console.log("Express is running on port: " + port); });
