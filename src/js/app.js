@@ -2,6 +2,7 @@ $(() =>{
 
   let $main = $('main');
   let $mapDiv = $('#map');
+  let midPoint = { lat: 0, lng: 0};
 
   $('.register').on('click', showRegisterForm);
   $('.login').on('click', showLoginForm);
@@ -191,18 +192,21 @@ $(() =>{
     let user = { lat: 51.5074, lng: -0.1278 };
     addMarker(user);
     people = [user];
+    let LatLngList = [user];
 
     let friends = [
-      { lat: 53.1074, lng: -1.8278 },
+      { lat: 51.6074, lng: -0.3278 },
       { lat: 52.9074, lng: -3.3278 },
       { lat: 52.6074, lng: 1.2278 },
-      { lat: 52.8074, lng: -1.2278 }
+      { lat: 51.6074, lng: -0.2278 }
     ];
 
     friends.forEach((friend) => {
+      LatLngList.push(friend);
       people.push(friend);
       addMarker(friend);
     });
+    setMapBounds(LatLngList);
   }
 
   function addMarker(location){
@@ -224,23 +228,76 @@ $(() =>{
 
     people.forEach((person) => {
       midLatSum += person.lat;
-    });
-
-    people.forEach((person) => {
       midLngSum += person.lng;
     });
 
     let midLat = midLatSum/people.length;
     let midLng = midLngSum/people.length;
 
-    let midPoint = {
+    midPoint = {
       lat: midLat,
       lng: midLng
     };
     addMarker(midPoint);
 
     map.panTo(midPoint);
-    map.zoom= 8;
+    nearbySearch(midPoint);
   }
 
+  function nearbySearch(midPoint){
+
+    let request = {
+      location: midPoint,
+      types: ['restaurant'],
+      openNow: true,
+      rankBy: google.maps.places.RankBy.DISTANCE
+    };
+
+    let service = new google.maps.places.PlacesService(map);
+    service.nearbySearch(request, callback);
+  }
+
+  function callback(results, status) {
+    let maxResults = 9;
+    if (results.length <= maxResults) {
+      maxResults = results.length;
+    }
+    if (status === 'ZERO_RESULTS'){
+      alert("No results found");
+    } else if (status == google.maps.places.PlacesServiceStatus.OK) {
+      let LatLngList = [];
+
+      for (var i = 0; i < maxResults; i++) {
+        var resource = results[i];
+        LatLngList.push(resource.geometry.location);
+        createMarker(resource);
+      }
+      setMapBounds(LatLngList);
+    }
+  }
+
+  function setMapBounds(LatLngList){
+    //  Create a new viewpoint bound
+    let bounds = new google.maps.LatLngBounds ();
+    //  Go through each marker...
+    for (var j = 0, LtLgLen = LatLngList.length; j < LtLgLen; j++) {
+      // increase the bounds to take marker
+      bounds.extend (LatLngList[j]);
+    }
+    //  Fit  bonds to the map
+    map.fitBounds (bounds);
+  }
+
+  function createMarker(place) {
+    var placeLoc = place.geometry.location;
+    var marker = new google.maps.Marker({
+      map: map,
+      position: place.geometry.location
+    });
+
+    google.maps.event.addListener(marker, 'click', function() {
+      infowindow.setContent(place.name);
+      infowindow.open(map, this);
+    });
+  }
 });
