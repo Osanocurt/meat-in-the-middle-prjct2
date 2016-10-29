@@ -3,39 +3,24 @@
 $(function () {
 
   var $main = $('main');
-  var $mapDiv = $('#map');
 
-  // $('.register').on('click', showRegisterForm);
-  // $('.login').on('click', showLoginForm);
-  // $('.friends').on('click', getFriends);
-  // $('.logout').on('click', logout);
-  // $main.on('submit', 'form', handleForm);
-  // $main.on('click', 'button.delete', deleteFriend);
-  // $main.on('click', 'button.edit', getFriend);
-
-  function initMap() {
-    var uluru = { lat: -25.363, lng: 131.044 };
-    var map = new google.maps.Map($mapDiv[0], {
-      center: uluru,
-      zoom: 14
-    });
-    var marker = new google.maps.Marker({
-      position: uluru,
-      map: map
-    });
-  }
+  $('.register').on('click', showRegisterForm);
+  $('.login').on('click', showLoginForm);
+  $('.friends').on('click', getFriends);
+  $('.logout').on('click', logout);
+  $main.on('submit', 'form', handleForm);
+  $main.on('click', 'button.delete', deleteFriend);
+  $main.on('click', 'button.edit', getFriend);
 
   function isLoggedIn() {
     return !!localStorage.getItem('token');
   }
 
   if (isLoggedIn()) {
-    // showMap();
-    // getFriends();
+    getFriends();
   } else {
-      // showMap();
-      // showLoginForm();
-    }
+    showLoginForm();
+  }
 
   function showRegisterForm() {
     if (event) event.preventDefault();
