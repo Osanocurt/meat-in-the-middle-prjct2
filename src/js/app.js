@@ -12,76 +12,6 @@ $(() =>{
   $main.on('click', 'button.delete', deleteFriend);
   $main.on('click', 'button.edit', getFriend);
 
-  let map;
-  let center = { lat: 51.5074, lng: -0.1278 };
-  let people = [];
-
-  function mapInit(){
-    map = new google.maps.Map($mapDiv[0], {
-      center,
-      zoom: 7
-    });
-    markerInit();
-  }
-  mapInit();
-
-  function markerInit(){
-
-    let user = { lat: 51.5074, lng: -0.1278 };
-    addMarker(user);
-    people = [user];
-
-    let friends = [
-      { lat: 53.1074, lng: -1.8278 },
-      { lat: 52.9074, lng: -3.3278 },
-      { lat: 52.6074, lng: 1.2278 },
-      { lat: 52.8074, lng: -1.2278 }
-    ];
-
-    friends.forEach((friend) => {
-      people.push(friend);
-      addMarker(friend);
-    });
-  }
-
-  function addMarker(location){
-    let position = {
-      lat: location.lat,
-      lng: location.lng
-    };
-
-    let marker = new google.maps.Marker({
-      position,
-      map
-    });
-  }
-
-  function calculateMidPoint(){
-
-    let midLatSum = 0;
-    let midLngSum = 0;
-
-    people.forEach((person) => {
-      midLatSum += person.lat;
-    });
-
-    people.forEach((person) => {
-      midLngSum += person.lng;
-    });
-
-    let midLat = midLatSum/people.length;
-    let midLng = midLngSum/people.length;
-
-    let midPoint = {
-      lat: midLat,
-      lng: midLng
-    };
-    addMarker(midPoint);
-
-    map.panTo(midPoint);
-    map.zoom= 8;
-  }
-
   function isLoggedIn() {
     return !!localStorage.getItem('token');
   }
@@ -240,4 +170,77 @@ $(() =>{
     localStorage.removeItem('token');
     showLoginForm();
   }
+
+
+
+  let map;
+  let center = { lat: 51.5074, lng: -0.1278 };
+  let people = [];
+
+  function mapInit(){
+    map = new google.maps.Map($mapDiv[0], {
+      center,
+      zoom: 7
+    });
+    markerInit();
+  }
+  mapInit();
+
+  function markerInit(){
+
+    let user = { lat: 51.5074, lng: -0.1278 };
+    addMarker(user);
+    people = [user];
+
+    let friends = [
+      { lat: 53.1074, lng: -1.8278 },
+      { lat: 52.9074, lng: -3.3278 },
+      { lat: 52.6074, lng: 1.2278 },
+      { lat: 52.8074, lng: -1.2278 }
+    ];
+
+    friends.forEach((friend) => {
+      people.push(friend);
+      addMarker(friend);
+    });
+  }
+
+  function addMarker(location){
+    let position = {
+      lat: location.lat,
+      lng: location.lng
+    };
+
+    let marker = new google.maps.Marker({
+      position,
+      map
+    });
+  }
+
+  function calculateMidPoint(){
+
+    let midLatSum = 0;
+    let midLngSum = 0;
+
+    people.forEach((person) => {
+      midLatSum += person.lat;
+    });
+
+    people.forEach((person) => {
+      midLngSum += person.lng;
+    });
+
+    let midLat = midLatSum/people.length;
+    let midLng = midLngSum/people.length;
+
+    let midPoint = {
+      lat: midLat,
+      lng: midLng
+    };
+    addMarker(midPoint);
+
+    map.panTo(midPoint);
+    map.zoom= 8;
+  }
+
 });
