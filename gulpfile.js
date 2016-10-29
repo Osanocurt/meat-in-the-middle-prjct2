@@ -1,27 +1,39 @@
-const gulp     = require("gulp");
-const babel    = require("gulp-babel");
-const cleanCSS = require("gulp-clean-css");
-const plumber  = require("gulp-plumber");
+const gulp     	 = require("gulp");
+const sass 		 	 = require('gulp-sass');
+const cleanCSS 	 = require("gulp-clean-css");
+const flatten		 = require('gulp-flatten');
+const plumber    = require('gulp-plumber');
+const nodemon    = require("gulp-nodemon");
+const livereload = require('gulp-livereload');
 
-gulp.task("es6", () => {
-	return gulp.src('src/**/*.js')
-		.pipe(plumber())
-		.pipe(babel({
-			presets: ["es2015"]
-		}))
-		.pipe(gulp.dest('public'));
+const src  = "src";
+const dist = "public";
+
+gulp.task('nodemon', () => {
+  return nodemon({
+    script: 'app.js',
+    ext: 'js html',
+    env: { 'NODE_ENV': 'development' }
+  });
 });
 
-gulp.task("minifyCSS", () => {
-	return gulp.src('src/**/*.css')
-		.pipe(plumber())
+gulp.task('sass', () => {
+	return gulp.src(`${src}/**/*.scss`)
+    .pipe(sass().on('error', sass.logError))
 		.pipe(cleanCSS({ compatibility: "ie8"}))
-		.pipe(gulp.dest('public'));
+    .pipe(plumber())
+    .pipe(flatten())
+    .pipe(gulp.dest(`${dist}/css/`))
+    .pipe(livereload());
 });
 
 gulp.task("watch", () => {
-  gulp.watch('src/**/*.js', ['es6']);
-	gulp.watch('src/**/*.css', ['minifyCSS']);
+	livereload.listen();
+	gulp.watch(`${src}/**/*.scss`, ['sass']);
 });
 
-gulp.task("default", ['es6', 'minifyCSS', 'watch']);
+gulp.task("default", [
+  'sass',
+  'watch',
+  'nodemon'
+]);
