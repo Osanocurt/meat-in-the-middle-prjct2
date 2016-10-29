@@ -3,6 +3,7 @@
 $(function () {
 
   var $main = $('main');
+  var $mapDiv = $('#map');
 
   $('.register').on('click', showRegisterForm);
   $('.login').on('click', showLoginForm);
@@ -12,15 +13,60 @@ $(function () {
   $main.on('click', 'button.delete', deleteFriend);
   $main.on('click', 'button.edit', getFriend);
 
+  var map = void 0;
+  var center = { lat: 51.5074, lng: -0.1278 };
+  var user = { lat: 51.5074, lng: -0.1278 };
+  var friend1 = { lat: 52.1074, lng: -1.8278 };
+
+  function mapInit() {
+    map = new google.maps.Map($mapDiv[0], {
+      center: center,
+      zoom: 13
+    });
+
+    addMarker(user);
+    addMarker(friend1);
+    calculateMidPoint();
+  }
+  mapInit();
+
+  function addMarker(location) {
+
+    var position = {
+      lat: location.lat,
+      lng: location.lng
+    };
+
+    var marker = new google.maps.Marker({
+      position: position,
+      map: map
+    });
+  }
+
+  function calculateMidPoint() {
+
+    var midLat = (user.lat + friend1.lat) / 2;
+    var midLng = (user.lng + friend1.lng) / 2;
+
+    var midPoint = {
+      lat: midLat,
+      lng: midLng
+    };
+    addMarker(midPoint);
+
+    map.panTo(midPoint);
+    map.zoom = 8;
+  }
+
   function isLoggedIn() {
     return !!localStorage.getItem('token');
   }
 
-  if (isLoggedIn()) {
-    getFriends();
-  } else {
-    showLoginForm();
-  }
+  // if(isLoggedIn()) {
+  //   getFriends();
+  // } else {
+  //   showLoginForm();
+  // }
 
   function showRegisterForm() {
     if (event) event.preventDefault();

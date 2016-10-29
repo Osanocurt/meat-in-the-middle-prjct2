@@ -1,6 +1,7 @@
 $(() =>{
 
   let $main = $('main');
+  let $mapDiv = $('#map');
 
   $('.register').on('click', showRegisterForm);
   $('.login').on('click', showLoginForm);
@@ -10,15 +11,60 @@ $(() =>{
   $main.on('click', 'button.delete', deleteFriend);
   $main.on('click', 'button.edit', getFriend);
 
+  let map;
+  let center = { lat: 51.5074, lng: -0.1278 };
+  let user = { lat: 51.5074, lng: -0.1278 };
+  let friend1 = { lat: 52.1074, lng: -1.8278 };
+
+  function mapInit(){
+    map = new google.maps.Map($mapDiv[0], {
+      center,
+      zoom: 13
+    });
+
+    addMarker(user);
+    addMarker(friend1);
+    calculateMidPoint();
+  }
+  mapInit();
+
+  function addMarker(location){
+
+    let position = {
+      lat: location.lat,
+      lng : location.lng
+    };
+
+    let marker = new google.maps.Marker({
+      position,
+      map
+    });
+  }
+
+  function calculateMidPoint(){
+
+      let midLat = (user.lat + friend1.lat)/2;
+      let midLng = (user.lng + friend1.lng)/2;
+
+      let midPoint = {
+        lat: midLat,
+        lng: midLng
+      };
+      addMarker(midPoint);
+
+      map.panTo(midPoint);
+      map.zoom=8;
+  }
+
   function isLoggedIn() {
     return !!localStorage.getItem('token');
   }
 
-  if(isLoggedIn()) {
-    getFriends();
-  } else {
-    showLoginForm();
-  }
+  // if(isLoggedIn()) {
+  //   getFriends();
+  // } else {
+  //   showLoginForm();
+  // }
 
   function showRegisterForm() {
     if(event) event.preventDefault();
