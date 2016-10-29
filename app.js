@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const morgan = require('morgan');
 const port = process.env.PORT || 8000;
 const bodyParser = require('body-parser');
-const router = require ('./config/routes');
 const expressJWT = require("express-jwt");
 
 const app = express();
