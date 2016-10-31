@@ -10,7 +10,7 @@ $(function () {
   $('.login').on('click', showLoginForm);
   $('.friends').on('click', getFriends);
   $('.logout').on('click', logout);
-  $('.go').on('click', calculateMidPoint);
+  // $('.go').on('click', calculateMidPoint);
   $main.on('submit', 'form', handleForm);
   $main.on('click', 'button.delete', deleteFriend);
   $main.on('click', 'button.edit', getFriend);
@@ -116,16 +116,19 @@ $(function () {
     showLoginForm();
   }
 
+  //------------------------------------------------------------------------------------------------------------------------------------
+
   var map = void 0;
-  var center = { lat: 51.5074, lng: -0.1278 };
   var people = [];
 
   function mapInit() {
     map = new google.maps.Map($mapDiv[0], {
-      center: center,
+      center: { lat: 51.5074, lng: -0.1278 },
       zoom: 7
     });
     markerInit();
+    var directionsDisplay = new google.maps.DirectionsRenderer({ map: map });
+    var directionsService = new google.maps.DirectionsService({ map: map });
   }
   mapInit();
 
@@ -238,4 +241,45 @@ $(function () {
       infowindow.open(map, this);
     });
   }
+
+  //click listener to be assigned to "choose venue" button on pop up wndows.
+  $(".direct").on("click", showDirections);
+
+  //user and venue variables for purpose of testing directions function
+  var startingPos = { lat: 51.5074, lng: -0.1278 };
+  var venueChosen = { lat: 51.5074, lng: -0.1222 };
+  var directionsDisplay = new google.maps.DirectionsRenderer();
+  var directionsService = new google.maps.DirectionsService();
+
+  //function to generate route and directions panel upon choosing venue. other pins still remain on map!
+  function showDirections() {
+    $("#travelModeDiv").css("visibility", "visible");
+    $("#map").css("width", "72vw");
+    $("#directionsPanel").css("visibility", "visible");
+    directionsDisplay.setMap(map);
+    directionsDisplay.setPanel(document.getElementById('directionsPanel'));
+    var selectedMode = document.getElementById('travelSelect').value;
+    directionsService.route({
+      origin: startingPos,
+      destination: venueChosen,
+      travelMode: google.maps.TravelMode[selectedMode]
+    }, function (response, status) {
+      if (status == 'OK') {
+        directionsDisplay.setDirections(response);
+      } else {
+        window.alert('Directions request failed due to ' + status);
+      }
+    });
+  }
+
+  //directions and route live update based on choice of travel method from drop down menu which spawns on function firing.
+  $("#travelSelect").on('change', showDirections);
+
+  //friendnumber_.on('click', function() {
+  //startingPos = friendnumber_.latlng;
+  // })
+
+  var input = document.getElementById('pac-input');
+
+  var searchBox = new google.maps.places.SearchBox(input);
 });
