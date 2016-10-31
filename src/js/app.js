@@ -206,7 +206,7 @@ $(() =>{
 
 
 
-  function showForm() {
+  function showUserForm() {
     if(event) event.preventDefault();
     $sidePanel.html(
       `<h2>Choose your location</h2>
@@ -219,19 +219,40 @@ $(() =>{
     createSearchBar();
   }
 
-  showForm();
+  showUserForm();
 
-  function createSearchBar() {
-    var input = document.getElementById('pac-input');
-    var searchBox = new google.maps.places.SearchBox(input);
-    searchBox.addListener('places_changed', function() {
-      var myPlaces = searchBox.getPlaces();
-      let userPosition = {
-        lat: myPlaces[0].geometry.location.lat(),
-        lng: myPlaces[0].geometry.location.lng()
-      };
-      addMarker(userPosition);
-    });
+
+let latLngList = [];
+
+function createSearchBar() {
+  var input = document.getElementById('pac-input');
+  var searchBox = new google.maps.places.SearchBox(input);
+  searchBox.addListener('places_changed', function() {
+    var myPlaces = searchBox.getPlaces();
+    let userPosition = {
+      lat: myPlaces[0].geometry.location.lat(),
+      lng: myPlaces[0].geometry.location.lng()
+    };
+    addMarker(userPosition);
+    latLngList.push(userPosition);
+    showFriendForm();
+  });
+}
+console.log(latLngList);
+
+// setMapBounds(LatLngList);
+
+function showFriendForm() {
+  if(event) event.preventDefault();
+  $sidePanel.html(
+    `<h4>Enter friend's starting location</h4>
+    <input id="pac-input" class="controls" type="text" placeholder="Enter your address">
+    <button class="btn btn-primary">Go!</button>
+    <h4>or</h4>
+    <button class="btn btn-primary">Add another friend</button>
+    </form>
+  `);
+  createSearchBar();
 }
 
 
@@ -389,9 +410,6 @@ $(() =>{
 //friendnumber_.on('click', function() {
 //startingPos = friendnumber_.latlng;
 // })
-
-
-
 
 
 });

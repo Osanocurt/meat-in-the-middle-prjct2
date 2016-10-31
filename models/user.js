@@ -5,7 +5,8 @@ const validator = require("validator");
 const friendSchema = new mongoose.Schema({
   name: { type: String, trim: true, required: true },
   lat: { type: Number, required: true },
-  lng: { type: Number, required: true }
+  lng: { type: Number, required: true },
+  address: { type: String}
 });
 
 const userSchema = new mongoose.Schema({
@@ -14,7 +15,8 @@ const userSchema = new mongoose.Schema({
   passwordHash: { type: String, required: true },
   friends: [friendSchema],
   lat: { type: Number },
-  lng: { type: Number }
+  lng: { type: Number },
+  address: { type: String}
 });
 
 function setPassword(value){
