@@ -8,12 +8,16 @@ $(() =>{
   $('.login').on('click', showLoginForm);
   $('.friends').on('click', getFriends);
   $('.logout').on('click', logout);
-  $('.go').on('click', calculateMidPoint);
+  $main.on('click', "#go", calculateMidPoint);
   $main.on('submit', 'form', handleForm);
+  $main.on('click', '#friendSaveLocation', saved);
   $main.on('click', 'button.delete', deleteFriend);
   $main.on('click', 'button.edit', getFriend);
   const $sidePanel = $("#sidePanel") ;
 
+  function saved() {
+    $("#friendSaveLocation").html("Saved");
+  }
 
   function isLoggedIn() {
     return !!localStorage.getItem('token');
@@ -65,7 +69,7 @@ $(() =>{
     `);
   }
 
-  function showEditForm(friend) {
+  function showFriendEditForm(friend) {
     if(event) event.preventDefault();
     let userId = localStorage.getItem('id');
 
@@ -75,10 +79,8 @@ $(() =>{
         <div class="form-group">
           <label for="name">
           <input class="form-control" name="name" value="${friend.name}">
-          <label for="location">
-          <input class="form-control" name="lat" value="${friend.lat}">
-          <label for="rating">
-          <input class="form-control" name="lng" value="${friend.lng}">
+          <label for="address">
+          <input class="form-control" name="address" value="${friend.address}">
         </div>
         <button class="btn btn-primary">Update</button>
       </form>
@@ -107,7 +109,7 @@ $(() =>{
         if(userId) localStorage.setItem('id', userId);
         if(data.token) localStorage.setItem('token', data.token);
       }
-      getFriends();
+      // getFriends();
     }).fail(showLoginForm);
   }
 
@@ -115,7 +117,6 @@ $(() =>{
     if(event) event.preventDefault();
     let token = localStorage.getItem('token');
     let userId = localStorage.getItem('id');
-    console.log(userId);
 
     $.ajax({
       url: `/api/users/${userId}/friends`,
@@ -129,24 +130,36 @@ $(() =>{
   }
 
   function showFriends(friends) {
-    let $row = $('<div class="row"></div>');
-    friends.forEach((friend) => {
-      $row.append(`
-        <div class="col-md-12">
-          <div class="card">
-            <div class="card-block">
-              <h4 class="card-title">${friend.name}</h4>
-              <h4 class="card-title">${friend.lat}</h4>
-              <h4 class="card-title">${friend.lng}</h4>
-            </div>
-          </div>
-          <button class="btn btn-danger delete" data-id="${friend._id}">Delete</button>
-          <button class="btn btn-primary edit" data-id="${friend._id}">Edit</button>
-        </div>
-      `);
-    });
+    let token = localStorage.getItem('token');
+    let userId = localStorage.getItem('id');
 
-    $sidePanel.html($row);
+    $.ajax({
+      url: `/api/users/${userId}`,
+      method: "GET",
+      beforeSend: function(jqXHR) {
+        if(token) return jqXHR.setRequestHeader('Authorization', `Bearer ${token}`);
+      }
+    })
+    .done((user) => {
+    console.log(user);
+      let $row = $(`<div class="row"><h2>${user.username}</h2><p>${user.address}</div>`);
+      friends.forEach((friend) => {
+        $row.append(`
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-block">
+                <h4 class="card-title">${friend.name}</h4>
+                <h4 class="card-title">${friend.address}</h4>
+              </div>
+            </div>
+            <button class="btn btn-danger delete" data-id="${friend._id}">Delete</button>
+            <button class="btn btn-primary edit" data-id="${friend._id}">Edit</button>
+          </div>
+        `);
+      });
+
+      $sidePanel.html($row);
+    });
   }
 
   function deleteFriend() {
@@ -176,13 +189,14 @@ $(() =>{
         if(token) return jqXHR.setRequestHeader('Authorization', `Bearer ${token}`);
       }
     })
-    .done(showEditForm)
+    .done(showFriendEditForm)
     .fail(showLoginForm);
   }
 
   function logout() {
     if(event) event.preventDefault();
     localStorage.removeItem('token');
+    localStorage.removeItem('id');
     showLoginForm();
   }
 
@@ -200,7 +214,6 @@ $(() =>{
     center: { lat: 51.5074, lng: -0.1278 },
       zoom: 7
     });
-    markerInit();
   }
   mapInit();
 
@@ -208,73 +221,78 @@ $(() =>{
 
   function showUserForm() {
     if(event) event.preventDefault();
+    let userId = localStorage.getItem('id');
     $sidePanel.html(
       `<h2>Choose your location</h2>
       <h4>Either</h4>
       <input id="pac-input" class="controls" type="text" placeholder="Enter your address">
       <h4>or</h4>
-        <button class="btn btn-primary">Click here to find my location</button>
+      <button class="btn btn-primary">Click here to find my location</button>
+      <form method="put" action="/api/users/${userId}">
+      <input id="input-location" name="user[address]">
+      <input id="input-lat" name="user[lat]">
+      <input id="input-lng" name="user[lng]">
+      <button id="userSaveLocation">Save this as my address</button>
       </form>
+      <button id="addAFriend" class="btn btn-primary">Add first friend</button>
     `);
     createSearchBar();
   }
 
   showUserForm();
 
+  let latLngList = [];
 
-let latLngList = [];
+  function createSearchBar() {
+    var input = document.getElementById('pac-input');
+    var searchBox = new google.maps.places.SearchBox(input);
+    searchBox.addListener('places_changed', function() {
+      var addresses = searchBox.getPlaces();
+      let personsPosition = {
+        lat: addresses[0].geometry.location.lat(),
+        lng: addresses[0].geometry.location.lng()
+      };
 
-function createSearchBar() {
-  var input = document.getElementById('pac-input');
-  var searchBox = new google.maps.places.SearchBox(input);
-  searchBox.addListener('places_changed', function() {
-    var myPlaces = searchBox.getPlaces();
-    let userPosition = {
-      lat: myPlaces[0].geometry.location.lat(),
-      lng: myPlaces[0].geometry.location.lng()
-    };
-    addMarker(userPosition);
-    latLngList.push(userPosition);
-    showFriendForm();
-  });
-}
-console.log(latLngList);
-
-// setMapBounds(LatLngList);
-
-function showFriendForm() {
-  if(event) event.preventDefault();
-  $sidePanel.html(
-    `<h4>Enter friend's starting location</h4>
-    <input id="pac-input" class="controls" type="text" placeholder="Enter your address">
-    <button class="btn btn-primary">Go!</button>
-    <h4>or</h4>
-    <button class="btn btn-primary">Add another friend</button>
-    </form>
-  `);
-  createSearchBar();
-}
-  function markerInit(){
-
-    let user = { lat: 51.5074, lng: -0.1278 };
-    addMarker(user);
-    people = [user];
-    let LatLngList = [user];
-
-    let friends = [
-      { lat: 51.6074, lng: -0.3278 },
-      { lat: 52.9074, lng: -3.3278 },
-      { lat: 52.6074, lng: 1.2278 },
-      { lat: 51.6074, lng: -0.2278 }
-    ];
-
-    friends.forEach((friend) => {
-      LatLngList.push(friend);
-      people.push(friend);
-      addMarker(friend);
-    });
-    setMapBounds(LatLngList);
+      document.getElementById("input-location").value = addresses[0].formatted_address;
+      console.log(addresses[0].formatted_address);
+      document.getElementById("input-lat").value = `${personsPosition.lat}`;
+      document.getElementById("input-lng").value = `${personsPosition.lng}`;
+      people.push(personsPosition);
+      console.log(people);
+      addMarker(personsPosition);
+      setMapBounds(people);
+      }
+    );
+      $main.on('click', '#addAFriend', showFriendForm);
   }
+
+
+
+
+  function showFriendForm() {
+    let userId = localStorage.getItem('id');
+    if(event) event.preventDefault();
+    $sidePanel.html(
+      `<h4>Enter friend's starting location</h4>
+      <input id="pac-input" class="controls" type="text" placeholder="Enter friend's address">
+      <button id="go" class="btn btn-primary">Go!</button>
+      <h4>or</h4>
+      <form method="post" action="/api/users/${userId}/friends">
+      <input id="input-name" name="name" placeholder="Friend's name">
+      <input id="input-location" name="address">
+      <input id="input-lat" name="lat">
+      <input id="input-lng" name="lng">
+      <button id="friendSaveLocation">Save friend to my contacts</button>
+      </form>
+      <button id="addAFriend" class="btn btn-primary">Add another friend</button>
+    `);
+    createSearchBar();
+
+  }
+
+
+
+
 
   function addMarker(location){
     let position = {
@@ -365,13 +383,13 @@ $sidePanel.html($carousel);
 
   }
 
-  function setMapBounds(LatLngList){
+  function setMapBounds(latLngList){
     //  Create a new viewpoint bound
     let bounds = new google.maps.LatLngBounds ();
     //  Go through each marker...
-    for (var j = 0, LatLngLen = LatLngList.length; j < LatLngLen; j++) {
+    for (var j = 0, LatLngLen = latLngList.length; j < LatLngLen; j++) {
       // increase the bounds to take marker
-      bounds.extend (LatLngList[j]);
+      bounds.extend (latLngList[j]);
     }
     //  Fit  bonds to the map
     map.fitBounds (bounds);
@@ -429,5 +447,9 @@ $sidePanel.html($carousel);
 //startingPos = friendnumber_.latlng;
 // })
 
+// function getProfile(){
+//   $sidePanel.html(`<div class="row"><h1>Profile</h1></div>`);
+//   getFriends();
+// }
 
 });
