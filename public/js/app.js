@@ -259,9 +259,19 @@ $(function () {
         var resource = results[i];
         LatLngList.push(resource.geometry.location);
         createMarker(resource);
+        addToCarousel(resource);
       }
       setMapBounds(LatLngList);
+      showCarousel(LatLngList);
     }
+  }
+
+  function showCarousel() {
+    $sidePanel.html('<div id=\'carousel-custom\' class=\'carousel slide\' data-ride=\'carousel\'>\n       <div class=\'carousel-outer\'>\n           <!-- Wrapper for slides -->\n           <div class=\'carousel-inner\'>\n               <div class=\'item active\'>\n                   <img src=\'http://placehold.it/400x200&text=slide1\' alt=\'\' />\n               </div>\n               <div class=\'item\'>\n                   <img src=\'http://placehold.it/400x200&text=slide2\' alt=\'\' />\n               </div>\n               <div class=\'item\'>\n                   <img src=\'http://placehold.it/400x200&text=slide3\' alt=\'\' />\n               </div>\n\n               <div class=\'item\'>\n                   <img src=\'http://placehold.it/400x200&text=slide4\' alt=\'\' />\n               </div>\n               <div class=\'item\'>\n                   <img src=\'http://placehold.it/400x200&text=slide5\' alt=\'\' />\n               </div>\n               <div class=\'item\'>\n                   <img src=\'http://placehold.it/400x200&text=slide6\' alt=\'\' />\n               </div>\n\n               <div class=\'item\'>\n                   <img src=\'http://placehold.it/400x200&text=slide7\' alt=\'\' />\n               </div>\n               <div class=\'item\'>\n                   <img src=\'http://placehold.it/400x200&text=slide8\' alt=\'\' />\n               </div>\n               <div class=\'item\'>\n                   <img src=\'http://placehold.it/400x200&text=slide9\' alt=\'\' />\n               </div>\n           </div>\n\n           <!-- Controls -->\n           <a class=\'left carousel-control\' href=\'#carousel-custom\' data-slide=\'prev\'>\n               <span class=\'glyphicon glyphicon-chevron-left\'></span>\n           </a>\n           <a class=\'right carousel-control\' href=\'#carousel-custom\' data-slide=\'next\'>\n               <span class=\'glyphicon glyphicon-chevron-right\'></span>\n           </a>\n       </div>\n\n       <!-- Indicators -->\n       <ol class=\'carousel-indicators\'>\n           <li data-target=\'#carousel-custom\' data-slide-to=\'0\' class=\'active\'><img src=\'http://placehold.it/100x50&text=slide1\' alt=\'\' /></li>\n           <li data-target=\'#carousel-custom\' data-slide-to=\'1\'><img src=\'http://placehold.it/100x50&text=slide2\' alt=\'\' /></li>\n           <li data-target=\'#carousel-custom\' data-slide-to=\'2\'><img src=\'http://placehold.it/100x50&text=slide3\' alt=\'\' /></li>\n           <li data-target=\'#carousel-custom\' data-slide-to=\'3\'><img src=\'http://placehold.it/100x50&text=slide4\' alt=\'\' /></li>\n           <li data-target=\'#carousel-custom\' data-slide-to=\'4\'><img src=\'http://placehold.it/100x50&text=slide5\' alt=\'\' /></li>\n           <li data-target=\'#carousel-custom\' data-slide-to=\'5\'><img src=\'http://placehold.it/100x50&text=slide6\' alt=\'\' /></li>\n           <li data-target=\'#carousel-custom\' data-slide-to=\'6\'><img src=\'http://placehold.it/100x50&text=slide7\' alt=\'\' /></li>\n           <li data-target=\'#carousel-custom\' data-slide-to=\'7\'><img src=\'http://placehold.it/100x50&text=slide8\' alt=\'\' /></li>\n           <li data-target=\'#carousel-custom\' data-slide-to=\'8\'><img src=\'http://placehold.it/100x50&text=slide9\' alt=\'\' /></li>\n       </ol>');
+  }
+
+  function addToCarousel(resource) {
+    console.log(resource);
   }
 
   function setMapBounds(LatLngList) {
