@@ -26,16 +26,16 @@ router.route("/login")
   .post(authController.login);
 
 router.route("/users")
-  // .all(secureRoute)
+  .all(secureRoute)
   .get(usersController.index);
 
 router.route("/users/:id/friends")
-  // .all(secureRoute)
+  .all(secureRoute)
   .get(usersController.friendsIndex)
   .post(usersController.friendsCreate);
 
 router.route("/users/:id/friends/:friendId")
-  // .all(secureRoute)
+  .all(secureRoute)
   .get(usersController.friendsShow)
   .put(usersController.friendsUpdate)
   .delete(usersController.friendsDelete);
