@@ -327,8 +327,11 @@ function showFriendForm() {
     service.nearbySearch(request, callback);
   }
 
+
   function callback(results, status) {
-    let maxResults = 9;
+    let maxResults = 10;
+    let resultsToShow = [];
+
     if (status === 'ZERO_RESULTS'){
       alert("No results found");
     } else if (status == google.maps.places.PlacesServiceStatus.OK) {
@@ -338,79 +341,37 @@ function showFriendForm() {
         maxResults = results.length;
       }
 
-      for (var i = 0; i < maxResults; i++) {
+      for (var i = 1; i < maxResults; i++) {
         var resource = results[i];
+        resultsToShow.push(resource);
         LatLngList.push(resource.geometry.location);
         createMarker(resource);
-        addToCarousel(resource);
       }
       setMapBounds(LatLngList);
-      showCarousel(LatLngList);
+      populateCarousel(resultsToShow);
     }
   }
 
-  function showCarousel(){
-    $sidePanel.html(`<div id='carousel-custom' class='carousel slide' data-ride='carousel'>
-       <div class='carousel-outer'>
-           <!-- Wrapper for slides -->
-           <div class='carousel-inner'>
-               <div class='item active'>
-                   <img src='http://placehold.it/400x200&text=slide1' alt='' />
-               </div>
-               <div class='item'>
-                   <img src='http://placehold.it/400x200&text=slide2' alt='' />
-               </div>
-               <div class='item'>
-                   <img src='http://placehold.it/400x200&text=slide3' alt='' />
-               </div>
+  function populateCarousel(resultsToShow){
+    let $carousel = $(`
+      <div id='carousel-custom' class='carousel slide' data-ride='carousel'>
+        <div class='carousel-outer'>
+          <div class='carousel-inner'>
+          </div>
+        </div>
+      </div>`);
 
-               <div class='item'>
-                   <img src='http://placehold.it/400x200&text=slide4' alt='' />
-               </div>
-               <div class='item'>
-                   <img src='http://placehold.it/400x200&text=slide5' alt='' />
-               </div>
-               <div class='item'>
-                   <img src='http://placehold.it/400x200&text=slide6' alt='' />
-               </div>
+    resultsToShow.forEach((result) => {
+      if (!!result.photos) {
+        let imgUrl = result;
+        console.log(imgUrl);
+      }
 
-               <div class='item'>
-                   <img src='http://placehold.it/400x200&text=slide7' alt='' />
-               </div>
-               <div class='item'>
-                   <img src='http://placehold.it/400x200&text=slide8' alt='' />
-               </div>
-               <div class='item'>
-                   <img src='http://placehold.it/400x200&text=slide9' alt='' />
-               </div>
-           </div>
+      $carousel.append(`
+        <div class="item"><img src="${result.photos}"><h4>${result.name}</h4></div>`);
+    });
 
-           <!-- Controls -->
-           <a class='left carousel-control' href='#carousel-custom' data-slide='prev'>
-               <span class='glyphicon glyphicon-chevron-left'></span>
-           </a>
-           <a class='right carousel-control' href='#carousel-custom' data-slide='next'>
-               <span class='glyphicon glyphicon-chevron-right'></span>
-           </a>
-       </div>
-
-       <!-- Indicators -->
-       <ol class='carousel-indicators'>
-           <li data-target='#carousel-custom' data-slide-to='0' class='active'><img src='http://placehold.it/100x50&text=slide1' alt='' /></li>
-           <li data-target='#carousel-custom' data-slide-to='1'><img src='http://placehold.it/100x50&text=slide2' alt='' /></li>
-           <li data-target='#carousel-custom' data-slide-to='2'><img src='http://placehold.it/100x50&text=slide3' alt='' /></li>
-           <li data-target='#carousel-custom' data-slide-to='3'><img src='http://placehold.it/100x50&text=slide4' alt='' /></li>
-           <li data-target='#carousel-custom' data-slide-to='4'><img src='http://placehold.it/100x50&text=slide5' alt='' /></li>
-           <li data-target='#carousel-custom' data-slide-to='5'><img src='http://placehold.it/100x50&text=slide6' alt='' /></li>
-           <li data-target='#carousel-custom' data-slide-to='6'><img src='http://placehold.it/100x50&text=slide7' alt='' /></li>
-           <li data-target='#carousel-custom' data-slide-to='7'><img src='http://placehold.it/100x50&text=slide8' alt='' /></li>
-           <li data-target='#carousel-custom' data-slide-to='8'><img src='http://placehold.it/100x50&text=slide9' alt='' /></li>
-       </ol>`);
-  }
-
-  function addToCarousel(resource) {
-    console.log(resource);
-
+    $sidePanel.html($carousel);
   }
 
   function setMapBounds(LatLngList){
