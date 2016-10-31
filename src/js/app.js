@@ -6,7 +6,7 @@ $(() =>{
 
   $('.register').on('click', showRegisterForm);
   $('.login').on('click', showLoginForm);
-  $('.friends').on('click', getFriends);
+  $('.friends').on('click', getProfile);
   $('.logout').on('click', logout);
   $('.go').on('click', calculateMidPoint);
   $main.on('submit', 'form', handleForm);
@@ -19,15 +19,17 @@ $(() =>{
     return !!localStorage.getItem('token');
   }
 
-  // if(isLoggedIn()) {
-  //   getFriends();
-  // } else {
-  //   showLoginForm();
-  // }
+  if(isLoggedIn()) {
+    // getFriends();
+    console.log("logged in");
+  } else {
+    // showLoginForm();
+    console.log("logged out");
+  }
 
   function showRegisterForm() {
     if(event) event.preventDefault();
-    $main.html(`
+    $sidePanel.html(`
       <h2>Register</h2>
       <form method="post" action="/api/register">
         <div class="form-group">
@@ -49,7 +51,7 @@ $(() =>{
 
   function showLoginForm() {
     if(event) event.preventDefault();
-    $main.html(`
+    $sidePanel.html(`
       <h2>Login</h2>
       <form method="post" action="/api/login">
         <div class="form-group">
@@ -65,16 +67,18 @@ $(() =>{
 
   function showEditForm(friend) {
     if(event) event.preventDefault();
-    $main.html(`
+    let userId = localStorage.getItem('id');
+
+    $sidePanel.html(`
       <h2>Edit Friend</h2>
-      <form method="put" action="/api/friends/${friend._id}">
+      <form method="put" action="/api/users/${userId}/friends/${friend._id}">
         <div class="form-group">
           <label for="name">
           <input class="form-control" name="name" value="${friend.name}">
           <label for="location">
-          <input class="form-control" name="name" value="${friend.location}">
+          <input class="form-control" name="lat" value="${friend.lat}">
           <label for="rating">
-          <input class="form-control" name="name" value="${friend.rating}">
+          <input class="form-control" name="lng" value="${friend.lng}">
         </div>
         <button class="btn btn-primary">Update</button>
       </form>
@@ -98,17 +102,23 @@ $(() =>{
         if(token) return jqXHR.setRequestHeader('Authorization', `Bearer ${token}`);
       }
     }).done((data) => {
-      if(data.token) localStorage.setItem('token', data.token);
+      if (!!data.user) {
+        let userId = data.user._id;
+        if(userId) localStorage.setItem('id', userId);
+        if(data.token) localStorage.setItem('token', data.token);
+      }
       getFriends();
     }).fail(showLoginForm);
   }
 
   function getFriends() {
     if(event) event.preventDefault();
-
     let token = localStorage.getItem('token');
+    let userId = localStorage.getItem('id');
+    console.log(userId);
+
     $.ajax({
-      url: '/api/friends',
+      url: `/api/users/${userId}/friends`,
       method: "GET",
       beforeSend: function(jqXHR) {
         if(token) return jqXHR.setRequestHeader('Authorization', `Bearer ${token}`);
@@ -122,11 +132,12 @@ $(() =>{
     let $row = $('<div class="row"></div>');
     friends.forEach((friend) => {
       $row.append(`
-        <div class="col-md-4">
+        <div class="col-md-12">
           <div class="card">
-            <img class="card-img-top" src="http://fillmurray.com/300/300" alt="Card image cap">
             <div class="card-block">
               <h4 class="card-title">${friend.name}</h4>
+              <h4 class="card-title">${friend.lat}</h4>
+              <h4 class="card-title">${friend.lng}</h4>
             </div>
           </div>
           <button class="btn btn-danger delete" data-id="${friend._id}">Delete</button>
@@ -135,30 +146,31 @@ $(() =>{
       `);
     });
 
-    $main.html($row);
+    $sidePanel.html($row);
   }
 
   function deleteFriend() {
-    let id = $(this).data('id');
-    let token = localStorage.getItem('token');
-
-    $.ajax({
-      url: `/api/friends/${id}`,
-      method: "DELETE",
-      beforeSend: function(jqXHR) {
-        if(token) return jqXHR.setRequestHeader('Authorization', `Bearer ${token}`);
-      }
-    })
-    .done(getFriends)
-    .fail(showLoginForm);
+  //   let id = $(this).data('id');
+  //   let token = localStorage.getItem('token');
+  //
+  //   $.ajax({
+  //     url: `/api/friends/${id}`,
+  //     method: "DELETE",
+  //     beforeSend: function(jqXHR) {
+  //       if(token) return jqXHR.setRequestHeader('Authorization', `Bearer ${token}`);
+  //     }
+  //   })
+  //   .done(getFriends)
+  //   .fail(showLoginForm);
   }
 
   function getFriend() {
-    let id = $(this).data('id');
+    let userId = localStorage.getItem('id');
+    let friendId = $(this).data('id');
     let token = localStorage.getItem('token');
 
     $.ajax({
-      url: `/api/friends/${id}`,
+      url: `/api/users/${userId}/friends/${friendId}`,
       method: "GET",
       beforeSend: function(jqXHR) {
         if(token) return jqXHR.setRequestHeader('Authorization', `Bearer ${token}`);
@@ -400,6 +412,10 @@ function showFriendForm() {
 // })
 
 
+function getProfile(){
+  $sidePanel.html(`<div class="row"><h1>Profile</h1></div>`);
+  getFriends();
+}
 
 
 

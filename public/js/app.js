@@ -8,7 +8,7 @@ $(function () {
 
   $('.register').on('click', showRegisterForm);
   $('.login').on('click', showLoginForm);
-  $('.friends').on('click', getFriends);
+  $('.friends').on('click', getProfile);
   $('.logout').on('click', logout);
   $('.go').on('click', calculateMidPoint);
   $main.on('submit', 'form', handleForm);
@@ -20,25 +20,29 @@ $(function () {
     return !!localStorage.getItem('token');
   }
 
-  // if(isLoggedIn()) {
-  //   getFriends();
-  // } else {
-  //   showLoginForm();
-  // }
+  if (isLoggedIn()) {
+    // getFriends();
+    console.log("logged in");
+  } else {
+    // showLoginForm();
+    console.log("logged out");
+  }
 
   function showRegisterForm() {
     if (event) event.preventDefault();
-    $main.html('\n      <h2>Register</h2>\n      <form method="post" action="/api/register">\n        <div class="form-group">\n          <input class="form-control" name="user[username]" placeholder="Username">\n        </div>\n        <div class="form-group">\n          <input class="form-control" name="user[email]" placeholder="Email">\n        </div>\n        <div class="form-group">\n          <input class="form-control" type="password" name="user[password]" placeholder="Password">\n        </div>\n        <div class="form-group">\n          <input class="form-control" type="password" name="user[passwordConfirmation]" placeholder="Password Confirmation">\n        </div>\n        <button class="btn btn-primary">Register</button>\n      </form>\n    ');
+    $sidePanel.html('\n      <h2>Register</h2>\n      <form method="post" action="/api/register">\n        <div class="form-group">\n          <input class="form-control" name="user[username]" placeholder="Username">\n        </div>\n        <div class="form-group">\n          <input class="form-control" name="user[email]" placeholder="Email">\n        </div>\n        <div class="form-group">\n          <input class="form-control" type="password" name="user[password]" placeholder="Password">\n        </div>\n        <div class="form-group">\n          <input class="form-control" type="password" name="user[passwordConfirmation]" placeholder="Password Confirmation">\n        </div>\n        <button class="btn btn-primary">Register</button>\n      </form>\n    ');
   }
 
   function showLoginForm() {
     if (event) event.preventDefault();
-    $main.html('\n      <h2>Login</h2>\n      <form method="post" action="/api/login">\n        <div class="form-group">\n          <input class="form-control" name="email" placeholder="Email">\n        </div>\n        <div class="form-group">\n          <input class="form-control" type="password" name="password" placeholder="Password">\n        </div>\n        <button class="btn btn-primary">Login</button>\n      </form>\n    ');
+    $sidePanel.html('\n      <h2>Login</h2>\n      <form method="post" action="/api/login">\n        <div class="form-group">\n          <input class="form-control" name="email" placeholder="Email">\n        </div>\n        <div class="form-group">\n          <input class="form-control" type="password" name="password" placeholder="Password">\n        </div>\n        <button class="btn btn-primary">Login</button>\n      </form>\n    ');
   }
 
   function showEditForm(friend) {
     if (event) event.preventDefault();
-    $main.html('\n      <h2>Edit Friend</h2>\n      <form method="put" action="/api/friends/' + friend._id + '">\n        <div class="form-group">\n          <label for="name">\n          <input class="form-control" name="name" value="' + friend.name + '">\n          <label for="location">\n          <input class="form-control" name="name" value="' + friend.location + '">\n          <label for="rating">\n          <input class="form-control" name="name" value="' + friend.rating + '">\n        </div>\n        <button class="btn btn-primary">Update</button>\n      </form>\n    ');
+    var userId = localStorage.getItem('id');
+
+    $sidePanel.html('\n      <h2>Edit Friend</h2>\n      <form method="put" action="/api/users/' + userId + '/friends/' + friend._id + '">\n        <div class="form-group">\n          <label for="name">\n          <input class="form-control" name="name" value="' + friend.name + '">\n          <label for="location">\n          <input class="form-control" name="lat" value="' + friend.lat + '">\n          <label for="rating">\n          <input class="form-control" name="lng" value="' + friend.lng + '">\n        </div>\n        <button class="btn btn-primary">Update</button>\n      </form>\n    ');
   }
 
   function handleForm() {
@@ -58,17 +62,23 @@ $(function () {
         if (token) return jqXHR.setRequestHeader('Authorization', 'Bearer ' + token);
       }
     }).done(function (data) {
-      if (data.token) localStorage.setItem('token', data.token);
+      if (!!data.user) {
+        var userId = data.user._id;
+        if (userId) localStorage.setItem('id', userId);
+        if (data.token) localStorage.setItem('token', data.token);
+      }
       getFriends();
     }).fail(showLoginForm);
   }
 
   function getFriends() {
     if (event) event.preventDefault();
-
     var token = localStorage.getItem('token');
+    var userId = localStorage.getItem('id');
+    console.log(userId);
+
     $.ajax({
-      url: '/api/friends',
+      url: '/api/users/' + userId + '/friends',
       method: "GET",
       beforeSend: function beforeSend(jqXHR) {
         if (token) return jqXHR.setRequestHeader('Authorization', 'Bearer ' + token);
@@ -79,31 +89,34 @@ $(function () {
   function showFriends(friends) {
     var $row = $('<div class="row"></div>');
     friends.forEach(function (friend) {
-      $row.append('\n        <div class="col-md-4">\n          <div class="card">\n            <img class="card-img-top" src="http://fillmurray.com/300/300" alt="Card image cap">\n            <div class="card-block">\n              <h4 class="card-title">' + friend.name + '</h4>\n            </div>\n          </div>\n          <button class="btn btn-danger delete" data-id="' + friend._id + '">Delete</button>\n          <button class="btn btn-primary edit" data-id="' + friend._id + '">Edit</button>\n        </div>\n      ');
+      $row.append('\n        <div class="col-md-12">\n          <div class="card">\n            <div class="card-block">\n              <h4 class="card-title">' + friend.name + '</h4>\n              <h4 class="card-title">' + friend.lat + '</h4>\n              <h4 class="card-title">' + friend.lng + '</h4>\n            </div>\n          </div>\n          <button class="btn btn-danger delete" data-id="' + friend._id + '">Delete</button>\n          <button class="btn btn-primary edit" data-id="' + friend._id + '">Edit</button>\n        </div>\n      ');
     });
 
-    $main.html($row);
+    $sidePanel.html($row);
   }
 
   function deleteFriend() {
-    var id = $(this).data('id');
-    var token = localStorage.getItem('token');
-
-    $.ajax({
-      url: '/api/friends/' + id,
-      method: "DELETE",
-      beforeSend: function beforeSend(jqXHR) {
-        if (token) return jqXHR.setRequestHeader('Authorization', 'Bearer ' + token);
-      }
-    }).done(getFriends).fail(showLoginForm);
+    //   let id = $(this).data('id');
+    //   let token = localStorage.getItem('token');
+    //
+    //   $.ajax({
+    //     url: `/api/friends/${id}`,
+    //     method: "DELETE",
+    //     beforeSend: function(jqXHR) {
+    //       if(token) return jqXHR.setRequestHeader('Authorization', `Bearer ${token}`);
+    //     }
+    //   })
+    //   .done(getFriends)
+    //   .fail(showLoginForm);
   }
 
   function getFriend() {
-    var id = $(this).data('id');
+    var userId = localStorage.getItem('id');
+    var friendId = $(this).data('id');
     var token = localStorage.getItem('token');
 
     $.ajax({
-      url: '/api/friends/' + id,
+      url: '/api/users/' + userId + '/friends/' + friendId,
       method: "GET",
       beforeSend: function beforeSend(jqXHR) {
         if (token) return jqXHR.setRequestHeader('Authorization', 'Bearer ' + token);
@@ -312,4 +325,9 @@ $(function () {
   //startingPos = friendnumber_.latlng;
   // })
 
+
+  function getProfile() {
+    $sidePanel.html('<div class="row"><h1>Profile</h1></div>');
+    getFriends();
+  }
 });
