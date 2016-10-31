@@ -77,21 +77,27 @@ $(() =>{
 
     $sidePanel.html(`
       <h2>Edit Friend</h2>
-      <form id="friendUpdate"">
+      <form id="friendUpdate">
         <div class="form-group">
           <label for="name">
           <input class="form-control" name="name" value="${friend.name}">
             <input type="hidden" id="input-lat" name="lat" value="${friend.lat}">
             <input type="hidden" id="input-lng" name="lng" value="${friend.lng}">
-        </form>
-          <label for="address">
-          <input id="friendAddr" class="controls" type="text" value="${friendAddress}">
+            <label for="address">
+            <input id="friendAddr" class="controls" type="text" value="${friendAddress}">
+            <button id="friendUpdateBtn" class="btn btn-primary" type='submit'>Update</button>
         </div>
-        <button class="btn btn-primary">Update</button>
-    `);
+      </form>`);
 
     var input = document.getElementById('friendAddr');
     var searchBox = new google.maps.places.SearchBox(input);
+  }
+
+  $sidePanel.on('submit', 'form#friendUpdate', getFriendUpdateFromForm);
+
+  function getFriendUpdateFromForm(){
+    let data = $(this).serialize();
+    console.log(data);
   }
 
   function handleForm() {
@@ -146,7 +152,7 @@ $(() =>{
   }
 
   function getUser(friends, src) {
-    console.log(src);
+    // console.log(src);
     let token = localStorage.getItem('token');
     let userId = localStorage.getItem('id');
 
@@ -161,7 +167,7 @@ $(() =>{
       if (src === 'viewProfile') {
         showFriendsInProfile(user, friends);
       } else if (src === 'useSavedAddress'){
-        console.log("Use SAved address");
+        // console.log("Use SAved address");
         updateMap(user);
       } else {
         console.log("Request from elsewhere");
@@ -181,7 +187,7 @@ $(() =>{
             </div>
           </div>
           <button class="btn btn-danger delete" data-id="${friend._id}">Delete</button>
-          <button class="btn btn-primary edit" data-id="${friend._id}">Edit</button>
+          <button class="btn btn-primary edit" data-target='updateFriend' data-id="${friend._id}">Edit</button>
         </div>
       `);
     });
@@ -201,14 +207,14 @@ $(() =>{
       }
     })
     .done((user) => {
-      let $row = $(`<div class="row"><h2>Saved Friends</h2></div>`);
+      let $row = $(`<div class="row"><h2>Add Friends</h2></div>`);
       friends.forEach((friend) => {
         $row.append(`
           <div class="col-md-12">
             <div class="card">
               <div class="card-block">
                 <h4 class="card-title">${friend.name}</h4>
-                <h4 class="card-title">${friend.address}</h4>
+                <p class="card-title">${friend.address}</p>
               </div>
             <button class="btn btn-primary addFriend" data-target="addToMap" data-id="${friend._id}">Add</button>
             </div>
@@ -254,8 +260,7 @@ $(() =>{
       let next = $(this).data('target');
       if (next === 'addToMap') {
         updateMap(person);
-      } else {
-        console.log("getFriend gone wrong");
+      } else if (next === 'updateFriend'){
         showFriendEditForm(person);
       }
     })
@@ -299,20 +304,20 @@ $(() =>{
     if(event) event.preventDefault();
     let userId = localStorage.getItem('id');
     $sidePanel.html(
-      `<h2>Choose your location</h2>
+      `<h2>Where Are You?</h2>
       <button class="btn btn-secondary" id="useSavedAdd">Use saved address</button>
       <h4>or</h4>
-      <input id="pac-input" class="controls" type="text" placeholder="Enter your address">
+      <input id="pac-input" class="controls" type="text" placeholder="Enter location">
       <form method="put" action="/api/users/${userId}">
         <input type='hidden' id="input-location" name="user[address]">
         <input type='hidden' id="input-lat" name="user[lat]">
         <input type='hidden' id="input-lng" name="user[lng]">
       </form>
-      <button id="userSaveLocation">Save for future</button>
+      <button class="btn btn-secondary" id="userSaveLocation">Save</button>
       <h4>or</h4>
-      <button class="btn btn-secondary">Click here to find my location</button>
+      <button class="btn btn-secondary">Use current location</button>
       <br>
-      <button id="addAFriend" class="btn btn-primary">Add first friend</button>
+      <button id="addAFriend" class="btn btn-primary">Add friend</button>
     `);
     createSearchBar();
   }
@@ -323,7 +328,7 @@ $(() =>{
   $sidePanel.on('click', 'button#useSavedAdd', useHome);
 
   function useHome(){
-    console.log("Use saved address");
+    // console.log("Use saved address");
     let friends = [];
     let src = "useSavedAddress";
     getUser(friends, src);
@@ -356,8 +361,7 @@ $(() =>{
     let userId = localStorage.getItem('id');
     if(event) event.preventDefault();
     $sidePanel.append(
-      `<h4>Add Friend</h4>
-      <h4>Friend's starting location</h4>
+      `<h4>New Friend</h4>
       <input id="pac-input" class="controls" type="text" placeholder="Enter friend's address">
       <form method="post" action="/api/users/${userId}/friends">
         <input type='hidden' id="input-name" name="name" placeholder="Friend's name">
