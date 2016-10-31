@@ -101,7 +101,6 @@ $(function () {
         if (token) return jqXHR.setRequestHeader('Authorization', 'Bearer ' + token);
       }
     }).done(function (user) {
-      console.log(user);
       var $row = $('<div class="row"><h2>' + user.username + '</h2><p>' + user.address + '</div>');
       friends.forEach(function (friend) {
         $row.append('\n          <div class="col-md-12">\n            <div class="card">\n              <div class="card-block">\n                <h4 class="card-title">' + friend.name + '</h4>\n                <h4 class="card-title">' + friend.address + '</h4>\n              </div>\n            </div>\n            <button class="btn btn-danger delete" data-id="' + friend._id + '">Delete</button>\n            <button class="btn btn-primary edit" data-id="' + friend._id + '">Edit</button>\n          </div>\n        ');
@@ -112,18 +111,17 @@ $(function () {
   }
 
   function deleteFriend() {
-    //   let id = $(this).data('id');
-    //   let token = localStorage.getItem('token');
-    //
-    //   $.ajax({
-    //     url: `/api/friends/${id}`,
-    //     method: "DELETE",
-    //     beforeSend: function(jqXHR) {
-    //       if(token) return jqXHR.setRequestHeader('Authorization', `Bearer ${token}`);
-    //     }
-    //   })
-    //   .done(getFriends)
-    //   .fail(showLoginForm);
+    var userId = localStorage.getItem('id');
+    var friendId = $(this).data('id');
+    var token = localStorage.getItem('token');
+
+    $.ajax({
+      url: '/api/users/' + userId + '/friends/' + friendId,
+      method: "DELETE",
+      beforeSend: function beforeSend(jqXHR) {
+        if (token) return jqXHR.setRequestHeader('Authorization', 'Bearer ' + token);
+      }
+    }).done(getFriends).fail(showLoginForm);
   }
 
   function getFriend() {
@@ -165,11 +163,7 @@ $(function () {
   function showUserForm() {
     if (event) event.preventDefault();
     var userId = localStorage.getItem('id');
-<<<<<<< HEAD
     $sidePanel.html('<h2>Choose your location</h2>\n      <h4>Either</h4>\n      <input id="pac-input" class="controls" type="text" placeholder="Enter your address">\n      <h4>or</h4>\n      <button class="btn btn-primary">Click here to find my location</button>\n      <form method="put" action="/api/users/' + userId + '">\n      <input id="input-location" name="user[address]">\n      <input id="input-lat" name="user[lat]">\n      <input id="input-lng" name="user[lng]">\n      <button id="userSaveLocation">Save this as my address</button>\n      </form>\n      <button id="addAFriend" class="btn btn-primary">Add first friend</button>\n    ');
-=======
-    $sidePanel.html('<h2>Choose your location</h2>\n      <h4>Either</h4>\n      <input id="pac-input" class="controls" type="text" placeholder="Enter your address">\n      <h4>or</h4>\n      <button class="btn btn-primary">Click here to find my location</button>\n      <form method="put" action="api/users/' + userId + '">\n      <input id="input-location" name="user[address]">\n      <input id="input-lat" name="user[lat]">\n      <input id="input-lng" name="user[lng]">\n      <button id="userSaveLocation">Save this as my address</button>\n      </form>\n      <button id="addAFriend" class="btn btn-primary">Add first friend</button>\n    ');
->>>>>>> development
     createSearchBar();
   }
 

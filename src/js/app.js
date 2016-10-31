@@ -141,7 +141,6 @@ $(() =>{
       }
     })
     .done((user) => {
-    console.log(user);
       let $row = $(`<div class="row"><h2>${user.username}</h2><p>${user.address}</div>`);
       friends.forEach((friend) => {
         $row.append(`
@@ -163,18 +162,19 @@ $(() =>{
   }
 
   function deleteFriend() {
-  //   let id = $(this).data('id');
-  //   let token = localStorage.getItem('token');
-  //
-  //   $.ajax({
-  //     url: `/api/friends/${id}`,
-  //     method: "DELETE",
-  //     beforeSend: function(jqXHR) {
-  //       if(token) return jqXHR.setRequestHeader('Authorization', `Bearer ${token}`);
-  //     }
-  //   })
-  //   .done(getFriends)
-  //   .fail(showLoginForm);
+    let userId = localStorage.getItem('id');
+    let friendId = $(this).data('id');
+    let token = localStorage.getItem('token');
+
+    $.ajax({
+      url: `/api/users/${userId}/friends/${friendId}`,
+      method: "DELETE",
+      beforeSend: function(jqXHR) {
+        if(token) return jqXHR.setRequestHeader('Authorization', `Bearer ${token}`);
+      }
+    })
+    .done(getFriends)
+    .fail(showLoginForm);
   }
 
   function getFriend() {
