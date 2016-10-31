@@ -69,7 +69,7 @@ $(() =>{
     `);
   }
 
-  function showEditForm(friend) {
+  function showFriendEditForm(friend) {
     if(event) event.preventDefault();
     let userId = localStorage.getItem('id');
 
@@ -79,10 +79,8 @@ $(() =>{
         <div class="form-group">
           <label for="name">
           <input class="form-control" name="name" value="${friend.name}">
-          <label for="location">
-          <input class="form-control" name="lat" value="${friend.lat}">
-          <label for="rating">
-          <input class="form-control" name="lng" value="${friend.lng}">
+          <label for="address">
+          <input class="form-control" name="address" value="${friend.address}">
         </div>
         <button class="btn btn-primary">Update</button>
       </form>
@@ -144,15 +142,14 @@ $(() =>{
     })
     .done((user) => {
     console.log(user);
-      let $row = $(`<div class="row"><h2>${user.username}</h2><p>${user.lat}${user.lng}</div>`);
+      let $row = $(`<div class="row"><h2>${user.username}</h2><p>${user.address}</div>`);
       friends.forEach((friend) => {
         $row.append(`
           <div class="col-md-12">
             <div class="card">
               <div class="card-block">
                 <h4 class="card-title">${friend.name}</h4>
-                <h4 class="card-title">${friend.lat}</h4>
-                <h4 class="card-title">${friend.lng}</h4>
+                <h4 class="card-title">${friend.address}</h4>
               </div>
             </div>
             <button class="btn btn-danger delete" data-id="${friend._id}">Delete</button>
@@ -192,7 +189,7 @@ $(() =>{
         if(token) return jqXHR.setRequestHeader('Authorization', `Bearer ${token}`);
       }
     })
-    .done(showEditForm)
+    .done(showFriendEditForm)
     .fail(showLoginForm);
   }
 
@@ -232,8 +229,8 @@ $(() =>{
       <input id="pac-input" class="controls" type="text" placeholder="Enter your address">
       <h4>or</h4>
       <button class="btn btn-primary">Click here to find my location</button>
-      <form method="put" action="api/users/${userId}">
-      <input id="input-location" name="user[location]">
+      <form method="put" action="/api/users/${userId}">
+      <input id="input-location" name="user[address]">
       <input id="input-lat" name="user[lat]">
       <input id="input-lng" name="user[lng]">
       <button id="userSaveLocation">Save this as my address</button>
@@ -259,7 +256,7 @@ function createSearchBar() {
     };
     addMarker(personsPosition);
     document.getElementById("input-location").value = addresses[0].formatted_address;
-    console.log(addresses[0]);
+    console.log(addresses[0].formatted_address);
     document.getElementById("input-lat").value = `${personsPosition.lat}`;
     document.getElementById("input-lng").value = `${personsPosition.lng}`;
     latLngList.push(personsPosition);
@@ -280,7 +277,7 @@ function showFriendForm() {
     <h4>or</h4>
     <form method="post" action="/api/users/${userId}/friends">
     <input id="input-name" name="name" placeholder="Friend's name">
-    <input id="input-location" name="location">
+    <input id="input-location" name="address">
     <input id="input-lat" name="lat">
     <input id="input-lng" name="lng">
     <button id="friendSaveLocation">Save friend to my contacts</button>

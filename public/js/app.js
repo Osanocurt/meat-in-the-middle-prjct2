@@ -43,11 +43,11 @@ $(function () {
     $sidePanel.html('\n      <h2>Login</h2>\n      <form method="post" action="/api/login">\n        <div class="form-group">\n          <input class="form-control" name="email" placeholder="Email">\n        </div>\n        <div class="form-group">\n          <input class="form-control" type="password" name="password" placeholder="Password">\n        </div>\n        <button class="btn btn-primary">Login</button>\n      </form>\n    ');
   }
 
-  function showEditForm(friend) {
+  function showFriendEditForm(friend) {
     if (event) event.preventDefault();
     var userId = localStorage.getItem('id');
 
-    $sidePanel.html('\n      <h2>Edit Friend</h2>\n      <form method="put" action="/api/users/' + userId + '/friends/' + friend._id + '">\n        <div class="form-group">\n          <label for="name">\n          <input class="form-control" name="name" value="' + friend.name + '">\n          <label for="location">\n          <input class="form-control" name="lat" value="' + friend.lat + '">\n          <label for="rating">\n          <input class="form-control" name="lng" value="' + friend.lng + '">\n        </div>\n        <button class="btn btn-primary">Update</button>\n      </form>\n    ');
+    $sidePanel.html('\n      <h2>Edit Friend</h2>\n      <form method="put" action="/api/users/' + userId + '/friends/' + friend._id + '">\n        <div class="form-group">\n          <label for="name">\n          <input class="form-control" name="name" value="' + friend.name + '">\n          <label for="address">\n          <input class="form-control" name="address" value="' + friend.address + '">\n        </div>\n        <button class="btn btn-primary">Update</button>\n      </form>\n    ');
   }
 
   function handleForm() {
@@ -102,9 +102,9 @@ $(function () {
       }
     }).done(function (user) {
       console.log(user);
-      var $row = $('<div class="row"><h2>' + user.username + '</h2><p>' + user.lat + user.lng + '</div>');
+      var $row = $('<div class="row"><h2>' + user.username + '</h2><p>' + user.address + '</div>');
       friends.forEach(function (friend) {
-        $row.append('\n          <div class="col-md-12">\n            <div class="card">\n              <div class="card-block">\n                <h4 class="card-title">' + friend.name + '</h4>\n                <h4 class="card-title">' + friend.lat + '</h4>\n                <h4 class="card-title">' + friend.lng + '</h4>\n              </div>\n            </div>\n            <button class="btn btn-danger delete" data-id="' + friend._id + '">Delete</button>\n            <button class="btn btn-primary edit" data-id="' + friend._id + '">Edit</button>\n          </div>\n        ');
+        $row.append('\n          <div class="col-md-12">\n            <div class="card">\n              <div class="card-block">\n                <h4 class="card-title">' + friend.name + '</h4>\n                <h4 class="card-title">' + friend.address + '</h4>\n              </div>\n            </div>\n            <button class="btn btn-danger delete" data-id="' + friend._id + '">Delete</button>\n            <button class="btn btn-primary edit" data-id="' + friend._id + '">Edit</button>\n          </div>\n        ');
       });
 
       $sidePanel.html($row);
@@ -137,7 +137,7 @@ $(function () {
       beforeSend: function beforeSend(jqXHR) {
         if (token) return jqXHR.setRequestHeader('Authorization', 'Bearer ' + token);
       }
-    }).done(showEditForm).fail(showLoginForm);
+    }).done(showFriendEditForm).fail(showLoginForm);
   }
 
   function logout() {
@@ -165,7 +165,7 @@ $(function () {
   function showUserForm() {
     if (event) event.preventDefault();
     var userId = localStorage.getItem('id');
-    $sidePanel.html('<h2>Choose your location</h2>\n      <h4>Either</h4>\n      <input id="pac-input" class="controls" type="text" placeholder="Enter your address">\n      <h4>or</h4>\n      <button class="btn btn-primary">Click here to find my location</button>\n      <form method="put" action="api/users/' + userId + '">\n      <input id="input-location" name="user[location]">\n      <input id="input-lat" name="user[lat]">\n      <input id="input-lng" name="user[lng]">\n      <button id="userSaveLocation">Save this as my address</button>\n      </form>\n      <button id="addAFriend" class="btn btn-primary">Add first friend</button>\n    ');
+    $sidePanel.html('<h2>Choose your location</h2>\n      <h4>Either</h4>\n      <input id="pac-input" class="controls" type="text" placeholder="Enter your address">\n      <h4>or</h4>\n      <button class="btn btn-primary">Click here to find my location</button>\n      <form method="put" action="/api/users/' + userId + '">\n      <input id="input-location" name="user[address]">\n      <input id="input-lat" name="user[lat]">\n      <input id="input-lng" name="user[lng]">\n      <button id="userSaveLocation">Save this as my address</button>\n      </form>\n      <button id="addAFriend" class="btn btn-primary">Add first friend</button>\n    ');
     createSearchBar();
   }
 
@@ -184,7 +184,7 @@ $(function () {
       };
       addMarker(personsPosition);
       document.getElementById("input-location").value = addresses[0].formatted_address;
-      console.log(addresses[0]);
+      console.log(addresses[0].formatted_address);
       document.getElementById("input-lat").value = '' + personsPosition.lat;
       document.getElementById("input-lng").value = '' + personsPosition.lng;
       latLngList.push(personsPosition);
@@ -198,7 +198,7 @@ $(function () {
   function showFriendForm() {
     var userId = localStorage.getItem('id');
     if (event) event.preventDefault();
-    $sidePanel.html('<h4>Enter friend\'s starting location</h4>\n    <input id="pac-input" class="controls" type="text" placeholder="Enter friend\'s address">\n    <button class="btn btn-primary">Go!</button>\n    <h4>or</h4>\n    <form method="post" action="/api/users/' + userId + '/friends">\n    <input id="input-name" name="name" placeholder="Friend\'s name">\n    <input id="input-location" name="location">\n    <input id="input-lat" name="lat">\n    <input id="input-lng" name="lng">\n    <button id="friendSaveLocation">Save friend to my contacts</button>\n    </form>\n    <button id="addAFriend" class="btn btn-primary">Add another friend</button>\n  ');
+    $sidePanel.html('<h4>Enter friend\'s starting location</h4>\n    <input id="pac-input" class="controls" type="text" placeholder="Enter friend\'s address">\n    <button class="btn btn-primary">Go!</button>\n    <h4>or</h4>\n    <form method="post" action="/api/users/' + userId + '/friends">\n    <input id="input-name" name="name" placeholder="Friend\'s name">\n    <input id="input-location" name="address">\n    <input id="input-lat" name="lat">\n    <input id="input-lng" name="lng">\n    <button id="friendSaveLocation">Save friend to my contacts</button>\n    </form>\n    <button id="addAFriend" class="btn btn-primary">Add another friend</button>\n  ');
     createSearchBar();
   }
 
@@ -360,13 +360,8 @@ $(function () {
   //startingPos = friendnumber_.latlng;
   // })
 
-<<<<<<< HEAD
-=======
-
   // function getProfile(){
   //   $sidePanel.html(`<div class="row"><h1>Profile</h1></div>`);
   //   getFriends();
   // }
-
->>>>>>> friends
 });
