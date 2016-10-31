@@ -147,7 +147,8 @@ $(function () {
 
   function showUserForm() {
     if (event) event.preventDefault();
-    $sidePanel.html('<h2>Choose your location</h2>\n      <h4>Either</h4>\n      <input id="pac-input" class="controls" type="text" placeholder="Enter your address">\n      <h4>or</h4>\n        <button class="btn btn-primary">Click here to find my location</button>\n      </form>\n    ');
+    var userId = localStorage.getItem('id');
+    $sidePanel.html('<h2>Choose your location</h2>\n      <h4>Either</h4>\n      <input id="pac-input" class="controls" type="text" placeholder="Enter your address">\n      <h4>or</h4>\n      <button class="btn btn-primary">Click here to find my location</button>\n      <form method="post" action="api/users/' + userId + '">\n      <input id="input-location" name="user[location]">\n      <input id="input-lat" name="user[lat]">\n      <input id="input-lng" name="user[lng]">\n      <button>Save this as my address</button>\n      </form>\n    ');
     createSearchBar();
   }
 
@@ -159,25 +160,44 @@ $(function () {
     var input = document.getElementById('pac-input');
     var searchBox = new google.maps.places.SearchBox(input);
     searchBox.addListener('places_changed', function () {
-      var myPlaces = searchBox.getPlaces();
-      var userPosition = {
-        lat: myPlaces[0].geometry.location.lat(),
-        lng: myPlaces[0].geometry.location.lng()
+      var addresses = searchBox.getPlaces();
+      var personsPosition = {
+        lat: addresses[0].geometry.location.lat(),
+        lng: addresses[0].geometry.location.lng()
       };
-      addMarker(userPosition);
-      latLngList.push(userPosition);
-      showFriendForm();
+      addMarker(personsPosition);
+      document.getElementById("input-location").value = addresses[0].formatted_address;
+      console.log(addresses[0]);
+      document.getElementById("input-lat").value = '' + personsPosition.lat;
+      document.getElementById("input-lng").value = '' + personsPosition.lng;
+      latLngList.push(personsPosition);
+      // showFriendForm();
     });
   }
   console.log(latLngList);
 
   // setMapBounds(LatLngList);
+  //
+  // function showFriendForm() {
+  //   if(event) event.preventDefault();
+  //   $sidePanel.html(
+  //     `<h4>Enter friend's starting location</h4>
+  //     <input id="pac-input" class="controls" type="text" placeholder="Enter your address">
+  //     <button class="btn btn-primary">Go!</button>
+  //     <h4>or</h4>
+  //     <button class="btn btn-primary">Add another friend</button>
+  //
+  //     <form method="post" action="api/users/${userId}/friends">
+  //     <input id="input-name" name="friend[name]">
+  //     <input id="input-location" name="friend[location]">
+  //     <input id="input-lat" name="friend[lat]">
+  //     <input id="input-lng" name="friend[lng]">
+  //     <button>Save friend to my contacts</button>
+  //     </form>
+  //   `);
+  //   createSearchBar();
+  // }
 
-  function showFriendForm() {
-    if (event) event.preventDefault();
-    $sidePanel.html('<h4>Enter friend\'s starting location</h4>\n    <input id="pac-input" class="controls" type="text" placeholder="Enter your address">\n    <button class="btn btn-primary">Go!</button>\n    <h4>or</h4>\n    <button class="btn btn-primary">Add another friend</button>\n    </form>\n  ');
-    createSearchBar();
-  }
 
   function markerInit() {
 
