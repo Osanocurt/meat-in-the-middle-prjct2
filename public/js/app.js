@@ -178,7 +178,6 @@ $(function () {
     $sidePanel.html('<h4>Enter friend\'s starting location</h4>\n    <input id="pac-input" class="controls" type="text" placeholder="Enter your address">\n    <button class="btn btn-primary">Go!</button>\n    <h4>or</h4>\n    <button class="btn btn-primary">Add another friend</button>\n    </form>\n  ');
     createSearchBar();
   }
-
   function markerInit() {
 
     var user = { lat: 51.5074, lng: -0.1278 };
@@ -245,7 +244,9 @@ $(function () {
   }
 
   function callback(results, status) {
-    var maxResults = 9;
+    var maxResults = 10;
+    var resultsToShow = [];
+
     if (status === 'ZERO_RESULTS') {
       alert("No results found");
     } else if (status == google.maps.places.PlacesServiceStatus.OK) {
@@ -255,23 +256,23 @@ $(function () {
         maxResults = results.length;
       }
 
-      for (var i = 0; i < maxResults; i++) {
+      for (var i = 1; i < maxResults; i++) {
         var resource = results[i];
+        resultsToShow.push(resource);
         LatLngList.push(resource.geometry.location);
         createMarker(resource);
-        addToCarousel(resource);
       }
       setMapBounds(LatLngList);
-      showCarousel(LatLngList);
+      populateCarousel(resultsToShow);
     }
   }
-
-  function showCarousel() {
-    $sidePanel.html('<div id=\'carousel-custom\' class=\'carousel slide\' data-ride=\'carousel\'>\n       <div class=\'carousel-outer\'>\n           <!-- Wrapper for slides -->\n           <div class=\'carousel-inner\'>\n               <div class=\'item active\'>\n                   <img src=\'http://placehold.it/400x200&text=slide1\' alt=\'\' />\n               </div>\n               <div class=\'item\'>\n                   <img src=\'http://placehold.it/400x200&text=slide2\' alt=\'\' />\n               </div>\n               <div class=\'item\'>\n                   <img src=\'http://placehold.it/400x200&text=slide3\' alt=\'\' />\n               </div>\n\n               <div class=\'item\'>\n                   <img src=\'http://placehold.it/400x200&text=slide4\' alt=\'\' />\n               </div>\n               <div class=\'item\'>\n                   <img src=\'http://placehold.it/400x200&text=slide5\' alt=\'\' />\n               </div>\n               <div class=\'item\'>\n                   <img src=\'http://placehold.it/400x200&text=slide6\' alt=\'\' />\n               </div>\n\n               <div class=\'item\'>\n                   <img src=\'http://placehold.it/400x200&text=slide7\' alt=\'\' />\n               </div>\n               <div class=\'item\'>\n                   <img src=\'http://placehold.it/400x200&text=slide8\' alt=\'\' />\n               </div>\n               <div class=\'item\'>\n                   <img src=\'http://placehold.it/400x200&text=slide9\' alt=\'\' />\n               </div>\n           </div>\n\n           <!-- Controls -->\n           <a class=\'left carousel-control\' href=\'#carousel-custom\' data-slide=\'prev\'>\n               <span class=\'glyphicon glyphicon-chevron-left\'></span>\n           </a>\n           <a class=\'right carousel-control\' href=\'#carousel-custom\' data-slide=\'next\'>\n               <span class=\'glyphicon glyphicon-chevron-right\'></span>\n           </a>\n       </div>\n\n       <!-- Indicators -->\n       <ol class=\'carousel-indicators\'>\n           <li data-target=\'#carousel-custom\' data-slide-to=\'0\' class=\'active\'><img src=\'http://placehold.it/100x50&text=slide1\' alt=\'\' /></li>\n           <li data-target=\'#carousel-custom\' data-slide-to=\'1\'><img src=\'http://placehold.it/100x50&text=slide2\' alt=\'\' /></li>\n           <li data-target=\'#carousel-custom\' data-slide-to=\'2\'><img src=\'http://placehold.it/100x50&text=slide3\' alt=\'\' /></li>\n           <li data-target=\'#carousel-custom\' data-slide-to=\'3\'><img src=\'http://placehold.it/100x50&text=slide4\' alt=\'\' /></li>\n           <li data-target=\'#carousel-custom\' data-slide-to=\'4\'><img src=\'http://placehold.it/100x50&text=slide5\' alt=\'\' /></li>\n           <li data-target=\'#carousel-custom\' data-slide-to=\'5\'><img src=\'http://placehold.it/100x50&text=slide6\' alt=\'\' /></li>\n           <li data-target=\'#carousel-custom\' data-slide-to=\'6\'><img src=\'http://placehold.it/100x50&text=slide7\' alt=\'\' /></li>\n           <li data-target=\'#carousel-custom\' data-slide-to=\'7\'><img src=\'http://placehold.it/100x50&text=slide8\' alt=\'\' /></li>\n           <li data-target=\'#carousel-custom\' data-slide-to=\'8\'><img src=\'http://placehold.it/100x50&text=slide9\' alt=\'\' /></li>\n       </ol>');
-  }
-
-  function addToCarousel(resource) {
-    console.log(resource);
+  function populateCarousel(resultsToShow) {
+    var $carousel = $('<div id=\'carousel-custom\' class=\'carousel slide\' data-ride=\'carousel\'>\n        <div class=\'carousel-outer\'>\n           <div class=\'carousel-inner\'>\n\n           </div>\n\n           </div>\n       </div>');
+    resultsToShow.forEach(function (result) {
+      console.log(result);
+      $carousel.append('<div class="item"><h4>' + result.name + '</h4></div>');
+    });
+    $sidePanel.html($carousel);
   }
 
   function setMapBounds(LatLngList) {
