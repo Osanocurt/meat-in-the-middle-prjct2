@@ -367,7 +367,9 @@ function showFriendForm() {
     });
 
     google.maps.event.addListener(marker, 'click', function() {
-      infowindow.setContent(place.name);
+      let infowindow = new google.maps.InfoWindow();
+
+      infowindow.setContent(`<strong>${place.name}</strong>`);
       infowindow.open(map, this);
     });
   }
