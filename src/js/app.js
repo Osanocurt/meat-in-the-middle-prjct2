@@ -15,6 +15,7 @@ $(() =>{
   const $sidePanel = $("#sidePanel") ;
 
 
+
   function isLoggedIn() {
     return !!localStorage.getItem('token');
   }
@@ -215,12 +216,13 @@ $(() =>{
       <input id="pac-input" class="controls" type="text" placeholder="Enter your address">
       <h4>or</h4>
       <button class="btn btn-primary">Click here to find my location</button>
-      <form method="post" action="api/users/${userId}">
+      <form method="put" action="api/users/${userId}">
       <input id="input-location" name="user[location]">
       <input id="input-lat" name="user[lat]">
       <input id="input-lng" name="user[lng]">
-      <button>Save this as my address</button>
+      <button id="userSaveLocation">Save this as my address</button>
       </form>
+      <button id="addAFriend" class="btn btn-primary">Add first friend</button>
     `);
     createSearchBar();
   }
@@ -245,32 +247,34 @@ function createSearchBar() {
     document.getElementById("input-lat").value = `${personsPosition.lat}`;
     document.getElementById("input-lng").value = `${personsPosition.lng}`;
     latLngList.push(personsPosition);
-    // showFriendForm();
+    $main.on('click', '#addAFriend', showFriendForm);
   });
 }
 console.log(latLngList);
 
 // setMapBounds(LatLngList);
-//
-// function showFriendForm() {
-//   if(event) event.preventDefault();
-//   $sidePanel.html(
-//     `<h4>Enter friend's starting location</h4>
-//     <input id="pac-input" class="controls" type="text" placeholder="Enter your address">
-//     <button class="btn btn-primary">Go!</button>
-//     <h4>or</h4>
-//     <button class="btn btn-primary">Add another friend</button>
-//
-//     <form method="post" action="api/users/${userId}/friends">
-//     <input id="input-name" name="friend[name]">
-//     <input id="input-location" name="friend[location]">
-//     <input id="input-lat" name="friend[lat]">
-//     <input id="input-lng" name="friend[lng]">
-//     <button>Save friend to my contacts</button>
-//     </form>
-//   `);
-//   createSearchBar();
-// }
+
+function showFriendForm() {
+  let userId = localStorage.getItem('id');
+  if(event) event.preventDefault();
+  $sidePanel.html(
+    `<h4>Enter friend's starting location</h4>
+    <input id="pac-input" class="controls" type="text" placeholder="Enter friend's address">
+    <button class="btn btn-primary">Go!</button>
+    <h4>or</h4>
+    <button class="btn btn-primary">Add another friend</button>
+
+    <form method="post" action="/api/users/${userId}/friends">
+    <input id="input-name" name="name" placeholder="Friend's name">
+    <input id="input-location" name="location">
+    <input id="input-lat" name="lat">
+    <input id="input-lng" name="lng">
+    <button id="friendSaveLocation">Save friend to my contacts</button>
+    </form>
+    <button id="addAFriend" class="btn btn-primary">Add another friend</button>
+  `);
+  createSearchBar();
+}
 
 
 

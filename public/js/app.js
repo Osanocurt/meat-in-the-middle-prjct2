@@ -148,7 +148,7 @@ $(function () {
   function showUserForm() {
     if (event) event.preventDefault();
     var userId = localStorage.getItem('id');
-    $sidePanel.html('<h2>Choose your location</h2>\n      <h4>Either</h4>\n      <input id="pac-input" class="controls" type="text" placeholder="Enter your address">\n      <h4>or</h4>\n      <button class="btn btn-primary">Click here to find my location</button>\n      <form method="post" action="api/users/' + userId + '">\n      <input id="input-location" name="user[location]">\n      <input id="input-lat" name="user[lat]">\n      <input id="input-lng" name="user[lng]">\n      <button>Save this as my address</button>\n      </form>\n    ');
+    $sidePanel.html('<h2>Choose your location</h2>\n      <h4>Either</h4>\n      <input id="pac-input" class="controls" type="text" placeholder="Enter your address">\n      <h4>or</h4>\n      <button class="btn btn-primary">Click here to find my location</button>\n      <form method="put" action="api/users/' + userId + '">\n      <input id="input-location" name="user[location]">\n      <input id="input-lat" name="user[lat]">\n      <input id="input-lng" name="user[lng]">\n      <button id="userSaveLocation">Save this as my address</button>\n      </form>\n      <button id="addAFriend" class="btn btn-primary">Add first friend</button>\n    ');
     createSearchBar();
   }
 
@@ -171,33 +171,19 @@ $(function () {
       document.getElementById("input-lat").value = '' + personsPosition.lat;
       document.getElementById("input-lng").value = '' + personsPosition.lng;
       latLngList.push(personsPosition);
-      // showFriendForm();
+      $main.on('click', '#addAFriend', showFriendForm);
     });
   }
   console.log(latLngList);
 
   // setMapBounds(LatLngList);
-  //
-  // function showFriendForm() {
-  //   if(event) event.preventDefault();
-  //   $sidePanel.html(
-  //     `<h4>Enter friend's starting location</h4>
-  //     <input id="pac-input" class="controls" type="text" placeholder="Enter your address">
-  //     <button class="btn btn-primary">Go!</button>
-  //     <h4>or</h4>
-  //     <button class="btn btn-primary">Add another friend</button>
-  //
-  //     <form method="post" action="api/users/${userId}/friends">
-  //     <input id="input-name" name="friend[name]">
-  //     <input id="input-location" name="friend[location]">
-  //     <input id="input-lat" name="friend[lat]">
-  //     <input id="input-lng" name="friend[lng]">
-  //     <button>Save friend to my contacts</button>
-  //     </form>
-  //   `);
-  //   createSearchBar();
-  // }
 
+  function showFriendForm() {
+    var userId = localStorage.getItem('id');
+    if (event) event.preventDefault();
+    $sidePanel.html('<h4>Enter friend\'s starting location</h4>\n    <input id="pac-input" class="controls" type="text" placeholder="Enter friend\'s address">\n    <button class="btn btn-primary">Go!</button>\n    <h4>or</h4>\n    <button class="btn btn-primary">Add another friend</button>\n\n    <form method="post" action="/api/users/' + userId + '/friends">\n    <input id="input-name" name="name" placeholder="Friend\'s name">\n    <input id="input-location" name="location">\n    <input id="input-lat" name="lat">\n    <input id="input-lng" name="lng">\n    <button id="friendSaveLocation">Save friend to my contacts</button>\n    </form>\n    <button id="addAFriend" class="btn btn-primary">Add another friend</button>\n  ');
+    createSearchBar();
+  }
 
   function markerInit() {
 
