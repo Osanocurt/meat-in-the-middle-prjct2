@@ -127,8 +127,6 @@ $(function () {
       zoom: 7
     });
     markerInit();
-    var directionsDisplay = new google.maps.DirectionsRenderer({ map: map });
-    var directionsService = new google.maps.DirectionsService({ map: map });
   }
   mapInit();
 
@@ -254,7 +252,6 @@ $(function () {
   //function to generate route and directions panel upon choosing venue. other pins still remain on map!
   function showDirections() {
     $("#travelModeDiv").css("visibility", "visible");
-    $("#map").css("width", "72vw");
     $("#directionsPanel").css("visibility", "visible");
     directionsDisplay.setMap(map);
     directionsDisplay.setPanel(document.getElementById('directionsPanel'));
