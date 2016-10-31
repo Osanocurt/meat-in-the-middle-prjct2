@@ -6,7 +6,7 @@ $(() =>{
 
   $('.register').on('click', showRegisterForm);
   $('.login').on('click', showLoginForm);
-  $('.friends').on('click', getProfile);
+  $('.friends').on('click', getFriends);
   $('.logout').on('click', logout);
   $('.go').on('click', calculateMidPoint);
   $main.on('submit', 'form', handleForm);
@@ -390,11 +390,6 @@ $(() =>{
 //startingPos = friendnumber_.latlng;
 // })
 
-
-function getProfile(){
-  $sidePanel.html(`<div class="row"><h1>Profile</h1></div>`);
-  getFriends();
-}
 
 
 
