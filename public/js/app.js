@@ -46,8 +46,12 @@ $(function () {
   function showFriendEditForm(friend) {
     if (event) event.preventDefault();
     var userId = localStorage.getItem('id');
+    var friendAddress = friend.address;
 
-    $sidePanel.html('\n      <h2>Edit Friend</h2>\n      <form method="put" action="/api/users/' + userId + '/friends/' + friend._id + '">\n        <div class="form-group">\n          <label for="name">\n          <input class="form-control" name="name" value="' + friend.name + '">\n          <label for="address">\n          <input class="form-control" name="address" value="' + friend.address + '">\n        </div>\n        <button class="btn btn-primary">Update</button>\n      </form>\n    ');
+    $sidePanel.html('\n      <h2>Edit Friend</h2>\n      <form method="put" action="/api/users/' + userId + '/friends/' + friend._id + '">\n        <div class="form-group">\n          <label for="name">\n          <input class="form-control" name="name" value="' + friend.name + '">\n            <input id="input-lat" name="lat" value="' + friend.lat + '">\n            <input id="input-lng" name="lng" value="' + friend.lng + '">\n        </form>\n          <label for="address">\n          <input id="friendAddr" class="controls" type="text" value="' + friendAddress + '">\n        </div>\n        <button class="btn btn-primary">Update</button>\n    ');
+
+    var input = document.getElementById('friendAddr');
+    var searchBox = new google.maps.places.SearchBox(input);
   }
 
   function handleForm() {
@@ -163,7 +167,7 @@ $(function () {
   function showUserForm() {
     if (event) event.preventDefault();
     var userId = localStorage.getItem('id');
-    $sidePanel.html('<h2>Choose your location</h2>\n      <h4>Either</h4>\n      <input id="pac-input" class="controls" type="text" placeholder="Enter your address">\n      <h4>or</h4>\n      <button class="btn btn-primary">Click here to find my location</button>\n      <form method="put" action="/api/users/' + userId + '">\n      <input id="input-location" name="user[address]">\n      <input id="input-lat" name="user[lat]">\n      <input id="input-lng" name="user[lng]">\n      <button id="userSaveLocation">Save this as my address</button>\n      </form>\n      <button id="addAFriend" class="btn btn-primary">Add first friend</button>\n    ');
+    $sidePanel.html('<h2>Choose your location</h2>\n      <h4>Either</h4>\n      <input id="pac-input" class="controls" type="text" placeholder="Enter your address">\n      <form method="put" action="/api/users/' + userId + '">\n        <input id="input-location" name="user[address]">\n        <input id="input-lat" name="user[lat]">\n        <input id="input-lng" name="user[lng]">\n      </form>\n      <button id="userSaveLocation">Save for future</button>\n      <h4>or</h4>\n      <button class="btn btn-secondary">Use saved address</button>\n      <h4>or</h4>\n      <button class="btn btn-secondary">Click here to find my location</button>\n      <br>\n      <button id="addAFriend" class="btn btn-primary">Add first friend</button>\n    ');
     createSearchBar();
   }
 

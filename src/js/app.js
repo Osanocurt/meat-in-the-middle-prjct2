@@ -72,6 +72,8 @@ $(() =>{
   function showFriendEditForm(friend) {
     if(event) event.preventDefault();
     let userId = localStorage.getItem('id');
+    let friendAddress = friend.address;
+
 
     $sidePanel.html(`
       <h2>Edit Friend</h2>
@@ -79,12 +81,17 @@ $(() =>{
         <div class="form-group">
           <label for="name">
           <input class="form-control" name="name" value="${friend.name}">
+            <input id="input-lat" name="lat" value="${friend.lat}">
+            <input id="input-lng" name="lng" value="${friend.lng}">
+        </form>
           <label for="address">
-          <input class="form-control" name="address" value="${friend.address}">
+          <input id="friendAddr" class="controls" type="text" value="${friendAddress}">
         </div>
         <button class="btn btn-primary">Update</button>
-      </form>
     `);
+
+    var input = document.getElementById('friendAddr');
+    var searchBox = new google.maps.places.SearchBox(input);
   }
 
   function handleForm() {
@@ -227,14 +234,17 @@ $(() =>{
       `<h2>Choose your location</h2>
       <h4>Either</h4>
       <input id="pac-input" class="controls" type="text" placeholder="Enter your address">
-      <h4>or</h4>
-      <button class="btn btn-primary">Click here to find my location</button>
       <form method="put" action="/api/users/${userId}">
-      <input id="input-location" name="user[address]">
-      <input id="input-lat" name="user[lat]">
-      <input id="input-lng" name="user[lng]">
-      <button id="userSaveLocation">Save this as my address</button>
+        <input id="input-location" name="user[address]">
+        <input id="input-lat" name="user[lat]">
+        <input id="input-lng" name="user[lng]">
       </form>
+      <button id="userSaveLocation">Save for future</button>
+      <h4>or</h4>
+      <button class="btn btn-secondary">Use saved address</button>
+      <h4>or</h4>
+      <button class="btn btn-secondary">Click here to find my location</button>
+      <br>
       <button id="addAFriend" class="btn btn-primary">Add first friend</button>
     `);
     createSearchBar();

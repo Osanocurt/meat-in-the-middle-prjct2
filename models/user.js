@@ -3,7 +3,7 @@ const bcrypt    = require("bcrypt");
 const validator = require("validator");
 
 const friendSchema = new mongoose.Schema({
-  name: { type: String, trim: true, required: true },
+  name: { type: String, trim: true, required: true , default: "friend" },
   lat: { type: Number, required: true },
   lng: { type: Number, required: true },
   address: { type: String}
