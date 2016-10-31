@@ -10,11 +10,14 @@ $(() =>{
   $('.logout').on('click', logout);
   $('.go').on('click', calculateMidPoint);
   $main.on('submit', 'form', handleForm);
+  $main.on('click', '#friendSaveLocation', saved);
   $main.on('click', 'button.delete', deleteFriend);
   $main.on('click', 'button.edit', getFriend);
   const $sidePanel = $("#sidePanel") ;
 
-
+  function saved() {
+    $("#friendSaveLocation").html("Saved");
+  }
 
   function isLoggedIn() {
     return !!localStorage.getItem('token');
@@ -108,7 +111,7 @@ $(() =>{
         if(userId) localStorage.setItem('id', userId);
         if(data.token) localStorage.setItem('token', data.token);
       }
-      getFriends();
+      // getFriends();
     }).fail(showLoginForm);
   }
 
@@ -262,8 +265,6 @@ function showFriendForm() {
     <input id="pac-input" class="controls" type="text" placeholder="Enter friend's address">
     <button class="btn btn-primary">Go!</button>
     <h4>or</h4>
-    <button class="btn btn-primary">Add another friend</button>
-
     <form method="post" action="/api/users/${userId}/friends">
     <input id="input-name" name="name" placeholder="Friend's name">
     <input id="input-location" name="location">

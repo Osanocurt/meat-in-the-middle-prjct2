@@ -12,9 +12,14 @@ $(function () {
   $('.logout').on('click', logout);
   $('.go').on('click', calculateMidPoint);
   $main.on('submit', 'form', handleForm);
+  $main.on('click', '#friendSaveLocation', saved);
   $main.on('click', 'button.delete', deleteFriend);
   $main.on('click', 'button.edit', getFriend);
   var $sidePanel = $("#sidePanel");
+
+  function saved() {
+    $("#friendSaveLocation").html("Saved");
+  }
 
   function isLoggedIn() {
     return !!localStorage.getItem('token');
@@ -67,7 +72,7 @@ $(function () {
         if (userId) localStorage.setItem('id', userId);
         if (data.token) localStorage.setItem('token', data.token);
       }
-      getFriends();
+      // getFriends();
     }).fail(showLoginForm);
   }
 
@@ -181,7 +186,7 @@ $(function () {
   function showFriendForm() {
     var userId = localStorage.getItem('id');
     if (event) event.preventDefault();
-    $sidePanel.html('<h4>Enter friend\'s starting location</h4>\n    <input id="pac-input" class="controls" type="text" placeholder="Enter friend\'s address">\n    <button class="btn btn-primary">Go!</button>\n    <h4>or</h4>\n    <button class="btn btn-primary">Add another friend</button>\n\n    <form method="post" action="/api/users/' + userId + '/friends">\n    <input id="input-name" name="name" placeholder="Friend\'s name">\n    <input id="input-location" name="location">\n    <input id="input-lat" name="lat">\n    <input id="input-lng" name="lng">\n    <button id="friendSaveLocation">Save friend to my contacts</button>\n    </form>\n    <button id="addAFriend" class="btn btn-primary">Add another friend</button>\n  ');
+    $sidePanel.html('<h4>Enter friend\'s starting location</h4>\n    <input id="pac-input" class="controls" type="text" placeholder="Enter friend\'s address">\n    <button class="btn btn-primary">Go!</button>\n    <h4>or</h4>\n    <form method="post" action="/api/users/' + userId + '/friends">\n    <input id="input-name" name="name" placeholder="Friend\'s name">\n    <input id="input-location" name="location">\n    <input id="input-lat" name="lat">\n    <input id="input-lng" name="lng">\n    <button id="friendSaveLocation">Save friend to my contacts</button>\n    </form>\n    <button id="addAFriend" class="btn btn-primary">Add another friend</button>\n  ');
     createSearchBar();
   }
 
