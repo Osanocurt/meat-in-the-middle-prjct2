@@ -67,7 +67,7 @@ $(function () {
         if (userId) localStorage.setItem('id', userId);
         if (data.token) localStorage.setItem('token', data.token);
       }
-      getFriends();
+      // getFriends();
     }).fail(showLoginForm);
   }
 
@@ -75,7 +75,6 @@ $(function () {
     if (event) event.preventDefault();
     var token = localStorage.getItem('token');
     var userId = localStorage.getItem('id');
-    console.log(userId);
 
     $.ajax({
       url: '/api/users/' + userId + '/friends',
@@ -87,12 +86,24 @@ $(function () {
   }
 
   function showFriends(friends) {
-    var $row = $('<div class="row"></div>');
-    friends.forEach(function (friend) {
-      $row.append('\n        <div class="col-md-12">\n          <div class="card">\n            <div class="card-block">\n              <h4 class="card-title">' + friend.name + '</h4>\n              <h4 class="card-title">' + friend.lat + '</h4>\n              <h4 class="card-title">' + friend.lng + '</h4>\n            </div>\n          </div>\n          <button class="btn btn-danger delete" data-id="' + friend._id + '">Delete</button>\n          <button class="btn btn-primary edit" data-id="' + friend._id + '">Edit</button>\n        </div>\n      ');
-    });
+    var token = localStorage.getItem('token');
+    var userId = localStorage.getItem('id');
 
-    $sidePanel.html($row);
+    $.ajax({
+      url: '/api/users/' + userId,
+      method: "GET",
+      beforeSend: function beforeSend(jqXHR) {
+        if (token) return jqXHR.setRequestHeader('Authorization', 'Bearer ' + token);
+      }
+    }).done(function (user) {
+      console.log(user);
+      var $row = $('<div class="row"><h2>' + user.username + '</h2><p>' + user.lat + user.lng + '</div>');
+      friends.forEach(function (friend) {
+        $row.append('\n          <div class="col-md-12">\n            <div class="card">\n              <div class="card-block">\n                <h4 class="card-title">' + friend.name + '</h4>\n                <h4 class="card-title">' + friend.lat + '</h4>\n                <h4 class="card-title">' + friend.lng + '</h4>\n              </div>\n            </div>\n            <button class="btn btn-danger delete" data-id="' + friend._id + '">Delete</button>\n            <button class="btn btn-primary edit" data-id="' + friend._id + '">Edit</button>\n          </div>\n        ');
+      });
+
+      $sidePanel.html($row);
+    });
   }
 
   function deleteFriend() {
@@ -127,6 +138,7 @@ $(function () {
   function logout() {
     if (event) event.preventDefault();
     localStorage.removeItem('token');
+    localStorage.removeItem('id');
     showLoginForm();
   }
 
@@ -337,4 +349,13 @@ $(function () {
   //startingPos = friendnumber_.latlng;
   // })
 
+<<<<<<< HEAD
+=======
+
+  // function getProfile(){
+  //   $sidePanel.html(`<div class="row"><h1>Profile</h1></div>`);
+  //   getFriends();
+  // }
+
+>>>>>>> friends
 });
