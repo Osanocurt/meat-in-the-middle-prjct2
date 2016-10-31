@@ -2,10 +2,17 @@ const mongoose  = require("mongoose");
 const bcrypt    = require("bcrypt");
 const validator = require("validator");
 
+const friendSchema = new mongoose.Schema({
+  name: { type: String, trim: true, required: true },
+  lat: { type: Number, required: true },
+  lng: { type: Number, required: true }
+});
+
 const userSchema = new mongoose.Schema({
   username:     { type: String, required: true },
   email:        { type: String, unique: true, required: true },
-  passwordHash: { type: String, required: true }
+  passwordHash: { type: String, required: true },
+  friends: [friendSchema]
 });
 
 function setPassword(value){
