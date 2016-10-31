@@ -12,9 +12,9 @@ const userSchema = new mongoose.Schema({
   username:     { type: String, required: true },
   email:        { type: String, unique: true, required: true },
   passwordHash: { type: String, required: true },
-  friends: [friendSchema],
-  lat: { type: Number },
-  lng: { type: Number }
+  lat: { type: Number, default: 0 },
+  lng: { type: Number, default: 0 },
+  friends: [friendSchema]
 });
 
 function setPassword(value){

@@ -29,6 +29,12 @@ router.route("/users")
   .all(secureRoute)
   .get(usersController.index);
 
+router.route("/users/:id")
+  .all(secureRoute)
+  .get(usersController.show)
+  .put(usersController.update)
+  .delete(usersController.delete);
+
 router.route("/users/:id/friends")
   .all(secureRoute)
   .get(usersController.friendsIndex)
