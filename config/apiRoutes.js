@@ -31,7 +31,10 @@ router.route("/users")
 
 router.route("/users/:id")
   .all(secureRoute)
-  .put(usersController.update);
+  .get(usersController.show)
+  .put(usersController.update)
+  .delete(usersController.delete);
+
 
 router.route("/users/:id/friends")
   .all(secureRoute)

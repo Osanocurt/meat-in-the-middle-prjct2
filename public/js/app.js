@@ -80,7 +80,6 @@ $(function () {
     if (event) event.preventDefault();
     var token = localStorage.getItem('token');
     var userId = localStorage.getItem('id');
-    console.log(userId);
 
     $.ajax({
       url: '/api/users/' + userId + '/friends',
@@ -92,12 +91,24 @@ $(function () {
   }
 
   function showFriends(friends) {
-    var $row = $('<div class="row"></div>');
-    friends.forEach(function (friend) {
-      $row.append('\n        <div class="col-md-12">\n          <div class="card">\n            <div class="card-block">\n              <h4 class="card-title">' + friend.name + '</h4>\n              <h4 class="card-title">' + friend.lat + '</h4>\n              <h4 class="card-title">' + friend.lng + '</h4>\n            </div>\n          </div>\n          <button class="btn btn-danger delete" data-id="' + friend._id + '">Delete</button>\n          <button class="btn btn-primary edit" data-id="' + friend._id + '">Edit</button>\n        </div>\n      ');
-    });
+    var token = localStorage.getItem('token');
+    var userId = localStorage.getItem('id');
 
-    $sidePanel.html($row);
+    $.ajax({
+      url: '/api/users/' + userId,
+      method: "GET",
+      beforeSend: function beforeSend(jqXHR) {
+        if (token) return jqXHR.setRequestHeader('Authorization', 'Bearer ' + token);
+      }
+    }).done(function (user) {
+      console.log(user);
+      var $row = $('<div class="row"><h2>' + user.username + '</h2><p>' + user.lat + user.lng + '</div>');
+      friends.forEach(function (friend) {
+        $row.append('\n          <div class="col-md-12">\n            <div class="card">\n              <div class="card-block">\n                <h4 class="card-title">' + friend.name + '</h4>\n                <h4 class="card-title">' + friend.lat + '</h4>\n                <h4 class="card-title">' + friend.lng + '</h4>\n              </div>\n            </div>\n            <button class="btn btn-danger delete" data-id="' + friend._id + '">Delete</button>\n            <button class="btn btn-primary edit" data-id="' + friend._id + '">Edit</button>\n          </div>\n        ');
+      });
+
+      $sidePanel.html($row);
+    });
   }
 
   function deleteFriend() {
@@ -132,6 +143,7 @@ $(function () {
   function logout() {
     if (event) event.preventDefault();
     localStorage.removeItem('token');
+    localStorage.removeItem('id');
     showLoginForm();
   }
 
@@ -270,9 +282,19 @@ $(function () {
         var resource = results[i];
         LatLngList.push(resource.geometry.location);
         createMarker(resource);
+        addToCarousel(resource);
       }
       setMapBounds(LatLngList);
+      showCarousel(LatLngList);
     }
+  }
+
+  function showCarousel() {
+    $sidePanel.html('<div id=\'carousel-custom\' class=\'carousel slide\' data-ride=\'carousel\'>\n       <div class=\'carousel-outer\'>\n           <!-- Wrapper for slides -->\n           <div class=\'carousel-inner\'>\n               <div class=\'item active\'>\n                   <img src=\'http://placehold.it/400x200&text=slide1\' alt=\'\' />\n               </div>\n               <div class=\'item\'>\n                   <img src=\'http://placehold.it/400x200&text=slide2\' alt=\'\' />\n               </div>\n               <div class=\'item\'>\n                   <img src=\'http://placehold.it/400x200&text=slide3\' alt=\'\' />\n               </div>\n\n               <div class=\'item\'>\n                   <img src=\'http://placehold.it/400x200&text=slide4\' alt=\'\' />\n               </div>\n               <div class=\'item\'>\n                   <img src=\'http://placehold.it/400x200&text=slide5\' alt=\'\' />\n               </div>\n               <div class=\'item\'>\n                   <img src=\'http://placehold.it/400x200&text=slide6\' alt=\'\' />\n               </div>\n\n               <div class=\'item\'>\n                   <img src=\'http://placehold.it/400x200&text=slide7\' alt=\'\' />\n               </div>\n               <div class=\'item\'>\n                   <img src=\'http://placehold.it/400x200&text=slide8\' alt=\'\' />\n               </div>\n               <div class=\'item\'>\n                   <img src=\'http://placehold.it/400x200&text=slide9\' alt=\'\' />\n               </div>\n           </div>\n\n           <!-- Controls -->\n           <a class=\'left carousel-control\' href=\'#carousel-custom\' data-slide=\'prev\'>\n               <span class=\'glyphicon glyphicon-chevron-left\'></span>\n           </a>\n           <a class=\'right carousel-control\' href=\'#carousel-custom\' data-slide=\'next\'>\n               <span class=\'glyphicon glyphicon-chevron-right\'></span>\n           </a>\n       </div>\n\n       <!-- Indicators -->\n       <ol class=\'carousel-indicators\'>\n           <li data-target=\'#carousel-custom\' data-slide-to=\'0\' class=\'active\'><img src=\'http://placehold.it/100x50&text=slide1\' alt=\'\' /></li>\n           <li data-target=\'#carousel-custom\' data-slide-to=\'1\'><img src=\'http://placehold.it/100x50&text=slide2\' alt=\'\' /></li>\n           <li data-target=\'#carousel-custom\' data-slide-to=\'2\'><img src=\'http://placehold.it/100x50&text=slide3\' alt=\'\' /></li>\n           <li data-target=\'#carousel-custom\' data-slide-to=\'3\'><img src=\'http://placehold.it/100x50&text=slide4\' alt=\'\' /></li>\n           <li data-target=\'#carousel-custom\' data-slide-to=\'4\'><img src=\'http://placehold.it/100x50&text=slide5\' alt=\'\' /></li>\n           <li data-target=\'#carousel-custom\' data-slide-to=\'5\'><img src=\'http://placehold.it/100x50&text=slide6\' alt=\'\' /></li>\n           <li data-target=\'#carousel-custom\' data-slide-to=\'6\'><img src=\'http://placehold.it/100x50&text=slide7\' alt=\'\' /></li>\n           <li data-target=\'#carousel-custom\' data-slide-to=\'7\'><img src=\'http://placehold.it/100x50&text=slide8\' alt=\'\' /></li>\n           <li data-target=\'#carousel-custom\' data-slide-to=\'8\'><img src=\'http://placehold.it/100x50&text=slide9\' alt=\'\' /></li>\n       </ol>');
+  }
+
+  function addToCarousel(resource) {
+    console.log(resource);
   }
 
   function setMapBounds(LatLngList) {
@@ -295,7 +317,9 @@ $(function () {
     });
 
     google.maps.event.addListener(marker, 'click', function () {
-      infowindow.setContent(place.name);
+      var infowindow = new google.maps.InfoWindow();
+
+      infowindow.setContent('<strong>' + place.name + '</strong>');
       infowindow.open(map, this);
     });
   }
@@ -336,4 +360,13 @@ $(function () {
   //startingPos = friendnumber_.latlng;
   // })
 
+<<<<<<< HEAD
+=======
+
+  // function getProfile(){
+  //   $sidePanel.html(`<div class="row"><h1>Profile</h1></div>`);
+  //   getFriends();
+  // }
+
+>>>>>>> friends
 });
