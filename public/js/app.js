@@ -24,7 +24,7 @@ $(function () {
     // getFriends();
     console.log("logged in");
   } else {
-    showLoginForm();
+    // showLoginForm();
     console.log("logged out");
   }
 
@@ -62,7 +62,6 @@ $(function () {
         if (token) return jqXHR.setRequestHeader('Authorization', 'Bearer ' + token);
       }
     }).done(function (data) {
-      console.log(data);
       if (!!data.user) {
         var userId = data.user._id;
         if (userId) localStorage.setItem('id', userId);
@@ -90,7 +89,7 @@ $(function () {
   function showFriends(friends) {
     var $row = $('<div class="row"></div>');
     friends.forEach(function (friend) {
-      $row.append('\n        <div class="col-md-4">\n          <div class="card">\n            <div class="card-block">\n              <h4 class="card-title">' + friend.name + '</h4>\n              <h4 class="card-title">' + friend.lat + '</h4>\n              <h4 class="card-title">' + friend.lng + '</h4>\n            </div>\n          </div>\n          <button class="btn btn-danger delete" data-id="' + friend._id + '">Delete</button>\n          <button class="btn btn-primary edit" data-id="' + friend._id + '">Edit</button>\n        </div>\n      ');
+      $row.append('\n        <div class="col-md-12">\n          <div class="card">\n            <div class="card-block">\n              <h4 class="card-title">' + friend.name + '</h4>\n              <h4 class="card-title">' + friend.lat + '</h4>\n              <h4 class="card-title">' + friend.lng + '</h4>\n            </div>\n          </div>\n          <button class="btn btn-danger delete" data-id="' + friend._id + '">Delete</button>\n          <button class="btn btn-primary edit" data-id="' + friend._id + '">Edit</button>\n        </div>\n      ');
     });
 
     $sidePanel.html($row);

@@ -23,7 +23,7 @@ $(() =>{
     // getFriends();
     console.log("logged in");
   } else {
-    showLoginForm();
+    // showLoginForm();
     console.log("logged out");
   }
 
@@ -102,7 +102,6 @@ $(() =>{
         if(token) return jqXHR.setRequestHeader('Authorization', `Bearer ${token}`);
       }
     }).done((data) => {
-      console.log(data);
       if (!!data.user) {
         let userId = data.user._id;
         if(userId) localStorage.setItem('id', userId);
@@ -133,7 +132,7 @@ $(() =>{
     let $row = $('<div class="row"></div>');
     friends.forEach((friend) => {
       $row.append(`
-        <div class="col-md-4">
+        <div class="col-md-12">
           <div class="card">
             <div class="card-block">
               <h4 class="card-title">${friend.name}</h4>
