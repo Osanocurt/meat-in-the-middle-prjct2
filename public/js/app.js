@@ -196,13 +196,14 @@ $(function () {
 
   function callback(results, status) {
     var maxResults = 9;
-    if (results.length <= maxResults) {
-      maxResults = results.length;
-    }
     if (status === 'ZERO_RESULTS') {
       alert("No results found");
     } else if (status == google.maps.places.PlacesServiceStatus.OK) {
       var LatLngList = [];
+
+      if (results.length <= maxResults) {
+        maxResults = results.length;
+      }
 
       for (var i = 0; i < maxResults; i++) {
         var resource = results[i];
@@ -217,7 +218,7 @@ $(function () {
     //  Create a new viewpoint bound
     var bounds = new google.maps.LatLngBounds();
     //  Go through each marker...
-    for (var j = 0, LtLgLen = LatLngList.length; j < LtLgLen; j++) {
+    for (var j = 0, LatLngLen = LatLngList.length; j < LatLngLen; j++) {
       // increase the bounds to take marker
       bounds.extend(LatLngList[j]);
     }
