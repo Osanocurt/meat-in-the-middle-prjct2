@@ -8,7 +8,7 @@ $(() =>{
   $('.login').on('click', showLoginForm);
   $('.friends').on('click', getFriends);
   $('.logout').on('click', logout);
-  $('.go').on('click', calculateMidPoint);
+  $main.on('click', "#go", calculateMidPoint);
   $main.on('submit', 'form', handleForm);
   $main.on('click', '#friendSaveLocation', saved);
   $main.on('click', 'button.delete', deleteFriend);
@@ -221,7 +221,6 @@ $(() =>{
     center: { lat: 51.5074, lng: -0.1278 },
       zoom: 7
     });
-    markerInit();
   }
   mapInit();
 
@@ -252,74 +251,58 @@ $(() =>{
 
   showUserForm();
 
+  let latLngList = [];
 
-let latLngList = [];
+  function createSearchBar() {
+    var input = document.getElementById('pac-input');
+    var searchBox = new google.maps.places.SearchBox(input);
+    searchBox.addListener('places_changed', function() {
+      var addresses = searchBox.getPlaces();
+      let personsPosition = {
+        lat: addresses[0].geometry.location.lat(),
+        lng: addresses[0].geometry.location.lng()
+      };
 
-function createSearchBar() {
-  var input = document.getElementById('pac-input');
-  var searchBox = new google.maps.places.SearchBox(input);
-  searchBox.addListener('places_changed', function() {
-    var addresses = searchBox.getPlaces();
-    let personsPosition = {
-      lat: addresses[0].geometry.location.lat(),
-      lng: addresses[0].geometry.location.lng()
-    };
-    addMarker(personsPosition);
-    document.getElementById("input-location").value = addresses[0].formatted_address;
-    console.log(addresses[0].formatted_address);
-    document.getElementById("input-lat").value = `${personsPosition.lat}`;
-    document.getElementById("input-lng").value = `${personsPosition.lng}`;
-    latLngList.push(personsPosition);
-    $main.on('click', '#addAFriend', showFriendForm);
-  });
-}
-console.log(latLngList);
-
-// setMapBounds(LatLngList);
-
-function showFriendForm() {
-  let userId = localStorage.getItem('id');
-  if(event) event.preventDefault();
-  $sidePanel.html(
-    `<h4>Enter friend's starting location</h4>
-    <input id="pac-input" class="controls" type="text" placeholder="Enter friend's address">
-    <button class="btn btn-primary">Go!</button>
-    <h4>or</h4>
-    <form method="post" action="/api/users/${userId}/friends">
-    <input id="input-name" name="name" placeholder="Friend's name">
-    <input id="input-location" name="address">
-    <input id="input-lat" name="lat">
-    <input id="input-lng" name="lng">
-    <button id="friendSaveLocation">Save friend to my contacts</button>
-    </form>
-    <button id="addAFriend" class="btn btn-primary">Add another friend</button>
-  `);
-  createSearchBar();
-}
-
-
-
-  function markerInit(){
-
-    let user = { lat: 51.5074, lng: -0.1278 };
-    addMarker(user);
-    people = [user];
-    let LatLngList = [user];
-
-    let friends = [
-      { lat: 51.6074, lng: -0.3278 },
-      { lat: 52.9074, lng: -3.3278 },
-      { lat: 52.6074, lng: 1.2278 },
-      { lat: 51.6074, lng: -0.2278 }
-    ];
-
-    friends.forEach((friend) => {
-      LatLngList.push(friend);
-      people.push(friend);
-      addMarker(friend);
-    });
-    setMapBounds(LatLngList);
+      document.getElementById("input-location").value = addresses[0].formatted_address;
+      console.log(addresses[0].formatted_address);
+      document.getElementById("input-lat").value = `${personsPosition.lat}`;
+      document.getElementById("input-lng").value = `${personsPosition.lng}`;
+      people.push(personsPosition);
+      console.log(people);
+      addMarker(personsPosition);
+      setMapBounds(people);
+      }
+    );
+      $main.on('click', '#addAFriend', showFriendForm);
   }
+
+
+
+
+  function showFriendForm() {
+    let userId = localStorage.getItem('id');
+    if(event) event.preventDefault();
+    $sidePanel.html(
+      `<h4>Enter friend's starting location</h4>
+      <input id="pac-input" class="controls" type="text" placeholder="Enter friend's address">
+      <button id="go" class="btn btn-primary">Go!</button>
+      <h4>or</h4>
+      <form method="post" action="/api/users/${userId}/friends">
+      <input id="input-name" name="name" placeholder="Friend's name">
+      <input id="input-location" name="address">
+      <input id="input-lat" name="lat">
+      <input id="input-lng" name="lng">
+      <button id="friendSaveLocation">Save friend to my contacts</button>
+      </form>
+      <button id="addAFriend" class="btn btn-primary">Add another friend</button>
+    `);
+    createSearchBar();
+
+  }
+
+
+
+
 
   function addMarker(location){
     let position = {
@@ -370,7 +353,9 @@ function showFriendForm() {
   }
 
   function callback(results, status) {
-    let maxResults = 9;
+    let maxResults = 10;
+    let resultsToShow = [];
+
     if (status === 'ZERO_RESULTS'){
       alert("No results found");
     } else if (status == google.maps.places.PlacesServiceStatus.OK) {
@@ -380,109 +365,60 @@ function showFriendForm() {
         maxResults = results.length;
       }
 
-      for (var i = 0; i < maxResults; i++) {
+      for (var i = 1; i < maxResults; i++) {
         var resource = results[i];
+        resultsToShow.push(resource);
         LatLngList.push(resource.geometry.location);
         createMarker(resource);
-        addToCarousel(resource);
       }
       setMapBounds(LatLngList);
-      showCarousel(LatLngList);
+      populateCarousel(resultsToShow);
     }
   }
-
-  function showCarousel(){
-    $sidePanel.html(`<div id='carousel-custom' class='carousel slide' data-ride='carousel'>
-       <div class='carousel-outer'>
-           <!-- Wrapper for slides -->
+  function populateCarousel(resultsToShow){
+    let $carousel = $(
+      `<div id='carousel-custom' class='carousel slide' data-ride='carousel'>
+        <div class='carousel-outer'>
            <div class='carousel-inner'>
-               <div class='item active'>
-                   <img src='http://placehold.it/400x200&text=slide1' alt='' />
-               </div>
-               <div class='item'>
-                   <img src='http://placehold.it/400x200&text=slide2' alt='' />
-               </div>
-               <div class='item'>
-                   <img src='http://placehold.it/400x200&text=slide3' alt='' />
-               </div>
 
-               <div class='item'>
-                   <img src='http://placehold.it/400x200&text=slide4' alt='' />
-               </div>
-               <div class='item'>
-                   <img src='http://placehold.it/400x200&text=slide5' alt='' />
-               </div>
-               <div class='item'>
-                   <img src='http://placehold.it/400x200&text=slide6' alt='' />
-               </div>
-
-               <div class='item'>
-                   <img src='http://placehold.it/400x200&text=slide7' alt='' />
-               </div>
-               <div class='item'>
-                   <img src='http://placehold.it/400x200&text=slide8' alt='' />
-               </div>
-               <div class='item'>
-                   <img src='http://placehold.it/400x200&text=slide9' alt='' />
-               </div>
            </div>
 
-           <!-- Controls -->
-           <a class='left carousel-control' href='#carousel-custom' data-slide='prev'>
-               <span class='glyphicon glyphicon-chevron-left'></span>
-           </a>
-           <a class='right carousel-control' href='#carousel-custom' data-slide='next'>
-               <span class='glyphicon glyphicon-chevron-right'></span>
-           </a>
-       </div>
-
-       <!-- Indicators -->
-       <ol class='carousel-indicators'>
-           <li data-target='#carousel-custom' data-slide-to='0' class='active'><img src='http://placehold.it/100x50&text=slide1' alt='' /></li>
-           <li data-target='#carousel-custom' data-slide-to='1'><img src='http://placehold.it/100x50&text=slide2' alt='' /></li>
-           <li data-target='#carousel-custom' data-slide-to='2'><img src='http://placehold.it/100x50&text=slide3' alt='' /></li>
-           <li data-target='#carousel-custom' data-slide-to='3'><img src='http://placehold.it/100x50&text=slide4' alt='' /></li>
-           <li data-target='#carousel-custom' data-slide-to='4'><img src='http://placehold.it/100x50&text=slide5' alt='' /></li>
-           <li data-target='#carousel-custom' data-slide-to='5'><img src='http://placehold.it/100x50&text=slide6' alt='' /></li>
-           <li data-target='#carousel-custom' data-slide-to='6'><img src='http://placehold.it/100x50&text=slide7' alt='' /></li>
-           <li data-target='#carousel-custom' data-slide-to='7'><img src='http://placehold.it/100x50&text=slide8' alt='' /></li>
-           <li data-target='#carousel-custom' data-slide-to='8'><img src='http://placehold.it/100x50&text=slide9' alt='' /></li>
-       </ol>`);
-  }
-
-  function addToCarousel(resource) {
-    console.log(resource);
+           </div>
+       </div>`);
+resultsToShow.forEach((result) => {
+  console.log(result);
+  $carousel.append(`<div class="item"><h4>${result.name}</h4></div>`);
+});
+$sidePanel.html($carousel);
 
   }
 
-  function setMapBounds(LatLngList){
+  function setMapBounds(latLngList){
     //  Create a new viewpoint bound
     let bounds = new google.maps.LatLngBounds ();
     //  Go through each marker...
-    for (var j = 0, LatLngLen = LatLngList.length; j < LatLngLen; j++) {
+    for (var j = 0, LatLngLen = latLngList.length; j < LatLngLen; j++) {
       // increase the bounds to take marker
-      bounds.extend (LatLngList[j]);
+      bounds.extend (latLngList[j]);
     }
     //  Fit  bonds to the map
     map.fitBounds (bounds);
   }
 
   function createMarker(place) {
-    var placeLoc = place.geometry.location;
-    var marker = new google.maps.Marker({
-      map: map,
-      position: place.geometry.location
-    });
+     var placeLoc = place.geometry.location;
+     var marker = new google.maps.Marker({
+       map: map,
+       position: place.geometry.location
+     });
 
-    google.maps.event.addListener(marker, 'click', function() {
-      let infowindow = new google.maps.InfoWindow();
+     google.maps.event.addListener(marker, 'click', function() {
+       let infowindow = new google.maps.InfoWindow();
 
-      infowindow.setContent(`<strong>${place.name}</strong>`);
-      infowindow.open(map, this);
-    });
-  }
-
-
+       infowindow.setContent(`<strong>${place.name}</strong>`);
+       infowindow.open(map, this);
+     });
+   }
 
 //click listener to be assigned to "choose venue" button on pop up wndows.
   $(".direct").on("click", showDirections);

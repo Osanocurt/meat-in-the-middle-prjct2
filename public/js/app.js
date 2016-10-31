@@ -10,7 +10,7 @@ $(function () {
   $('.login').on('click', showLoginForm);
   $('.friends').on('click', getFriends);
   $('.logout').on('click', logout);
-  $('.go').on('click', calculateMidPoint);
+  $main.on('click', "#go", calculateMidPoint);
   $main.on('submit', 'form', handleForm);
   $main.on('click', '#friendSaveLocation', saved);
   $main.on('click', 'button.delete', deleteFriend);
@@ -160,14 +160,13 @@ $(function () {
       center: { lat: 51.5074, lng: -0.1278 },
       zoom: 7
     });
-    markerInit();
   }
   mapInit();
 
   function showUserForm() {
     if (event) event.preventDefault();
     var userId = localStorage.getItem('id');
-    $sidePanel.html('<h2>Choose your location</h2>\n      <h4>Either</h4>\n      <input id="pac-input" class="controls" type="text" placeholder="Enter your address">\n      <form method="put" action="/api/users/' + userId + '">\n        <input id="input-location" name="user[address]">\n        <input id="input-lat" name="user[lat]">\n        <input id="input-lng" name="user[lng]">\n      </form>\n      <button id="userSaveLocation">Save for future</button>\n      <h4>or</h4>\n      <button class="btn btn-secondary">Use saved address</button>\n      <h4>or</h4>\n      <button class="btn btn-secondary">Click here to find my location</button>\n      <br>\n      <button id="addAFriend" class="btn btn-primary">Add first friend</button>\n    ');
+    $sidePanel.html('<h2>Choose your location</h2>\n      <h4>Either</h4>\n      <input id="pac-input" class="controls" type="text" placeholder="Enter your address">\n      <h4>or</h4>\n      <button class="btn btn-primary">Click here to find my location</button>\n      <form method="put" action="/api/users/' + userId + '">\n      <input id="input-location" name="user[address]">\n      <input id="input-lat" name="user[lat]">\n      <input id="input-lng" name="user[lng]">\n      <button id="userSaveLocation">Save this as my address</button>\n      </form>\n      <button id="addAFriend" class="btn btn-primary">Add first friend</button>\n    ');
     createSearchBar();
   }
 
@@ -184,41 +183,24 @@ $(function () {
         lat: addresses[0].geometry.location.lat(),
         lng: addresses[0].geometry.location.lng()
       };
-      addMarker(personsPosition);
+
       document.getElementById("input-location").value = addresses[0].formatted_address;
       console.log(addresses[0].formatted_address);
       document.getElementById("input-lat").value = '' + personsPosition.lat;
       document.getElementById("input-lng").value = '' + personsPosition.lng;
-      latLngList.push(personsPosition);
-      $main.on('click', '#addAFriend', showFriendForm);
+      people.push(personsPosition);
+      console.log(people);
+      addMarker(personsPosition);
+      setMapBounds(people);
     });
+    $main.on('click', '#addAFriend', showFriendForm);
   }
-  console.log(latLngList);
-
-  // setMapBounds(LatLngList);
 
   function showFriendForm() {
     var userId = localStorage.getItem('id');
     if (event) event.preventDefault();
-    $sidePanel.html('<h4>Enter friend\'s starting location</h4>\n    <input id="pac-input" class="controls" type="text" placeholder="Enter friend\'s address">\n    <button class="btn btn-primary">Go!</button>\n    <h4>or</h4>\n    <form method="post" action="/api/users/' + userId + '/friends">\n    <input id="input-name" name="name" placeholder="Friend\'s name">\n    <input id="input-location" name="address">\n    <input id="input-lat" name="lat">\n    <input id="input-lng" name="lng">\n    <button id="friendSaveLocation">Save friend to my contacts</button>\n    </form>\n    <button id="addAFriend" class="btn btn-primary">Add another friend</button>\n  ');
+    $sidePanel.html('<h4>Enter friend\'s starting location</h4>\n      <input id="pac-input" class="controls" type="text" placeholder="Enter friend\'s address">\n      <button id="go" class="btn btn-primary">Go!</button>\n      <h4>or</h4>\n      <form method="post" action="/api/users/' + userId + '/friends">\n      <input id="input-name" name="name" placeholder="Friend\'s name">\n      <input id="input-location" name="address">\n      <input id="input-lat" name="lat">\n      <input id="input-lng" name="lng">\n      <button id="friendSaveLocation">Save friend to my contacts</button>\n      </form>\n      <button id="addAFriend" class="btn btn-primary">Add another friend</button>\n    ');
     createSearchBar();
-  }
-
-  function markerInit() {
-
-    var user = { lat: 51.5074, lng: -0.1278 };
-    addMarker(user);
-    people = [user];
-    var LatLngList = [user];
-
-    var friends = [{ lat: 51.6074, lng: -0.3278 }, { lat: 52.9074, lng: -3.3278 }, { lat: 52.6074, lng: 1.2278 }, { lat: 51.6074, lng: -0.2278 }];
-
-    friends.forEach(function (friend) {
-      LatLngList.push(friend);
-      people.push(friend);
-      addMarker(friend);
-    });
-    setMapBounds(LatLngList);
   }
 
   function addMarker(location) {
@@ -270,7 +252,9 @@ $(function () {
   }
 
   function callback(results, status) {
-    var maxResults = 9;
+    var maxResults = 10;
+    var resultsToShow = [];
+
     if (status === 'ZERO_RESULTS') {
       alert("No results found");
     } else if (status == google.maps.places.PlacesServiceStatus.OK) {
@@ -280,32 +264,32 @@ $(function () {
         maxResults = results.length;
       }
 
-      for (var i = 0; i < maxResults; i++) {
+      for (var i = 1; i < maxResults; i++) {
         var resource = results[i];
+        resultsToShow.push(resource);
         LatLngList.push(resource.geometry.location);
         createMarker(resource);
-        addToCarousel(resource);
       }
       setMapBounds(LatLngList);
-      showCarousel(LatLngList);
+      populateCarousel(resultsToShow);
     }
   }
-
-  function showCarousel() {
-    $sidePanel.html('<div id=\'carousel-custom\' class=\'carousel slide\' data-ride=\'carousel\'>\n       <div class=\'carousel-outer\'>\n           <!-- Wrapper for slides -->\n           <div class=\'carousel-inner\'>\n               <div class=\'item active\'>\n                   <img src=\'http://placehold.it/400x200&text=slide1\' alt=\'\' />\n               </div>\n               <div class=\'item\'>\n                   <img src=\'http://placehold.it/400x200&text=slide2\' alt=\'\' />\n               </div>\n               <div class=\'item\'>\n                   <img src=\'http://placehold.it/400x200&text=slide3\' alt=\'\' />\n               </div>\n\n               <div class=\'item\'>\n                   <img src=\'http://placehold.it/400x200&text=slide4\' alt=\'\' />\n               </div>\n               <div class=\'item\'>\n                   <img src=\'http://placehold.it/400x200&text=slide5\' alt=\'\' />\n               </div>\n               <div class=\'item\'>\n                   <img src=\'http://placehold.it/400x200&text=slide6\' alt=\'\' />\n               </div>\n\n               <div class=\'item\'>\n                   <img src=\'http://placehold.it/400x200&text=slide7\' alt=\'\' />\n               </div>\n               <div class=\'item\'>\n                   <img src=\'http://placehold.it/400x200&text=slide8\' alt=\'\' />\n               </div>\n               <div class=\'item\'>\n                   <img src=\'http://placehold.it/400x200&text=slide9\' alt=\'\' />\n               </div>\n           </div>\n\n           <!-- Controls -->\n           <a class=\'left carousel-control\' href=\'#carousel-custom\' data-slide=\'prev\'>\n               <span class=\'glyphicon glyphicon-chevron-left\'></span>\n           </a>\n           <a class=\'right carousel-control\' href=\'#carousel-custom\' data-slide=\'next\'>\n               <span class=\'glyphicon glyphicon-chevron-right\'></span>\n           </a>\n       </div>\n\n       <!-- Indicators -->\n       <ol class=\'carousel-indicators\'>\n           <li data-target=\'#carousel-custom\' data-slide-to=\'0\' class=\'active\'><img src=\'http://placehold.it/100x50&text=slide1\' alt=\'\' /></li>\n           <li data-target=\'#carousel-custom\' data-slide-to=\'1\'><img src=\'http://placehold.it/100x50&text=slide2\' alt=\'\' /></li>\n           <li data-target=\'#carousel-custom\' data-slide-to=\'2\'><img src=\'http://placehold.it/100x50&text=slide3\' alt=\'\' /></li>\n           <li data-target=\'#carousel-custom\' data-slide-to=\'3\'><img src=\'http://placehold.it/100x50&text=slide4\' alt=\'\' /></li>\n           <li data-target=\'#carousel-custom\' data-slide-to=\'4\'><img src=\'http://placehold.it/100x50&text=slide5\' alt=\'\' /></li>\n           <li data-target=\'#carousel-custom\' data-slide-to=\'5\'><img src=\'http://placehold.it/100x50&text=slide6\' alt=\'\' /></li>\n           <li data-target=\'#carousel-custom\' data-slide-to=\'6\'><img src=\'http://placehold.it/100x50&text=slide7\' alt=\'\' /></li>\n           <li data-target=\'#carousel-custom\' data-slide-to=\'7\'><img src=\'http://placehold.it/100x50&text=slide8\' alt=\'\' /></li>\n           <li data-target=\'#carousel-custom\' data-slide-to=\'8\'><img src=\'http://placehold.it/100x50&text=slide9\' alt=\'\' /></li>\n       </ol>');
+  function populateCarousel(resultsToShow) {
+    var $carousel = $('<div id=\'carousel-custom\' class=\'carousel slide\' data-ride=\'carousel\'>\n        <div class=\'carousel-outer\'>\n           <div class=\'carousel-inner\'>\n\n           </div>\n\n           </div>\n       </div>');
+    resultsToShow.forEach(function (result) {
+      console.log(result);
+      $carousel.append('<div class="item"><h4>' + result.name + '</h4></div>');
+    });
+    $sidePanel.html($carousel);
   }
 
-  function addToCarousel(resource) {
-    console.log(resource);
-  }
-
-  function setMapBounds(LatLngList) {
+  function setMapBounds(latLngList) {
     //  Create a new viewpoint bound
     var bounds = new google.maps.LatLngBounds();
     //  Go through each marker...
-    for (var j = 0, LatLngLen = LatLngList.length; j < LatLngLen; j++) {
+    for (var j = 0, LatLngLen = latLngList.length; j < LatLngLen; j++) {
       // increase the bounds to take marker
-      bounds.extend(LatLngList[j]);
+      bounds.extend(latLngList[j]);
     }
     //  Fit  bonds to the map
     map.fitBounds(bounds);
