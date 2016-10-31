@@ -233,7 +233,7 @@ $(() =>{
       <h4>or</h4>
       <button class="btn btn-primary">Click here to find my location</button>
       <form method="put" action="api/users/${userId}">
-      <input id="input-location" name="user[location]">
+      <input id="input-location" name="user[address]">
       <input id="input-lat" name="user[lat]">
       <input id="input-lng" name="user[lng]">
       <button id="userSaveLocation">Save this as my address</button>
@@ -280,7 +280,7 @@ function showFriendForm() {
     <h4>or</h4>
     <form method="post" action="/api/users/${userId}/friends">
     <input id="input-name" name="name" placeholder="Friend's name">
-    <input id="input-location" name="location">
+    <input id="input-location" name="address">
     <input id="input-lat" name="lat">
     <input id="input-lng" name="lng">
     <button id="friendSaveLocation">Save friend to my contacts</button>
