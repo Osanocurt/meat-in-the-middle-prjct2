@@ -132,13 +132,15 @@ $(function () {
   }
   mapInit();
 
-  function showForm() {
+  function showUserForm() {
     if (event) event.preventDefault();
     $sidePanel.html('<h2>Choose your location</h2>\n      <h4>Either</h4>\n      <input id="pac-input" class="controls" type="text" placeholder="Enter your address">\n      <h4>or</h4>\n        <button class="btn btn-primary">Click here to find my location</button>\n      </form>\n    ');
     createSearchBar();
   }
 
-  showForm();
+  showUserForm();
+
+  var latLngList = [];
 
   function createSearchBar() {
     var input = document.getElementById('pac-input');
@@ -150,7 +152,18 @@ $(function () {
         lng: myPlaces[0].geometry.location.lng()
       };
       addMarker(userPosition);
+      latLngList.push(userPosition);
+      showFriendForm();
     });
+  }
+  console.log(latLngList);
+
+  // setMapBounds(LatLngList);
+
+  function showFriendForm() {
+    if (event) event.preventDefault();
+    $sidePanel.html('<h4>Enter friend\'s starting location</h4>\n    <input id="pac-input" class="controls" type="text" placeholder="Enter your address">\n    <button class="btn btn-primary">Go!</button>\n    <h4>or</h4>\n    <button class="btn btn-primary">Add another friend</button>\n    </form>\n  ');
+    createSearchBar();
   }
 
   function markerInit() {
