@@ -207,15 +207,22 @@ $(() =>{
     createSearchBar();
   }
 
-
-
   showForm();
 
   function createSearchBar() {
     var input = document.getElementById('pac-input');
     var searchBox = new google.maps.places.SearchBox(input);
-    console.log(searchBox);
-  }
+    searchBox.addListener('places_changed', function() {
+      var myPlaces = searchBox.getPlaces();
+      let userPosition = {
+        lat: myPlaces[0].geometry.location.lat(),
+        lng: myPlaces[0].geometry.location.lng()
+      };
+      addMarker(userPosition);
+    });
+}
+
+
 
   function markerInit(){
 
