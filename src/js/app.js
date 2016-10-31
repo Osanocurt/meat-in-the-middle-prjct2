@@ -8,10 +8,12 @@ $(() =>{
   $('.login').on('click', showLoginForm);
   $('.friends').on('click', getFriends);
   $('.logout').on('click', logout);
-  // $('.go').on('click', calculateMidPoint);
+  $('.go').on('click', calculateMidPoint);
   $main.on('submit', 'form', handleForm);
   $main.on('click', 'button.delete', deleteFriend);
   $main.on('click', 'button.edit', getFriend);
+  const $sidePanel = $("#sidePanel") ;
+
 
   function isLoggedIn() {
     return !!localStorage.getItem('token');
@@ -174,6 +176,8 @@ $(() =>{
 
 //------------------------------------------------------------------------------------------------------------------------------------
 
+
+
   let map;
   let people = [];
 
@@ -190,6 +194,28 @@ $(() =>{
 
 
 
+  function showForm() {
+    if(event) event.preventDefault();
+    $sidePanel.html(
+      `<h2>Choose your location</h2>
+      <h4>Either</h4>
+      <input id="pac-input" class="controls" type="text" placeholder="Enter your address">
+      <h4>or</h4>
+        <button class="btn btn-primary">Click here to find my location</button>
+      </form>
+    `);
+    createSearchBar();
+  }
+
+
+
+  showForm();
+
+  function createSearchBar() {
+    var input = document.getElementById('pac-input');
+    var searchBox = new google.maps.places.SearchBox(input);
+    console.log(searchBox);
+  }
 
   function markerInit(){
 
@@ -320,7 +346,6 @@ $(() =>{
 //function to generate route and directions panel upon choosing venue. other pins still remain on map!
   function showDirections() {
     $("#travelModeDiv").css("visibility", "visible");
-    $("#sidePanel").css("visibility", "visible");
     directionsDisplay.setMap(map);
     directionsDisplay.setPanel(document.getElementById('sidePanel'));
     var selectedMode = document.getElementById('travelSelect').value;
@@ -341,13 +366,12 @@ $(() =>{
 //directions and route live update based on choice of travel method from drop down menu which spawns on function firing.
   $("#travelSelect").on('change', showDirections);
 
+//function to link starting pos to user/friend clicked in carousel
 //friendnumber_.on('click', function() {
 //startingPos = friendnumber_.latlng;
 // })
 
-var input = document.getElementById('pac-input');
 
-var searchBox = new google.maps.places.SearchBox(input);
 
 
 
