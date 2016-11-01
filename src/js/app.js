@@ -482,26 +482,26 @@ $(() =>{
     let $carousel = $(
       `<div id='carousel-custom' class='carousel slide' data-ride='carousel'>
         <div class='carousel-outer'>
-           <div class='carousel-inner'>
+          <div class='carousel-inner'>
+          </div>
+        </div>
+      </div>`);
 
-           </div>
-
-           </div>
-       </div>`);
     resultsToShow.forEach((result) => {
-      // console.log(result);
       let imgSrc = '';
 
       let imgHtml = '';
       let ratingHtml = '';
       let priceHtml = '';
+      let lat = result.geometry.location.lat();
+      let lng = result.geometry.location.lng();
 
       if (!!result.rating) {
         ratingHtml = `<p>${result.rating} stars</p>`;
       }
 
       if (!!result.photos) {
-        imgSrc = result.photos[0].getUrl({ maxWidth:200, maxHeight: 300});
+        imgSrc = result.photos[0].getUrl({ maxWidth:300, maxHeight: 500});
         imgHtml = `<br><img src="${imgSrc}">`;
       }
 
@@ -511,22 +511,25 @@ $(() =>{
           case 1:
             priceHtml = priceImg;
             break;
-          case 2: priceHtml = `${priceImg}${priceImg}`;
-          break;
-          case 3: priceHtml = `${priceImg}${priceImg}${priceImg}`;
-          break;
-          case 4: priceHtml = `${priceImg}${priceImg}${priceImg}${priceImg}`;
-          break;
+          case 2:
+            priceHtml = `${priceImg}${priceImg}`;
+            break;
+          case 3:
+            priceHtml = `${priceImg}${priceImg}${priceImg}`;
+            break;
+          case 4:
+            priceHtml = `${priceImg}${priceImg}${priceImg}${priceImg}`;
+            break;
         }
-
       }
 
       $carousel.append(`
         <div class="item">
-        <h4>${result.name}</h4>
-        <p>${result.vicinity}</p>
-        ${ratingHtml}${priceHtml}
-        ${imgHtml}
+          <h4>${result.name}</h4>
+          <p>${result.vicinity}</p>
+          ${ratingHtml}${priceHtml}
+          ${imgHtml}
+          <button class="directionButton btn btn-primary" data-lat=${lat} data-lng${lng}>Directions</button>
         </div>
         <hr>`);
      });
@@ -556,7 +559,7 @@ $(() =>{
      google.maps.event.addListener(marker, 'click', function() {
        let infowindow = new google.maps.InfoWindow();
 
-       infowindow.setContent(`<strong>${place.name}</strong><button class="directionButton"  data-lat=  ${place.geometry.location.lat()} data-lng=${place.geometry.location.lng()}>Get Directions</button>`);
+       infowindow.setContent(`<h2>${place.name}</h2><br><button class="directionButton btn btn-secondary"  data-lat=  ${place.geometry.location.lat()} data-lng=${place.geometry.location.lng()}>Directions</button>`);
        console.log(place.geometry.location.lng());
        infowindow.open(map, this);
      });

@@ -376,21 +376,23 @@ $(function () {
   }
 
   function populateCarousel(resultsToShow) {
-    var $carousel = $('<div id=\'carousel-custom\' class=\'carousel slide\' data-ride=\'carousel\'>\n        <div class=\'carousel-outer\'>\n           <div class=\'carousel-inner\'>\n\n           </div>\n\n           </div>\n       </div>');
+    var $carousel = $('<div id=\'carousel-custom\' class=\'carousel slide\' data-ride=\'carousel\'>\n        <div class=\'carousel-outer\'>\n          <div class=\'carousel-inner\'>\n          </div>\n        </div>\n      </div>');
+
     resultsToShow.forEach(function (result) {
-      // console.log(result);
       var imgSrc = '';
 
       var imgHtml = '';
       var ratingHtml = '';
       var priceHtml = '';
+      var lat = result.geometry.location.lat();
+      var lng = result.geometry.location.lng();
 
       if (!!result.rating) {
         ratingHtml = '<p>' + result.rating + ' stars</p>';
       }
 
       if (!!result.photos) {
-        imgSrc = result.photos[0].getUrl({ maxWidth: 200, maxHeight: 300 });
+        imgSrc = result.photos[0].getUrl({ maxWidth: 300, maxHeight: 500 });
         imgHtml = '<br><img src="' + imgSrc + '">';
       }
 
@@ -412,7 +414,7 @@ $(function () {
         }
       }
 
-      $carousel.append('\n        <div class="item">\n        <h4>' + result.name + '</h4>\n        <p>' + result.vicinity + '</p>\n        ' + ratingHtml + priceHtml + '\n        ' + imgHtml + '\n        </div>\n        <hr>');
+      $carousel.append('\n        <div class="item">\n          <h4>' + result.name + '</h4>\n          <p>' + result.vicinity + '</p>\n          ' + ratingHtml + priceHtml + '\n          ' + imgHtml + '\n          <button class="directionButton btn btn-primary" data-lat=' + lat + ' data-lng' + lng + '>Directions</button>\n        </div>\n        <hr>');
     });
 
     $sidePanel.html($carousel);
@@ -440,7 +442,7 @@ $(function () {
     google.maps.event.addListener(marker, 'click', function () {
       var infowindow = new google.maps.InfoWindow();
 
-      infowindow.setContent('<strong>' + place.name + '</strong><button class="directionButton"  data-lat=  ' + place.geometry.location.lat() + ' data-lng=' + place.geometry.location.lng() + '>Get Directions</button>');
+      infowindow.setContent('<h2>' + place.name + '</h2><br><button class="directionButton btn btn-secondary"  data-lat=  ' + place.geometry.location.lat() + ' data-lng=' + place.geometry.location.lng() + '>Directions</button>');
       console.log(place.geometry.location.lng());
       infowindow.open(map, this);
     });
