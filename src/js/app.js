@@ -489,8 +489,23 @@ $(() =>{
            </div>
        </div>`);
     resultsToShow.forEach((result) => {
-      $carousel.append(`<div class="item"><h4>${result.name}</h4></div>`);
-    });
+      let imgHtml = '';
+      let imgSrc = '';
+
+      if (!!result.photos) {
+        imgSrc = result.photos[0].getUrl({ maxWidth:200, maxHeight: 300});
+        imgHtml = `<img src="${imgSrc}">`;
+      }
+
+      $carousel.append(`
+        <div class="item">
+        <h4>${result.name}</h4>
+        <p>${result.vicinity}</p>
+        <p>${result.rating} stars</p>
+        ${imgHtml}
+        </div>
+        <hr>`);
+     });
 
     $sidePanel.html($carousel);
   }

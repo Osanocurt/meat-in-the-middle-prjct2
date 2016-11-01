@@ -378,7 +378,15 @@ $(function () {
   function populateCarousel(resultsToShow) {
     var $carousel = $('<div id=\'carousel-custom\' class=\'carousel slide\' data-ride=\'carousel\'>\n        <div class=\'carousel-outer\'>\n           <div class=\'carousel-inner\'>\n\n           </div>\n\n           </div>\n       </div>');
     resultsToShow.forEach(function (result) {
-      $carousel.append('<div class="item"><h4>' + result.name + '</h4></div>');
+      var imgHtml = '';
+      var imgSrc = '';
+
+      if (!!result.photos) {
+        imgSrc = result.photos[0].getUrl({ maxWidth: 200, maxHeight: 300 });
+        imgHtml = '<img src="' + imgSrc + '">';
+      }
+
+      $carousel.append('\n        <div class="item">\n        <h4>' + result.name + '</h4>\n        <p>' + result.vicinity + '</p>\n        <p>' + result.rating + ' stars</p>\n        ' + imgHtml + '\n        </div>\n        <hr>');
     });
 
     $sidePanel.html($carousel);
