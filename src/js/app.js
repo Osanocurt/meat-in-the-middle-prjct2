@@ -12,6 +12,8 @@ $(() =>{
   $main.on('submit', 'form', handleForm);
   $main.on('click', '#friendSaveLocation', saved);
   $main.on('click', '#userSaveLocation', saved);
+  $main.on('click', 'button#addAFriend', getFriends);
+  $main.on('click', 'button#addAnotherFriend', showFriendsToAdd);
   $main.on('click', 'button.delete', deleteFriend);
   $main.on('click', 'button.edit', getFriend);
   const $sidePanel = $("#sidePanel") ;
@@ -229,7 +231,7 @@ $(() =>{
       }
     })
     .done((user) => {
-      let $row = $(`<div class="row"><h2>Add Friends</h2></div>`);
+      let $row = $(`<div class="row"><h4>Saved Friends</h4></div>`);
       friends.forEach((friend) => {
         $row.append(`
           <div class="col-md-12">
@@ -376,13 +378,12 @@ $(() =>{
       setMapBounds(people);
       }
     );
-      $main.on('click', 'button#addAFriend', getFriends);
   }
 
   function showFriendForm() {
     let userId = localStorage.getItem('id');
     if(event) event.preventDefault();
-    $sidePanel.append(
+    $sidePanel.prepend(
       `<h4>Add New Friend</h4>
       <input id="pac-input" class="controls" type="text" placeholder="Address">
       <form id="friendLocation" data-target="current" method="post" action="/api/users/${userId}/friends">
@@ -393,15 +394,11 @@ $(() =>{
         <button class="btn btn-secondary" id="friendSaveLocation">Save</button>
       </form>
       <button id="go" class="btn btn-primary">Go!</button>
-      <button id="addAFriend" class="btn btn-primary">Add another friend</button>
+      <button id="addAFriend" data-target='friendLocation' class="btn btn-primary">Add another friend</button>
     `);
     createSearchBar();
 
   }
-
-
-
-
 
   function addMarker(location){
     let position = {

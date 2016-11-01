@@ -14,6 +14,8 @@ $(function () {
   $main.on('submit', 'form', handleForm);
   $main.on('click', '#friendSaveLocation', saved);
   $main.on('click', '#userSaveLocation', saved);
+  $main.on('click', 'button#addAFriend', getFriends);
+  $main.on('click', 'button#addAnotherFriend', showFriendsToAdd);
   $main.on('click', 'button.delete', deleteFriend);
   $main.on('click', 'button.edit', getFriend);
   var $sidePanel = $("#sidePanel");
@@ -172,7 +174,7 @@ $(function () {
         if (token) return jqXHR.setRequestHeader('Authorization', 'Bearer ' + token);
       }
     }).done(function (user) {
-      var $row = $('<div class="row"><h2>Add Friends</h2></div>');
+      var $row = $('<div class="row"><h4>Saved Friends</h4></div>');
       friends.forEach(function (friend) {
         $row.append('\n          <div class="col-md-12">\n            <div class="card">\n              <div class="card-block">\n                <h4 class="card-title">' + friend.name + '</h4>\n                <p class="card-title">' + friend.address + '</p>\n              </div>\n            <button class="btn btn-primary addFriend" data-target="addToMap" data-id="' + friend._id + '">Add</button>\n            </div>\n          </div>\n        ');
       });
@@ -287,13 +289,12 @@ $(function () {
       addMarker(personsPosition);
       setMapBounds(people);
     });
-    $main.on('click', 'button#addAFriend', getFriends);
   }
 
   function showFriendForm() {
     var userId = localStorage.getItem('id');
     if (event) event.preventDefault();
-    $sidePanel.append('<h4>Add New Friend</h4>\n      <input id="pac-input" class="controls" type="text" placeholder="Address">\n      <form id="friendLocation" data-target="current" method="post" action="/api/users/' + userId + '/friends">\n        <input id="input-name" name="name" placeholder="Name">\n        <input type=\'hidden\' id="input-location" name="address">\n        <input type=\'hidden\' id="input-lat" name="lat">\n        <input type=\'hidden\' id="input-lng" name="lng">\n        <button class="btn btn-secondary" id="friendSaveLocation">Save</button>\n      </form>\n      <button id="go" class="btn btn-primary">Go!</button>\n      <button id="addAFriend" class="btn btn-primary">Add another friend</button>\n    ');
+    $sidePanel.prepend('<h4>Add New Friend</h4>\n      <input id="pac-input" class="controls" type="text" placeholder="Address">\n      <form id="friendLocation" data-target="current" method="post" action="/api/users/' + userId + '/friends">\n        <input id="input-name" name="name" placeholder="Name">\n        <input type=\'hidden\' id="input-location" name="address">\n        <input type=\'hidden\' id="input-lat" name="lat">\n        <input type=\'hidden\' id="input-lng" name="lng">\n        <button class="btn btn-secondary" id="friendSaveLocation">Save</button>\n      </form>\n      <button id="go" class="btn btn-primary">Go!</button>\n      <button id="addAFriend" data-target=\'friendLocation\' class="btn btn-primary">Add another friend</button>\n    ');
     createSearchBar();
   }
 
