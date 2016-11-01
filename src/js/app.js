@@ -147,11 +147,15 @@ $(() =>{
     let nextView = "";
 
     if (!$(this).data('target')) {
-      nextView = 'viewProfile';
+      if ($(event.srcElement).data('target') === 'friendLocation') {
+        nextView = 'friendLocation';
+      } else {
+        nextView = 'viewProfile';
+      }
     } else {
       nextView = $(this).data('target');
     }
-
+    
     if(event) event.preventDefault();
     let token = localStorage.getItem('token');
     let userId = localStorage.getItem('id');
@@ -340,7 +344,7 @@ $(() =>{
       </form>
 
       <h4>or</h4>
-      <button id="locationButton" class="btn btn-secondary">Use current location</button>
+      <button id="locationButton" data-target="friendLocation" class="btn btn-secondary">Use current location</button>
       <br>
       <button id="addAFriend" data-target="friendLocation" class="btn btn-primary">Add friend</button>
     `);
@@ -578,7 +582,7 @@ $(() =>{
      addMarker(personsPosition);
      setMapBounds(people);
    });
-   showFriendForm();
+   getFriends();
   });
 
 });
