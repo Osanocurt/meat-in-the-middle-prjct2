@@ -23,7 +23,7 @@ body, html {
   padding: 5px;
   text-align: center;
   font-family: 'Roboto','sans-serif';
-  line-height: 30px;
+  // line-height: 30px;
   padding-left: 10px;
   border: 5px solid blue;
 }
@@ -82,4 +82,8 @@ body, html {
 }
 #carousel-custom .carousel-outer {
    position: relative;
+}
+
+img.priceLevel{
+  width: 15px;
 }

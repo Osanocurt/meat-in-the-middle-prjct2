@@ -378,15 +378,41 @@ $(function () {
   function populateCarousel(resultsToShow) {
     var $carousel = $('<div id=\'carousel-custom\' class=\'carousel slide\' data-ride=\'carousel\'>\n        <div class=\'carousel-outer\'>\n           <div class=\'carousel-inner\'>\n\n           </div>\n\n           </div>\n       </div>');
     resultsToShow.forEach(function (result) {
-      var imgHtml = '';
+      // console.log(result);
       var imgSrc = '';
+
+      var imgHtml = '';
+      var ratingHtml = '';
+      var priceHtml = '';
+
+      if (!!result.rating) {
+        ratingHtml = '<p>' + result.rating + ' stars</p>';
+      }
 
       if (!!result.photos) {
         imgSrc = result.photos[0].getUrl({ maxWidth: 200, maxHeight: 300 });
-        imgHtml = '<img src="' + imgSrc + '">';
+        imgHtml = '<br><img src="' + imgSrc + '">';
       }
 
-      $carousel.append('\n        <div class="item">\n        <h4>' + result.name + '</h4>\n        <p>' + result.vicinity + '</p>\n        <p>' + result.rating + ' stars</p>\n        ' + imgHtml + '\n        </div>\n        <hr>');
+      if (!!result.price_level) {
+        var priceImg = '<img class="priceLevel" src="../images/pound.png">';
+        switch (result.price_level) {
+          case 1:
+            priceHtml = priceImg;
+            break;
+          case 2:
+            priceHtml = '' + priceImg + priceImg;
+            break;
+          case 3:
+            priceHtml = '' + priceImg + priceImg + priceImg;
+            break;
+          case 4:
+            priceHtml = '' + priceImg + priceImg + priceImg + priceImg;
+            break;
+        }
+      }
+
+      $carousel.append('\n        <div class="item">\n        <h4>' + result.name + '</h4>\n        <p>' + result.vicinity + '</p>\n        ' + ratingHtml + priceHtml + '\n        ' + imgHtml + '\n        </div>\n        <hr>');
     });
 
     $sidePanel.html($carousel);

@@ -489,19 +489,43 @@ $(() =>{
            </div>
        </div>`);
     resultsToShow.forEach((result) => {
-      let imgHtml = '';
+      // console.log(result);
       let imgSrc = '';
+
+      let imgHtml = '';
+      let ratingHtml = '';
+      let priceHtml = '';
+
+      if (!!result.rating) {
+        ratingHtml = `<p>${result.rating} stars</p>`;
+      }
 
       if (!!result.photos) {
         imgSrc = result.photos[0].getUrl({ maxWidth:200, maxHeight: 300});
-        imgHtml = `<img src="${imgSrc}">`;
+        imgHtml = `<br><img src="${imgSrc}">`;
+      }
+
+      if (!!result.price_level) {
+        let priceImg =  `<img class="priceLevel" src="../images/pound.png">`;
+        switch (result.price_level) {
+          case 1:
+            priceHtml = priceImg;
+            break;
+          case 2: priceHtml = `${priceImg}${priceImg}`;
+          break;
+          case 3: priceHtml = `${priceImg}${priceImg}${priceImg}`;
+          break;
+          case 4: priceHtml = `${priceImg}${priceImg}${priceImg}${priceImg}`;
+          break;
+        }
+
       }
 
       $carousel.append(`
         <div class="item">
         <h4>${result.name}</h4>
         <p>${result.vicinity}</p>
-        <p>${result.rating} stars</p>
+        ${ratingHtml}${priceHtml}
         ${imgHtml}
         </div>
         <hr>`);
