@@ -15,6 +15,7 @@
     "ejs": "^2.5.2",
     "express": "^4.14.0",
     "express-jwt": "^5.1.0",
+    "gulp-babel": "^6.1.2",
     "gulp-flatten": "^0.3.1",
     "gulp-livereload": "^3.8.1",
     "gulp-nodemon": "^2.2.1",

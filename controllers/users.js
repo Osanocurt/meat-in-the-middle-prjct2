@@ -72,8 +72,9 @@ function usersFriendsUpdate(req, res) {
     friend.name = req.body.name;
     friend.lat = req.body.lat;
     friend.lng = req.body.lng;
+    friend.address = req.body.address;
     user.save((err, user) => {
-      if (err) return res.status(500).json({ message: "Something went wrong." });
+      if (err) return res.status(500).json({ message: "Something went wrong. " + err });
       return res.status(200).json(user.friends);
     });
   });
