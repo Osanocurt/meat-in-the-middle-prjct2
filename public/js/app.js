@@ -13,12 +13,13 @@ $(function () {
   $main.on('click', "#go", calculateMidPoint);
   $main.on('submit', 'form', handleForm);
   $main.on('click', '#friendSaveLocation', saved);
+  $main.on('click', '#userSaveLocation', saved);
   $main.on('click', 'button.delete', deleteFriend);
   $main.on('click', 'button.edit', getFriend);
   var $sidePanel = $("#sidePanel");
 
   function saved() {
-    $("#friendSaveLocation").html("Saved");
+    $(this).html("Saved");
   }
 
   function isLoggedIn() {
