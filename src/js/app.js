@@ -227,7 +227,7 @@ $(() =>{
       <h4>Either</h4>
       <input id="pac-input" class="controls" type="text" placeholder="Enter your address">
       <h4>or</h4>
-      <button class="btn btn-primary">Click here to find my location</button>
+      <button id="locationButton" class="btn btn-primary">Click here to find my location</button>
       <form method="put" action="/api/users/${userId}">
       <input id="input-location" name="user[address]">
       <input id="input-lat" name="user[lat]">
@@ -496,5 +496,27 @@ $(() =>{
 //   $sidePanel.html(`<div class="row"><h1>Profile</h1></div>`);
 //   getFriends();
 // }
+
+
+document.getElementById("locationButton").addEventListener("click", function(){
+  navigator.geolocation.getCurrentPosition((position) => {
+    let personsPosition = {
+      lat: position.coords.latitude,
+      lng: position.coords.longitude
+    };
+    people.push(personsPosition);
+    console.log(people);
+    addMarker(personsPosition);
+    setMapBounds(people);
+  });
+  showFriendForm();
+});
+
+
+
+
+
+
+
 
 });

@@ -164,7 +164,7 @@ $(function () {
   function showUserForm() {
     if (event) event.preventDefault();
     var userId = localStorage.getItem('id');
-    $sidePanel.html('<h2>Choose your location</h2>\n      <h4>Either</h4>\n      <input id="pac-input" class="controls" type="text" placeholder="Enter your address">\n      <h4>or</h4>\n      <button class="btn btn-primary">Click here to find my location</button>\n      <form method="put" action="/api/users/' + userId + '">\n      <input id="input-location" name="user[address]">\n      <input id="input-lat" name="user[lat]">\n      <input id="input-lng" name="user[lng]">\n      <button id="userSaveLocation">Save this as my address</button>\n      </form>\n      <button id="addAFriend" class="btn btn-primary">Add first friend</button>\n    ');
+    $sidePanel.html('<h2>Choose your location</h2>\n      <h4>Either</h4>\n      <input id="pac-input" class="controls" type="text" placeholder="Enter your address">\n      <h4>or</h4>\n      <button id="locationButton" class="btn btn-primary">Click here to find my location</button>\n      <form method="put" action="/api/users/' + userId + '">\n      <input id="input-location" name="user[address]">\n      <input id="input-lat" name="user[lat]">\n      <input id="input-lng" name="user[lng]">\n      <button id="userSaveLocation">Save this as my address</button>\n      </form>\n      <button id="addAFriend" class="btn btn-primary">Add first friend</button>\n    ');
     createSearchBar();
   }
 
@@ -346,4 +346,19 @@ $(function () {
   //   $sidePanel.html(`<div class="row"><h1>Profile</h1></div>`);
   //   getFriends();
   // }
+
+
+  document.getElementById("locationButton").addEventListener("click", function () {
+    navigator.geolocation.getCurrentPosition(function (position) {
+      var personsPosition = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude
+      };
+      people.push(personsPosition);
+      console.log(people);
+      addMarker(personsPosition);
+      setMapBounds(people);
+    });
+    showFriendForm();
+  });
 });
