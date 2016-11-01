@@ -354,7 +354,6 @@ $(function () {
     var request = {
       location: midPoint,
       types: [resource],
-      openNow: true,
       rankBy: google.maps.places.RankBy.DISTANCE
     };
 
