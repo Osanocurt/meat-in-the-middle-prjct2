@@ -338,7 +338,7 @@ $(() =>{
       </form>
 
       <h4>or</h4>
-      <button class="btn btn-secondary">Use current location</button>
+      <button id="locationButton" class="btn btn-secondary">Use current location</button>
       <br>
       <button id="addAFriend" data-target="friendLocation" class="btn btn-primary">Add friend</button>
     `);
@@ -537,7 +537,7 @@ $(() =>{
 
 
 
-    
+
     $("#travelModeDiv").css("visibility", "visible");
     directionsDisplay.setMap(map);
     directionsDisplay.setPanel(document.getElementById('sidePanel'));
@@ -570,25 +570,18 @@ $(() =>{
 // }
 
 
-document.getElementById("locationButton").addEventListener("click", function(){
-  navigator.geolocation.getCurrentPosition((position) => {
-    let personsPosition = {
-      lat: position.coords.latitude,
-      lng: position.coords.longitude
-    };
-    people.push(personsPosition);
-    console.log(people);
-    addMarker(personsPosition);
-    setMapBounds(people);
+  document.getElementById("locationButton").addEventListener("click", function(){
+   navigator.geolocation.getCurrentPosition((position) => {
+     let personsPosition = {
+       lat: position.coords.latitude,
+       lng: position.coords.longitude
+     };
+     people.push(personsPosition);
+     console.log(people);
+     addMarker(personsPosition);
+     setMapBounds(people);
+   });
+   showFriendForm();
   });
-  showFriendForm();
-});
-
-
-
-
-
-
-
 
 });
