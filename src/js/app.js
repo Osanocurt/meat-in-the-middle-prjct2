@@ -16,7 +16,7 @@ $(() =>{
   $main.on('click', 'button#addAnotherFriend', showFriendsToAdd);
   $main.on('click', 'button.delete', deleteFriend);
   $main.on('click', 'button.edit', getFriend);
-  $main.on("click", ".directionButton", showDirections);
+  $main.on("click", ".directionButton", selectVenue);
   const $sidePanel = $("#sidePanel") ;
 
   function saved() {
@@ -378,7 +378,7 @@ $(() =>{
       document.getElementById("input-lat").value = `${personsPosition.lat}`;
       document.getElementById("input-lng").value = `${personsPosition.lng}`;
       people.push(personsPosition);
-      // console.log(people);
+      // console.log(people[0]);
       addMarker(personsPosition);
       setMapBounds(people);
       }
@@ -524,12 +524,12 @@ $(() =>{
       }
 
       $carousel.append(`
-        <div class="item">
+        <div class="item" id="carouselItem">
           <h4>${result.name}</h4>
           <p>${result.vicinity}</p>
           ${ratingHtml}${priceHtml}
           ${imgHtml}
-          <button class="directionButton btn btn-primary" data-lat=${lat} data-lng${lng}>Directions</button>
+          <button class="directionButton btn btn-primary" data-lat=${lat} data-lng=${lng}>Directions</button>
         </div>
         <hr>`);
      });
@@ -569,24 +569,27 @@ $(() =>{
 //click listener to be assigned to "choose venue" button on pop up wndows.
 
 //user and venue variables for purpose of testing directions function
-  let startingPos = { lat: 51.5074, lng: -0.1278 };
-  // let venueChosen = { lat: 51.5074, lng: -0.1222};
+  let startingPos = null;
+  let venueChosen = null;
   var directionsDisplay = new google.maps.DirectionsRenderer();
   var directionsService = new google.maps.DirectionsService();
 
 
+  function selectVenue() {
+    startingPos = people[0];
+    venueChosen = { lat: $(this).data("lat"), lng: $(this).data("lng") };
+    showDirections();
+  }
+
   function showDirections() {
-    let $venueChosen = { lat: $(this).data("lat"), lng: $(this).data("lng")};
-
     $sidePanel.empty();
-
     $("#travelModeDiv").css("visibility", "visible");
     directionsDisplay.setMap(map);
     directionsDisplay.setPanel(document.getElementById('sidePanel'));
     var selectedMode = document.getElementById('travelSelect').value;
     directionsService.route({
       origin: startingPos,
-      destination: $venueChosen,
+      destination: venueChosen,
       travelMode: google.maps.TravelMode[selectedMode]
     }, function(response, status) {
       if (status == 'OK') {
@@ -600,18 +603,6 @@ $(() =>{
 
 //directions and route live update based on choice of travel method from drop down menu which spawns on function firing.
   $("#travelSelect").on('change', showDirections);
-
-//function to link starting pos to user/friend clicked in carousel
-//friendnumber_.on('click', function() {
-//startingPos = friendnumber_.latlng;
-// })
-
-// function getProfile(){
-//   $sidePanel.html(`<div class="row"><h1>Profile</h1></div>`);
-//   getFriends();
-// }
-
-
   document.getElementById("locationButton").addEventListener("click", function(){
    navigator.geolocation.getCurrentPosition((position) => {
      let personsPosition = {
