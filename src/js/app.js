@@ -72,7 +72,6 @@ $(() =>{
   function showFriendEditForm(friend) {
     if(event) event.preventDefault();
     let userId = localStorage.getItem('id');
-    let friendAddress = friend.address;
 
     $sidePanel.html(`
       <h2>Edit Friend</h2>
@@ -80,11 +79,12 @@ $(() =>{
         <div class="form-group">
           <label for="name">
           <input class="form-control" name="name" value="${friend.name}">
-            <input type="hidden" id="input-lat" name="lat" value="${friend.lat}">
-            <input type="hidden" id="input-lng" name="lng" value="${friend.lng}">
-            <label for="address">
-            <input id="friendAddr" class="controls" type="text" value="${friendAddress}">
-            <button id="friendUpdateBtn" class="btn btn-primary" type='submit'>Update</button>
+          <input  id="input-lat" name="lat" value="${friend.lat}">
+          <input  id="input-lng" name="lng" value="${friend.lng}">
+          <label for="address">
+          <input id="friendAddr" class="controls" type="text" placeholder='Address' value="${friend.address}">
+          <input id="newFriendAdd" name='address' type="text" value='${friend.address}'>
+          <button id="friendUpdateBtn" class="btn btn-primary" type='submit'>Update</button>
         </div>
       </form>`);
 
@@ -92,10 +92,14 @@ $(() =>{
     var searchBox = new google.maps.places.SearchBox(input);
 
     searchBox.addListener('places_changed', function() {
-      let newAddress = searchBox.getPlaces();
-      document.getElementById("friendAddr").value = newAddress[0].formatted_address;
-        document.getElementById("input-lat").value = `${newAddress[0].lat}`;
-        document.getElementById("input-lng").value = `${newAddress[0].lng}`;
+      let newAddress = searchBox.getPlaces()[0];
+      let lat = newAddress.geometry.location.lat();
+      let lng = newAddress.geometry.location.lng();
+      let address = newAddress.formatted_address;
+      console.log(address);
+      document.getElementById("newFriendAdd").value = address;
+      document.getElementById("input-lat").value = lat;
+      document.getElementById("input-lng").value = lng;
     });
 
   }
@@ -108,6 +112,8 @@ $(() =>{
     let url = $form.attr('action');
     let method = $form.attr('method');
     let data = $form.serialize();
+
+    console.log(url, method, data);
 
     $.ajax({
       url,
@@ -123,7 +129,8 @@ $(() =>{
         if(data.token) localStorage.setItem('token', data.token);
       }
       // getFriends();
-    }).fail(showLoginForm);
+    });
+    // .fail(showLoginForm);
   }
 
   function getFriends() {
@@ -147,8 +154,8 @@ $(() =>{
       } else {
         console.log("Error: Check the source of the request to getFriends");
       }
-    })
-    .fail(showLoginForm);
+    });
+    // .fail(showLoginForm);
   }
 
   function getUser(friends, src) {
@@ -240,8 +247,8 @@ $(() =>{
         if(token) return jqXHR.setRequestHeader('Authorization', `Bearer ${token}`);
       }
     })
-    .done(getFriends)
-    .fail(showLoginForm);
+    .done(getFriends);
+    // .fail(showLoginForm);
   }
 
   function getFriend() {
@@ -263,8 +270,8 @@ $(() =>{
       } else if (next === 'updateFriend'){
         showFriendEditForm(person);
       }
-    })
-    .fail(showLoginForm);
+    });
+    // .fail(showLoginForm);
   }
 
   function updateMap(person){
@@ -489,7 +496,6 @@ $(() =>{
      });
 
      google.maps.event.addListener(marker, 'click', function() {
-       console.log("clicked");
        let infowindow = new google.maps.InfoWindow();
 
        infowindow.setContent(`<strong>${place.name}</strong>`);

@@ -46,18 +46,21 @@ $(function () {
   function showFriendEditForm(friend) {
     if (event) event.preventDefault();
     var userId = localStorage.getItem('id');
-    var friendAddress = friend.address;
 
-    $sidePanel.html('\n      <h2>Edit Friend</h2>\n      <form id="friendUpdate" method="put" action="/api/users/' + userId + '/friends/' + friend._id + '">\n        <div class="form-group">\n          <label for="name">\n          <input class="form-control" name="name" value="' + friend.name + '">\n            <input type="hidden" id="input-lat" name="lat" value="' + friend.lat + '">\n            <input type="hidden" id="input-lng" name="lng" value="' + friend.lng + '">\n            <label for="address">\n            <input id="friendAddr" class="controls" type="text" value="' + friendAddress + '">\n            <button id="friendUpdateBtn" class="btn btn-primary" type=\'submit\'>Update</button>\n        </div>\n      </form>');
+    $sidePanel.html('\n      <h2>Edit Friend</h2>\n      <form id="friendUpdate" method="put" action="/api/users/' + userId + '/friends/' + friend._id + '">\n        <div class="form-group">\n          <label for="name">\n          <input class="form-control" name="name" value="' + friend.name + '">\n          <input  id="input-lat" name="lat" value="' + friend.lat + '">\n          <input  id="input-lng" name="lng" value="' + friend.lng + '">\n          <label for="address">\n          <input id="friendAddr" class="controls" type="text" placeholder=\'Address\' value="' + friend.address + '">\n          <input id="newFriendAdd" name=\'address\' type="text" value=\'' + friend.address + '\'>\n          <button id="friendUpdateBtn" class="btn btn-primary" type=\'submit\'>Update</button>\n        </div>\n      </form>');
 
     var input = document.getElementById('friendAddr');
     var searchBox = new google.maps.places.SearchBox(input);
 
     searchBox.addListener('places_changed', function () {
-      var newAddress = searchBox.getPlaces();
-      document.getElementById("friendAddr").value = newAddress[0].formatted_address;
-      document.getElementById("input-lat").value = '' + newAddress[0].lat;
-      document.getElementById("input-lng").value = '' + newAddress[0].lng;
+      var newAddress = searchBox.getPlaces()[0];
+      var lat = newAddress.geometry.location.lat();
+      var lng = newAddress.geometry.location.lng();
+      var address = newAddress.formatted_address;
+      console.log(address);
+      document.getElementById("newFriendAdd").value = address;
+      document.getElementById("input-lat").value = lat;
+      document.getElementById("input-lng").value = lng;
     });
   }
 
@@ -69,6 +72,8 @@ $(function () {
     var url = $form.attr('action');
     var method = $form.attr('method');
     var data = $form.serialize();
+
+    console.log(url, method, data);
 
     $.ajax({
       url: url,
@@ -84,7 +89,8 @@ $(function () {
         if (data.token) localStorage.setItem('token', data.token);
       }
       // getFriends();
-    }).fail(showLoginForm);
+    });
+    // .fail(showLoginForm);
   }
 
   function getFriends() {
@@ -107,7 +113,8 @@ $(function () {
       } else {
         console.log("Error: Check the source of the request to getFriends");
       }
-    }).fail(showLoginForm);
+    });
+    // .fail(showLoginForm);
   }
 
   function getUser(friends, src) {
@@ -175,7 +182,8 @@ $(function () {
       beforeSend: function beforeSend(jqXHR) {
         if (token) return jqXHR.setRequestHeader('Authorization', 'Bearer ' + token);
       }
-    }).done(getFriends).fail(showLoginForm);
+    }).done(getFriends);
+    // .fail(showLoginForm);
   }
 
   function getFriend() {
@@ -198,7 +206,8 @@ $(function () {
       } else if (next === 'updateFriend') {
         showFriendEditForm(person);
       }
-    }).fail(showLoginForm);
+    });
+    // .fail(showLoginForm);
   }
 
   function updateMap(person) {
@@ -376,7 +385,6 @@ $(function () {
     });
 
     google.maps.event.addListener(marker, 'click', function () {
-      console.log("clicked");
       var infowindow = new google.maps.InfoWindow();
 
       infowindow.setContent('<strong>' + place.name + '</strong>');
