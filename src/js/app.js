@@ -6,7 +6,7 @@ $(() =>{
 
   $('.register').on('click', showRegisterForm);
   $('.login').on('click', showLoginForm);
-  $('.friends').on('click', getFriends);
+  $('.profile').on('click', getFriends);
   $('.logout').on('click', logout);
   $main.on('click', "#go", calculateMidPoint);
   $main.on('submit', 'form', handleForm);
