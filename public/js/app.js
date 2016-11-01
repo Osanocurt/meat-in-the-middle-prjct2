@@ -242,7 +242,7 @@ $(function () {
   function showUserForm() {
     if (event) event.preventDefault();
     var userId = localStorage.getItem('id');
-    $sidePanel.html('<h2>Where Are You?</h2>\n      <button class="btn btn-secondary" id="useSavedAdd">Use saved address</button>\n      <h4>or</h4>\n\n      <input id="pac-input" class="controls" type="text" placeholder="Enter location">\n\n      <form method="put" action="/api/users/' + userId + '">\n        <input type=\'hidden\' id="input-location" name="user[address]">\n        <input type=\'hidden\' id="input-lat" name="user[lat]">\n        <input type=\'hidden\' id="input-lng" name="user[lng]">\n      </form>\n      <button class="btn btn-secondary" id="userSaveLocation">Save</button>\n      <h4>or</h4>\n      <button class="btn btn-secondary">Use current location</button>\n      <br>\n      <button id="addAFriend" class="btn btn-primary">Add friend</button>\n    ');
+    $sidePanel.html('<h2>Where Are You?</h2>\n      <button class="btn btn-secondary" id="useSavedAdd">Use saved address</button>\n      <h4>or</h4>\n      <input id="pac-input" class="controls" type="text" placeholder="Enter location">\n      <form method="put" action="/api/users/' + userId + '">\n        <input type=\'hidden\' id="input-location" name="user[address]">\n        <input type=\'hidden\' id="input-lat" name="user[lat]">\n        <input type=\'hidden\' id="input-lng" name="user[lng]">\n        <button class="btn btn-secondary" id="userSaveLocation">Save</button>\n      </form>\n\n      <h4>or</h4>\n      <button class="btn btn-secondary">Use current location</button>\n      <br>\n      <button id="addAFriend" class="btn btn-primary">Add friend</button>\n    ');
     createSearchBar();
   }
 

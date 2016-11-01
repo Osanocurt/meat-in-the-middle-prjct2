@@ -315,17 +315,14 @@ $(() =>{
       `<h2>Where Are You?</h2>
       <button class="btn btn-secondary" id="useSavedAdd">Use saved address</button>
       <h4>or</h4>
-<<<<<<< HEAD
-      <button id="locationButton" class="btn btn-primary">Click here to find my location</button>
-=======
       <input id="pac-input" class="controls" type="text" placeholder="Enter location">
->>>>>>> development
       <form method="put" action="/api/users/${userId}">
         <input type='hidden' id="input-location" name="user[address]">
         <input type='hidden' id="input-lat" name="user[lat]">
         <input type='hidden' id="input-lng" name="user[lng]">
+        <button class="btn btn-secondary" id="userSaveLocation">Save</button>
       </form>
-      <button class="btn btn-secondary" id="userSaveLocation">Save</button>
+
       <h4>or</h4>
       <button class="btn btn-secondary">Use current location</button>
       <br>
