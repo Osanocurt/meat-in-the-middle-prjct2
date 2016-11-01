@@ -92,43 +92,12 @@ $(() =>{
     var searchBox = new google.maps.places.SearchBox(input);
 
     searchBox.addListener('places_changed', function() {
-      let newAddress = searchBox.getPlaces()[0];
-      updateFriendLocation(newAddress, friend);
+      let newAddress = searchBox.getPlaces();
+      document.getElementById("friendAddr").value = newAddress[0].formatted_address;
+        document.getElementById("input-lat").value = `${newAddress[0].lat}`;
+        document.getElementById("input-lng").value = `${newAddress[0].lng}`;
     });
 
-  }
-
-  $sidePanel.on('submit', 'form#friendUpdate', getFriendNameUpdate);
-
-  function getFriendNameUpdate(){
-    let name = $(this).serialize();
-  }
-
-  function updateFriendLocation(newAddress, friend){
-    let token = localStorage.getItem('token');
-    let userId = localStorage.getItem('id');
-    let lat = newAddress.geometry.location.lat();
-    let lng = newAddress.geometry.location.lng();
-    let address = newAddress.formatted_address;
-
-    let newData = {
-      name: friend.name,
-      lat,
-      lng,
-      address
-    };
-
-    $.ajax({
-      url: `/api/users/${userId}/friends/${friend._id}`,
-      method: "PUT",
-      data: newData,
-      beforeSend: function(jqXHR) {
-        if(token) return jqXHR.setRequestHeader('Authorization', `Bearer ${token}`);
-      }
-    })
-    .done((data) => {
-      console.log("Updated friend location");
-    });
   }
 
   function handleForm() {
@@ -520,6 +489,7 @@ $(() =>{
      });
 
      google.maps.event.addListener(marker, 'click', function() {
+       console.log("clicked");
        let infowindow = new google.maps.InfoWindow();
 
        infowindow.setContent(`<strong>${place.name}</strong>`);

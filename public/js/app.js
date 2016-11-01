@@ -54,40 +54,10 @@ $(function () {
     var searchBox = new google.maps.places.SearchBox(input);
 
     searchBox.addListener('places_changed', function () {
-      var newAddress = searchBox.getPlaces()[0];
-      updateFriendLocation(newAddress, friend);
-    });
-  }
-
-  $sidePanel.on('submit', 'form#friendUpdate', getFriendNameUpdate);
-
-  function getFriendNameUpdate() {
-    var name = $(this).serialize();
-  }
-
-  function updateFriendLocation(newAddress, friend) {
-    var token = localStorage.getItem('token');
-    var userId = localStorage.getItem('id');
-    var lat = newAddress.geometry.location.lat();
-    var lng = newAddress.geometry.location.lng();
-    var address = newAddress.formatted_address;
-
-    var newData = {
-      name: friend.name,
-      lat: lat,
-      lng: lng,
-      address: address
-    };
-
-    $.ajax({
-      url: '/api/users/' + userId + '/friends/' + friend._id,
-      method: "PUT",
-      data: newData,
-      beforeSend: function beforeSend(jqXHR) {
-        if (token) return jqXHR.setRequestHeader('Authorization', 'Bearer ' + token);
-      }
-    }).done(function (data) {
-      console.log("Updated friend location");
+      var newAddress = searchBox.getPlaces();
+      document.getElementById("friendAddr").value = newAddress[0].formatted_address;
+      document.getElementById("input-lat").value = '' + newAddress[0].lat;
+      document.getElementById("input-lng").value = '' + newAddress[0].lng;
     });
   }
 
@@ -406,6 +376,7 @@ $(function () {
     });
 
     google.maps.event.addListener(marker, 'click', function () {
+      console.log("clicked");
       var infowindow = new google.maps.InfoWindow();
 
       infowindow.setContent('<strong>' + place.name + '</strong>');
