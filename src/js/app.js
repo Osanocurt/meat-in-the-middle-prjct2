@@ -75,16 +75,17 @@ $(() =>{
 
     $sidePanel.html(`
       <h2>Edit Friend</h2>
-      <form id="friendUpdate" method="put" action="/api/users/${userId}/friends/${friend._id}">
+      <form id="friendUpdate" method="put" action="/api/users/${userId}/friends/${friend._id}"  data-target="viewProfile">
         <div class="form-group">
           <label for="name">
           <input class="form-control" name="name" value="${friend.name}">
-          <input  id="input-lat" name="lat" value="${friend.lat}">
-          <input  id="input-lng" name="lng" value="${friend.lng}">
+          <input type="hidden" id="input-lat" name="lat" value="${friend.lat}">
+          <input type="hidden" id="input-lng" name="lng" value="${friend.lng}">
           <label for="address">
           <input id="friendAddr" class="controls" type="text" placeholder='Address' value="${friend.address}">
-          <input id="newFriendAdd" name='address' type="text" value='${friend.address}'>
+          <input type="hidden" id="newFriendAdd" name='address' type="text" value='${friend.address}'>
           <button id="friendUpdateBtn" class="btn btn-primary" type='submit'>Update</button>
+          <button id="backToProfile" class="btn btn-secondary">Back</button>
         </div>
       </form>`);
 
@@ -114,8 +115,6 @@ $(() =>{
     let method = $form.attr('method');
     let data = $form.serialize();
 
-    console.log(nextView);
-
     $.ajax({
       url,
       method,
@@ -132,18 +131,28 @@ $(() =>{
       }
       if (nextView === 'showUserForm') {
         showUserForm();
+      } else if (nextView === 'viewProfile') {
+        getFriends();
       }
-      // getFriends();
     });
     // .fail(showLoginForm);
   }
 
+  //-------------------------------------------------------------//
+
   function getFriends() {
-    let src = (event.target.id);
-    console.log(event);
+    let nextView = "";
+
+    if (!$(this).data('target')) {
+      nextView = 'viewProfile';
+    } else {
+      nextView = $(this).data('target');
+    }
+
     if(event) event.preventDefault();
     let token = localStorage.getItem('token');
     let userId = localStorage.getItem('id');
+
 
     $.ajax({
       url: `/api/users/${userId}/friends`,
@@ -153,10 +162,10 @@ $(() =>{
       }
     })
     .done((friends) => {
-      if (src === 'addAFriend') {
+      if (nextView === 'friendLocation') {
         showFriendsToAdd(friends);
-      } else if (src === 'viewProfile') {
-        getUser(friends, src);
+      } else if (nextView === 'viewProfile') {
+        getUser(friends, nextView);
       } else {
         console.log("Error: Check the source of the request to getFriends");
       }
@@ -165,7 +174,7 @@ $(() =>{
   }
 
   function getUser(friends, src) {
-    // console.log(src);
+
     let token = localStorage.getItem('token');
     let userId = localStorage.getItem('id');
 
@@ -180,10 +189,9 @@ $(() =>{
       if (src === 'viewProfile') {
         showFriendsInProfile(user, friends);
       } else if (src === 'useSavedAddress'){
-        // console.log("Use SAved address");
         updateMap(user);
       } else {
-        console.log("Request from elsewhere");
+        console.log("Get user src of request unknown");
       }
     });
   }
@@ -321,7 +329,7 @@ $(() =>{
       <button class="btn btn-secondary" id="useSavedAdd">Use saved address</button>
       <h4>or</h4>
       <input id="pac-input" class="controls" type="text" placeholder="Enter location">
-      <form method="put" action="/api/users/${userId}">
+      <form id="userLocation" data-target="current" method="put" action="/api/users/${userId}">
         <input type='hidden' id="input-location" name="user[address]">
         <input type='hidden' id="input-lat" name="user[lat]">
         <input type='hidden' id="input-lng" name="user[lng]">
@@ -330,7 +338,7 @@ $(() =>{
       <h4>or</h4>
       <button class="btn btn-secondary">Use current location</button>
       <br>
-      <button id="addAFriend" class="btn btn-primary">Add friend</button>
+      <button id="addAFriend" data-target="friendLocation" class="btn btn-primary">Add friend</button>
     `);
     createSearchBar();
   }
@@ -341,7 +349,6 @@ $(() =>{
   $sidePanel.on('click', 'button#useSavedAdd', useHome);
 
   function useHome(){
-    // console.log("Use saved address");
     let friends = [];
     let src = "useSavedAddress";
     getUser(friends, src);
@@ -376,7 +383,7 @@ $(() =>{
     $sidePanel.append(
       `<h4>New Friend</h4>
       <input id="pac-input" class="controls" type="text" placeholder="Enter friend's address">
-      <form method="post" action="/api/users/${userId}/friends">
+      <form id="friendLocation" data-target="current" method="post" action="/api/users/${userId}/friends">
         <input type='hidden' id="input-name" name="name" placeholder="Friend's name">
         <input type='hidden' id="input-location" name="address">
         <input type='hidden' id="input-lat" name="lat">
