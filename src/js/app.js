@@ -35,7 +35,7 @@ $(() =>{
     if(event) event.preventDefault();
     $sidePanel.html(`
       <h2>Register</h2>
-      <form method="post" action="/api/register">
+      <form method="post" action="/api/register" data-target="showUserForm">
         <div class="form-group">
           <input class="form-control" name="user[username]" placeholder="Username">
         </div>
@@ -57,7 +57,7 @@ $(() =>{
     if(event) event.preventDefault();
     $sidePanel.html(`
       <h2>Login</h2>
-      <form method="post" action="/api/login">
+      <form method="post" action="/api/login" data-target="showUserForm">
         <div class="form-group">
           <input class="form-control" name="email" placeholder="Email">
         </div>
@@ -108,12 +108,13 @@ $(() =>{
     if(event) event.preventDefault();
     let token = localStorage.getItem('token');
     let $form = $(this);
+    let nextView = $form.data('target');
 
     let url = $form.attr('action');
     let method = $form.attr('method');
     let data = $form.serialize();
 
-    console.log(url, method, data);
+    console.log(nextView);
 
     $.ajax({
       url,
@@ -122,11 +123,15 @@ $(() =>{
       beforeSend: function(jqXHR) {
         if(token) return jqXHR.setRequestHeader('Authorization', `Bearer ${token}`);
       }
-    }).done((data) => {
+    })
+    .done((data) => {
       if (!!data.user) {
         let userId = data.user._id;
         if(userId) localStorage.setItem('id', userId);
         if(data.token) localStorage.setItem('token', data.token);
+      }
+      if (nextView === 'showUserForm') {
+        showUserForm();
       }
       // getFriends();
     });
@@ -135,6 +140,7 @@ $(() =>{
 
   function getFriends() {
     let src = (event.target.id);
+    console.log(event);
     if(event) event.preventDefault();
     let token = localStorage.getItem('token');
     let userId = localStorage.getItem('id');

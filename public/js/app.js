@@ -35,12 +35,12 @@ $(function () {
 
   function showRegisterForm() {
     if (event) event.preventDefault();
-    $sidePanel.html('\n      <h2>Register</h2>\n      <form method="post" action="/api/register">\n        <div class="form-group">\n          <input class="form-control" name="user[username]" placeholder="Username">\n        </div>\n        <div class="form-group">\n          <input class="form-control" name="user[email]" placeholder="Email">\n        </div>\n        <div class="form-group">\n          <input class="form-control" type="password" name="user[password]" placeholder="Password">\n        </div>\n        <div class="form-group">\n          <input class="form-control" type="password" name="user[passwordConfirmation]" placeholder="Password Confirmation">\n        </div>\n        <button class="btn btn-primary">Register</button>\n      </form>\n    ');
+    $sidePanel.html('\n      <h2>Register</h2>\n      <form method="post" action="/api/register" data-target="showUserForm">\n        <div class="form-group">\n          <input class="form-control" name="user[username]" placeholder="Username">\n        </div>\n        <div class="form-group">\n          <input class="form-control" name="user[email]" placeholder="Email">\n        </div>\n        <div class="form-group">\n          <input class="form-control" type="password" name="user[password]" placeholder="Password">\n        </div>\n        <div class="form-group">\n          <input class="form-control" type="password" name="user[passwordConfirmation]" placeholder="Password Confirmation">\n        </div>\n        <button class="btn btn-primary">Register</button>\n      </form>\n    ');
   }
 
   function showLoginForm() {
     if (event) event.preventDefault();
-    $sidePanel.html('\n      <h2>Login</h2>\n      <form method="post" action="/api/login">\n        <div class="form-group">\n          <input class="form-control" name="email" placeholder="Email">\n        </div>\n        <div class="form-group">\n          <input class="form-control" type="password" name="password" placeholder="Password">\n        </div>\n        <button class="btn btn-primary">Login</button>\n      </form>\n    ');
+    $sidePanel.html('\n      <h2>Login</h2>\n      <form method="post" action="/api/login" data-target="showUserForm">\n        <div class="form-group">\n          <input class="form-control" name="email" placeholder="Email">\n        </div>\n        <div class="form-group">\n          <input class="form-control" type="password" name="password" placeholder="Password">\n        </div>\n        <button class="btn btn-primary">Login</button>\n      </form>\n    ');
   }
 
   function showFriendEditForm(friend) {
@@ -68,12 +68,13 @@ $(function () {
     if (event) event.preventDefault();
     var token = localStorage.getItem('token');
     var $form = $(this);
+    var nextView = $form.data('target');
 
     var url = $form.attr('action');
     var method = $form.attr('method');
     var data = $form.serialize();
 
-    console.log(url, method, data);
+    console.log(nextView);
 
     $.ajax({
       url: url,
@@ -88,6 +89,9 @@ $(function () {
         if (userId) localStorage.setItem('id', userId);
         if (data.token) localStorage.setItem('token', data.token);
       }
+      if (nextView === 'showUserForm') {
+        showUserForm();
+      }
       // getFriends();
     });
     // .fail(showLoginForm);
@@ -95,6 +99,7 @@ $(function () {
 
   function getFriends() {
     var src = event.target.id;
+    console.log(event);
     if (event) event.preventDefault();
     var token = localStorage.getItem('token');
     var userId = localStorage.getItem('id');
