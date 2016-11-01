@@ -383,10 +383,10 @@ $(() =>{
     let userId = localStorage.getItem('id');
     if(event) event.preventDefault();
     $sidePanel.append(
-      `<h4>New Friend</h4>
-      <input id="pac-input" class="controls" type="text" placeholder="Enter friend's address">
+      `<h4>Add New Friend</h4>
+      <input id="pac-input" class="controls" type="text" placeholder="Address">
       <form id="friendLocation" data-target="current" method="post" action="/api/users/${userId}/friends">
-        <input type='hidden' id="input-name" name="name" placeholder="Friend's name">
+        <input id="input-name" name="name" placeholder="Name">
         <input type='hidden' id="input-location" name="address">
         <input type='hidden' id="input-lat" name="lat">
         <input type='hidden' id="input-lng" name="lng">
