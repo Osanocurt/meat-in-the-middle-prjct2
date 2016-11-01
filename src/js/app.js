@@ -16,6 +16,7 @@ $(() =>{
   $main.on('click', 'button#addAnotherFriend', showFriendsToAdd);
   $main.on('click', 'button.delete', deleteFriend);
   $main.on('click', 'button.edit', getFriend);
+  $main.on("click", ".directionButton", showDirections);
   const $sidePanel = $("#sidePanel") ;
 
   function saved() {
@@ -155,7 +156,7 @@ $(() =>{
     } else {
       nextView = $(this).data('target');
     }
-    
+
     if(event) event.preventDefault();
     let token = localStorage.getItem('token');
     let userId = localStorage.getItem('id');
@@ -514,7 +515,7 @@ $(() =>{
      google.maps.event.addListener(marker, 'click', function() {
        let infowindow = new google.maps.InfoWindow();
 
-       infowindow.setContent(`<strong>${place.name}</strong><button class="directionButton"  data-lat=  ${place.geometry.location.lat()} data-lng=${place.geometry.location.lng()}>Get Direction</button>`);
+       infowindow.setContent(`<strong>${place.name}</strong><button class="directionButton"  data-lat=  ${place.geometry.location.lat()} data-lng=${place.geometry.location.lng()}>Get Directions</button>`);
        console.log(place.geometry.location.lng());
        infowindow.open(map, this);
      });
@@ -522,7 +523,6 @@ $(() =>{
 
 
 //click listener to be assigned to "choose venue" button on pop up wndows.
-  $main.on("click", ".directionButton", showDirections);
 
 //user and venue variables for purpose of testing directions function
   let startingPos = { lat: 51.5074, lng: -0.1278 };
@@ -531,13 +531,10 @@ $(() =>{
   var directionsService = new google.maps.DirectionsService();
 
 
-
-//function to generate route and directions panel upon choosing venue. other pins still remain on map!
   function showDirections() {
     let $venueChosen = { lat: $(this).data("lat"), lng: $(this).data("lng")};
 
-
-
+    $sidePanel.empty();
 
     $("#travelModeDiv").css("visibility", "visible");
     directionsDisplay.setMap(map);
