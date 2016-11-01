@@ -101,7 +101,7 @@ $(function () {
         if (token) return jqXHR.setRequestHeader('Authorization', 'Bearer ' + token);
       }
     }).done(function (user) {
-      console.log(user);
+      // console.log(user);
       var $row = $('<div class="row"><h2>' + user.username + '</h2><p>' + user.address + '</div>');
       friends.forEach(function (friend) {
         $row.append('\n          <div class="col-md-12">\n            <div class="card">\n              <div class="card-block">\n                <h4 class="card-title">' + friend.name + '</h4>\n                <h4 class="card-title">' + friend.address + '</h4>\n              </div>\n            </div>\n            <button class="btn btn-danger delete" data-id="' + friend._id + '">Delete</button>\n            <button class="btn btn-primary edit" data-id="' + friend._id + '">Edit</button>\n          </div>\n        ');
@@ -183,11 +183,11 @@ $(function () {
       };
 
       document.getElementById("input-location").value = addresses[0].formatted_address;
-      console.log(addresses[0].formatted_address);
+      // console.log(addresses[0].formatted_address);
       document.getElementById("input-lat").value = '' + personsPosition.lat;
       document.getElementById("input-lng").value = '' + personsPosition.lng;
       people.push(personsPosition);
-      console.log(people);
+      // console.log(people);
       addMarker(personsPosition);
       setMapBounds(people);
     });
@@ -275,7 +275,7 @@ $(function () {
   function populateCarousel(resultsToShow) {
     var $carousel = $('<div id=\'carousel-custom\' class=\'carousel slide\' data-ride=\'carousel\'>\n        <div class=\'carousel-outer\'>\n           <div class=\'carousel-inner\'>\n\n           </div>\n\n           </div>\n       </div>');
     resultsToShow.forEach(function (result) {
-      console.log(result);
+      // console.log(result);
       $carousel.append('<div class="item"><h4>' + result.name + '</h4></div>');
     });
     $sidePanel.html($carousel);
@@ -300,7 +300,9 @@ $(function () {
       position: place.geometry.location
     });
 
+    console.log(marker);
     google.maps.event.addListener(marker, 'click', function () {
+      console.log("clicked");
       var infowindow = new google.maps.InfoWindow();
 
       infowindow.setContent('<strong>' + place.name + '</strong>');
