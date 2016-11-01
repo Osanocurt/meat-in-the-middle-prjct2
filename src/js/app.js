@@ -74,10 +74,9 @@ $(() =>{
     let userId = localStorage.getItem('id');
     let friendAddress = friend.address;
 
-
     $sidePanel.html(`
       <h2>Edit Friend</h2>
-      <form id="friendUpdate">
+      <form id="friendUpdate" method="put" action="/api/users/${userId}/friends/${friend._id}">
         <div class="form-group">
           <label for="name">
           <input class="form-control" name="name" value="${friend.name}">
@@ -91,13 +90,45 @@ $(() =>{
 
     var input = document.getElementById('friendAddr');
     var searchBox = new google.maps.places.SearchBox(input);
+
+    searchBox.addListener('places_changed', function() {
+      let newAddress = searchBox.getPlaces()[0];
+      updateFriendLocation(newAddress, friend);
+    });
+
   }
 
-  $sidePanel.on('submit', 'form#friendUpdate', getFriendUpdateFromForm);
+  $sidePanel.on('submit', 'form#friendUpdate', getFriendNameUpdate);
 
-  function getFriendUpdateFromForm(){
-    let data = $(this).serialize();
-    console.log(data);
+  function getFriendNameUpdate(){
+    let name = $(this).serialize();
+  }
+
+  function updateFriendLocation(newAddress, friend){
+    let token = localStorage.getItem('token');
+    let userId = localStorage.getItem('id');
+    let lat = newAddress.geometry.location.lat();
+    let lng = newAddress.geometry.location.lng();
+    let address = newAddress.formatted_address;
+
+    let newData = {
+      name: friend.name,
+      lat,
+      lng,
+      address
+    };
+
+    $.ajax({
+      url: `/api/users/${userId}/friends/${friend._id}`,
+      method: "PUT",
+      data: newData,
+      beforeSend: function(jqXHR) {
+        if(token) return jqXHR.setRequestHeader('Authorization', `Bearer ${token}`);
+      }
+    })
+    .done((data) => {
+      console.log("Updated friend location");
+    });
   }
 
   function handleForm() {

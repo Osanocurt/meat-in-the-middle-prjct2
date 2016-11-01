@@ -48,17 +48,47 @@ $(function () {
     var userId = localStorage.getItem('id');
     var friendAddress = friend.address;
 
-    $sidePanel.html('\n      <h2>Edit Friend</h2>\n      <form id="friendUpdate">\n        <div class="form-group">\n          <label for="name">\n          <input class="form-control" name="name" value="' + friend.name + '">\n            <input type="hidden" id="input-lat" name="lat" value="' + friend.lat + '">\n            <input type="hidden" id="input-lng" name="lng" value="' + friend.lng + '">\n            <label for="address">\n            <input id="friendAddr" class="controls" type="text" value="' + friendAddress + '">\n            <button id="friendUpdateBtn" class="btn btn-primary" type=\'submit\'>Update</button>\n        </div>\n      </form>');
+    $sidePanel.html('\n      <h2>Edit Friend</h2>\n      <form id="friendUpdate" method="put" action="/api/users/' + userId + '/friends/' + friend._id + '">\n        <div class="form-group">\n          <label for="name">\n          <input class="form-control" name="name" value="' + friend.name + '">\n            <input type="hidden" id="input-lat" name="lat" value="' + friend.lat + '">\n            <input type="hidden" id="input-lng" name="lng" value="' + friend.lng + '">\n            <label for="address">\n            <input id="friendAddr" class="controls" type="text" value="' + friendAddress + '">\n            <button id="friendUpdateBtn" class="btn btn-primary" type=\'submit\'>Update</button>\n        </div>\n      </form>');
 
     var input = document.getElementById('friendAddr');
     var searchBox = new google.maps.places.SearchBox(input);
+
+    searchBox.addListener('places_changed', function () {
+      var newAddress = searchBox.getPlaces()[0];
+      updateFriendLocation(newAddress, friend);
+    });
   }
 
-  $sidePanel.on('submit', 'form#friendUpdate', getFriendUpdateFromForm);
+  $sidePanel.on('submit', 'form#friendUpdate', getFriendNameUpdate);
 
-  function getFriendUpdateFromForm() {
-    var data = $(this).serialize();
-    console.log(data);
+  function getFriendNameUpdate() {
+    var name = $(this).serialize();
+  }
+
+  function updateFriendLocation(newAddress, friend) {
+    var token = localStorage.getItem('token');
+    var userId = localStorage.getItem('id');
+    var lat = newAddress.geometry.location.lat();
+    var lng = newAddress.geometry.location.lng();
+    var address = newAddress.formatted_address;
+
+    var newData = {
+      name: friend.name,
+      lat: lat,
+      lng: lng,
+      address: address
+    };
+
+    $.ajax({
+      url: '/api/users/' + userId + '/friends/' + friend._id,
+      method: "PUT",
+      data: newData,
+      beforeSend: function beforeSend(jqXHR) {
+        if (token) return jqXHR.setRequestHeader('Authorization', 'Bearer ' + token);
+      }
+    }).done(function (data) {
+      console.log("Updated friend location");
+    });
   }
 
   function handleForm() {
