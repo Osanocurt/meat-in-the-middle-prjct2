@@ -351,10 +351,6 @@ $(function () {
   function populateCarousel(resultsToShow) {
     var $carousel = $('<div id=\'carousel-custom\' class=\'carousel slide\' data-ride=\'carousel\'>\n        <div class=\'carousel-outer\'>\n           <div class=\'carousel-inner\'>\n\n           </div>\n\n           </div>\n       </div>');
     resultsToShow.forEach(function (result) {
-<<<<<<< HEAD
-      // console.log(result);
-=======
->>>>>>> 97181d29f3f326fde48926f27b4c8bdfcb89bdc1
       $carousel.append('<div class="item"><h4>' + result.name + '</h4></div>');
     });
     $sidePanel.html($carousel);
@@ -379,34 +375,36 @@ $(function () {
       position: place.geometry.location
     });
 
-    console.log(marker);
     google.maps.event.addListener(marker, 'click', function () {
       console.log("clicked");
       var infowindow = new google.maps.InfoWindow();
 
-      infowindow.setContent('<strong>' + place.name + '</strong>');
+      infowindow.setContent('<strong>' + place.name + '</strong><button class="directionButton"  data-lat=  ' + place.geometry.location.lat() + ' data-lng=' + place.geometry.location.lng() + '>Get Direction</button>');
+      console.log(place.geometry.location.lng());
       infowindow.open(map, this);
     });
   }
 
   //click listener to be assigned to "choose venue" button on pop up wndows.
-  $(".direct").on("click", showDirections);
+  $main.on("click", ".directionButton", showDirections);
 
   //user and venue variables for purpose of testing directions function
   var startingPos = { lat: 51.5074, lng: -0.1278 };
-  var venueChosen = { lat: 51.5074, lng: -0.1222 };
+  // let venueChosen = { lat: 51.5074, lng: -0.1222};
   var directionsDisplay = new google.maps.DirectionsRenderer();
   var directionsService = new google.maps.DirectionsService();
 
   //function to generate route and directions panel upon choosing venue. other pins still remain on map!
   function showDirections() {
+    var $venueChosen = { lat: $(this).data("lat"), lng: $(this).data("lng") };
+
     $("#travelModeDiv").css("visibility", "visible");
     directionsDisplay.setMap(map);
     directionsDisplay.setPanel(document.getElementById('sidePanel'));
     var selectedMode = document.getElementById('travelSelect').value;
     directionsService.route({
       origin: startingPos,
-      destination: venueChosen,
+      destination: $venueChosen,
       travelMode: google.maps.TravelMode[selectedMode]
     }, function (response, status) {
       if (status == 'OK') {

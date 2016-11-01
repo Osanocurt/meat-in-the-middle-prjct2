@@ -492,29 +492,38 @@ $(() =>{
        console.log("clicked");
        let infowindow = new google.maps.InfoWindow();
 
-       infowindow.setContent(`<strong>${place.name}</strong>`);
+       infowindow.setContent(`<strong>${place.name}</strong><button class="directionButton"  data-lat=  ${place.geometry.location.lat()} data-lng=${place.geometry.location.lng()}>Get Direction</button>`);
+       console.log(place.geometry.location.lng());
        infowindow.open(map, this);
      });
    }
 
+
 //click listener to be assigned to "choose venue" button on pop up wndows.
-  $(".direct").on("click", showDirections);
+  $main.on("click", ".directionButton", showDirections);
 
 //user and venue variables for purpose of testing directions function
   let startingPos = { lat: 51.5074, lng: -0.1278 };
-  let venueChosen = { lat: 51.5074, lng: -0.1222};
+  // let venueChosen = { lat: 51.5074, lng: -0.1222};
   var directionsDisplay = new google.maps.DirectionsRenderer();
   var directionsService = new google.maps.DirectionsService();
 
+
+
 //function to generate route and directions panel upon choosing venue. other pins still remain on map!
   function showDirections() {
+    let $venueChosen = { lat: $(this).data("lat"), lng: $(this).data("lng")};
+
+
+
+    
     $("#travelModeDiv").css("visibility", "visible");
     directionsDisplay.setMap(map);
     directionsDisplay.setPanel(document.getElementById('sidePanel'));
     var selectedMode = document.getElementById('travelSelect').value;
     directionsService.route({
       origin: startingPos,
-      destination: venueChosen,
+      destination: $venueChosen,
       travelMode: google.maps.TravelMode[selectedMode]
     }, function(response, status) {
       if (status == 'OK') {
