@@ -329,7 +329,7 @@ $(() =>{
       zoom: 7
     });
   }
-  mapInit();
+  // mapInit();
 
   function showResourceForm(){
     $main.prepend(`<h1>What are you in the mood for?</h1>
@@ -352,7 +352,10 @@ $(() =>{
 
   function updateResourceChoice(){
     resource = $(this).data('id');
+    mapInit();
+    showUserForm();
   }
+
 
   function showUserForm() {
     if(event) event.preventDefault();
@@ -377,7 +380,7 @@ $(() =>{
     createSearchBar();
   }
 
-  showUserForm();
+  // showUserForm();
 
   let latLngList = [];
   $sidePanel.on('click', 'button#useSavedAdd', useHome);

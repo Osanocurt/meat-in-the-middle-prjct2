@@ -257,7 +257,7 @@ $(function () {
       zoom: 7
     });
   }
-  mapInit();
+  // mapInit();
 
   function showResourceForm() {
     $main.prepend('<h1>What are you in the mood for?</h1>\n      <button id="resource" data-id=\'restaurant\'>Restaurant</button>\n      <button id="resource" data-id=\'casino\'>Casino</button>\n      <button id="resource" data-id=\'night_club\'>Night Club</button>\n      <button id="resource" data-id=\'movie_theater\'>Theater</button>\n      <button id="resource" data-id=\'liquor_store\'>Off-licence</button>\n      <button id="resource" data-id=\'clothing_store\'>Clothes</button>\n      <button id="resource" data-id=\'shoe_store\'>Shoes</button>\n      <button id="resource" data-id=\'shopping_mall\'>Shopping</button>\n      <button id="resource" data-id=\'florist\'>Florist</button>\n      <button id="resource" data-id=\'gym\'>Gym</button>\n      <button id="resource" data-id=\'zoo\'>Zoo</button>\n      <button id="resource" data-id=\'park\'>Park</button>\n      <button id="resource" data-id=\'spa\'>Spa</button>\n      <button id="resource" data-id=\'cafe\'>Cafe</button><br>');
@@ -266,6 +266,8 @@ $(function () {
 
   function updateResourceChoice() {
     resource = $(this).data('id');
+    mapInit();
+    showUserForm();
   }
 
   function showUserForm() {
@@ -275,7 +277,7 @@ $(function () {
     createSearchBar();
   }
 
-  showUserForm();
+  // showUserForm();
 
   var latLngList = [];
   $sidePanel.on('click', 'button#useSavedAdd', useHome);
