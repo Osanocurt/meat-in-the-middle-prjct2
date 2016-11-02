@@ -151,6 +151,7 @@ $(() =>{
     resource = $(this).data('id');
     console.log(resource);
     $landing.remove();
+    showResourceForm();
     mapInit();
     showUserForm();
   }
@@ -539,7 +540,7 @@ $(() =>{
       <button id="addAFriend" data-target="friendLocation" class="btn btn-primary">Add friend</button>
     `);
     createSearchBar();
-    showResourceForm();
+    // showResourceForm();
   }
 
   // showUserForm();
@@ -826,16 +827,8 @@ $(() =>{
         </div>
         <hr>`);
         uniqueId ++;
-
-        // $main.on("click", "#carouselChoice", function() {
-        //   iwindow.setPosition({ lat: $(this).data("lat"), lng: $(this).data("lng")});
-        //   iwindow.setContent(`<h4>${this.name}</h4>`);
-        //   iwindow.open(map);
-        // });
      });
-
     $sidePanel.html($carousel);
-
   }
 
   function setMapBounds(latLngList){

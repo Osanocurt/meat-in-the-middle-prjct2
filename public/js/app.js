@@ -77,6 +77,7 @@ $(function () {
     resource = $(this).data('id');
     console.log(resource);
     $landing.remove();
+    showResourceForm();
     mapInit();
     showUserForm();
   }
@@ -337,7 +338,7 @@ $(function () {
     var userId = localStorage.getItem('id');
     $sidePanel.html('<h2>Where Are You?</h2>\n      <button class="btn btn-secondary" id="useSavedAdd">Use saved address</button>\n      <h4>or</h4>\n      <input id="pac-input" class="controls" type="text" placeholder="Enter location">\n      <form id="userLocation" data-target="current" method="put" action="/api/users/' + userId + '">\n        <input type=\'hidden\' id="input-location" name="user[address]">\n        <input type=\'hidden\' id="input-lat" name="user[lat]">\n        <input type=\'hidden\' id="input-lng" name="user[lng]">\n        <button class="btn btn-secondary" id="userSaveLocation">Save</button>\n      </form>\n\n      <h4>or</h4>\n      <button id="locationButton" data-target="friendLocation" class="btn btn-secondary">Use current location</button>\n      <br>\n      <button id="addAFriend" data-target="friendLocation" class="btn btn-primary">Add friend</button>\n    ');
     createSearchBar();
-    showResourceForm();
+    // showResourceForm();
   }
 
   // showUserForm();
@@ -574,14 +575,7 @@ $(function () {
 
       $carousel.append('\n        <div class="item" id="carouselItem">\n          <a id="carouselChoice" data-id="' + uniqueId + '"><h4>' + venue.name + '</h4>\n          <p>' + venue.vicinity + '</p>\n          ' + ratingHtml + priceHtml + '\n          ' + imgHtml + '</a>\n          <button class="directionButton btn btn-primary" data-lat=' + lat + ' data-lng=' + lng + '>Directions</button>\n        </div>\n        <hr>');
       uniqueId++;
-
-      // $main.on("click", "#carouselChoice", function() {
-      //   iwindow.setPosition({ lat: $(this).data("lat"), lng: $(this).data("lng")});
-      //   iwindow.setContent(`<h4>${this.name}</h4>`);
-      //   iwindow.open(map);
-      // });
     });
-
     $sidePanel.html($carousel);
   }
 
