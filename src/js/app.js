@@ -344,6 +344,7 @@ $(() =>{
       <button id="resource" data-id='florist'>Florist</button>
       <button id="resource" data-id='gym'>Gym</button>
       <button id="resource" data-id='zoo'>Zoo</button>
+      <button id="resource" data-id='bar'>Bar</button>
       <button id="resource" data-id='park'>Park</button>
       <button id="resource" data-id='spa'>Spa</button>
       <button id="resource" data-id='cafe'>Cafe</button><br>`);
