@@ -87,3 +87,22 @@ body, html {
 img.priceLevel{
   width: 15px;
 }
+
+
+#friendCarouselDiv {
+  visibility: hidden;
+   height: 60px;
+   text-align: center;
+   line-height: 30px;
+   color: black;
+   width: 27vw;
+   position:absolute;
+   top: 10px;
+   left: 73%;
+   z-index: 5;
+   border: 5px solid blue;
+}
+
+h4 {
+   cursor: pointer; cursor: hand; 
+}

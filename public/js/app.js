@@ -23,6 +23,7 @@ $(function () {
   $main.on("click", ".directionButton", selectVenue);
   var $sidePanel = $("#sidePanel");
   $main.on("click", "button#resource", updateResourceChoice);
+  var $friendCarouselDiv = $("#friendCarouselDiv");
   $sidePanel.on('click', 'button#locationButton', getUserCurrentPos);
   $sidePanel.on('submit', 'form#filterResults', filterResults);
   $sidePanel.on('click', 'button#clearFilterResults', clearFilterResults);
@@ -555,9 +556,7 @@ $(function () {
     });
   }
 
-  //click listener to be assigned to "choose venue" button on pop up wndows.
-
-  //user and venue variables for purpose of testing directions function
+  //user and venue variables for directions function
   var startingPos = null;
   var venueChosen = null;
   var directionsDisplay = new google.maps.DirectionsRenderer();
@@ -582,11 +581,13 @@ $(function () {
     }, function (response, status) {
       if (status == 'OK') {
         directionsDisplay.setDirections(response);
+        showFriendCarousel();
       } else {
         window.alert('Directions request failed due to ' + status);
       }
     });
   }
+
   $("#travelSelect").on('change', showDirections);
 
   function getUserCurrentPos() {
@@ -601,5 +602,25 @@ $(function () {
       setMapBounds(people);
     });
     getFriends();
+  }
+
+  function showFriendCarousel() {
+    $friendCarouselDiv.css("visibility", "visible");
+    $friendCarouselDiv.html('<div id="friendCarousel">\n    <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">\n\n<div id="friendCarouselInner" class="carousel-inner" role="listbox">\n  <div class="carousel-item active">\n    <h4 class="chooseStart" data-lat="' + people[0].lat + '" data-lng="' + people[0].lng + '">Your directions</h4>\n  </div>\n</div>\n<a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">\n  <span class="icon-prev" aria-hidden="true"></span>\n  <span class="sr-only">Previous</span>\n</a>\n<a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">\n  <span class="icon-next" aria-hidden="true"></span>\n  <span class="sr-only">Next</span>\n</a>\n</div>\n\n     </div>');
+    people.forEach(function (person) {
+      if (people.indexOf(person) !== 0) {
+
+        $("#friendCarouselInner").append('<div class="carousel-item">\n           <h4 class="chooseStart" data-lat="' + person.lat + '" data-lng="' + person.lng + '">Directions for friend ' + people.indexOf(person) + '</h4>\n           </div>');
+        $main.on('click', '.chooseStart', chooseStart);
+      }
+    });
+  }
+
+  function chooseStart() {
+    var startingLat = $(this).data("lat");
+    var startingLng = $(this).data("lng");
+    startingPos = { lat: startingLat, lng: startingLng };
+    console.log(startingPos);
+    showDirections();
   }
 });
