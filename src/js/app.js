@@ -721,7 +721,9 @@ $(() =>{
 //user and venue variables for directions function
   let startingPos = null;
   let venueChosen = null;
-  var directionsDisplay = new google.maps.DirectionsRenderer();
+  var directionsDisplay = new google.maps.DirectionsRenderer({
+    suppressBicyclingLayer: true
+  });
   var directionsService = new google.maps.DirectionsService();
 
 
