@@ -460,20 +460,48 @@ $(() =>{
   // mapInit();
 
   function showResourceForm(){
-    $main.prepend(`<h1>What are you in the mood for?</h1>
-      <button id="resource" data-id='restaurant'>Restaurant</button>
-      <button id="resource" data-id='bar'>Bar</button>
-      <button id="resource" data-id='cafe'>Cafe</button>
-      <button id="resource" data-id='casino'>Casino</button>
-      <button id="resource" data-id='night_club'>Night Club</button>
-      <button id="resource" data-id='movie_theater'>Theater</button>
-      <button id="resource" data-id='shopping_mall'>Shopping</button>
-      <button id="resource" data-id='clothing_store'>Clothes</button>
-      <button id="resource" data-id='florist'>Florist</button>
-      <button id="resource" data-id='zoo'>Zoo</button>
-      <button id="resource" data-id='park'>Park</button>
-      <button id="resource" data-id='spa'>Spa</button>
-      <button id="resource" data-id='gym'>Gym</button><br>`);
+    $main.prepend(`
+      <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <p class="nav-link" id="resource" data-id='restaurant'>Restaurant</p>
+        </li>
+        <li class="nav-item">
+          <p class="nav-link" id="resource" data-id='bar'>Bar</p>
+        </li>
+        <li class="nav-item">
+          <p class="nav-link" id="resource" data-id='cafe'>Cafe</p>
+        </li>
+        <li class="nav-item">
+          <p class="nav-link" id="resource" data-id='casino'>Casino</p>
+        </li>
+        <li class="nav-item">
+          <p class="nav-link" id="night_club" data-id='casino'>Night Club</p>
+        </li>
+        <li class="nav-item">
+          <p class="nav-link" id="movie_theater" data-id='casino'>Theater</p>
+        </li>
+        <li class="nav-item">
+          <p class="nav-link" id="shopping_mall" data-id='casino'>Shopping</p>
+        </li>
+        <li class="nav-item">
+          <p class="nav-link" id="clothing_store" data-id='casino'>Clothes</p>
+        </li>
+        <li class="nav-item">
+          <p class="nav-link" id="florist" data-id='casino'>Florist</p>
+        </li>
+        <li class="nav-item">
+          <p class="nav-link" id="zoo" data-id='casino'>Zoo</p>
+        </li>
+        <li class="nav-item">
+          <p class="nav-link" id="park" data-id='casino'>Park</p>
+        </li>
+        <li class="nav-item">
+          <p class="nav-link" id="spa" data-id='casino'>Spa</p>
+        </li>
+        <li class="nav-item">
+          <p class="nav-link" id="gym" data-id='casino'>Gym</p>
+        </li>
+      </ul>`);
   }
   // showResourceForm();
 
@@ -505,6 +533,7 @@ $(() =>{
       <button id="addAFriend" data-target="friendLocation" class="btn btn-primary">Add friend</button>
     `);
     createSearchBar();
+    showResourceForm();
   }
 
   // showUserForm();
