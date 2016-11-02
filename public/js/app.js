@@ -6,6 +6,7 @@ $(function () {
   var $mapDiv = $('#map');
   var midPoint = { lat: 0, lng: 0 };
   var resource = void 0;
+  var allResults = [];
 
   $('.register').on('click', showRegisterForm);
   $('.login').on('click', showLoginForm);
@@ -373,17 +374,16 @@ $(function () {
     service.nearbySearch(request, callback);
   }
 
-  var allResults = [];
-
   function callback(results, status) {
     allResults = results;
     var maxResults = 100;
-    var resultsToShow = [];
 
     if (status === 'ZERO_RESULTS') {
       alert("No results found");
     } else if (status == google.maps.places.PlacesServiceStatus.OK) {
       var LatLngList = [];
+      var resultsToShow = [];
+      mapInit();
 
       if (results.length <= maxResults) {
         maxResults = results.length;
@@ -400,12 +400,25 @@ $(function () {
     }
   }
   $sidePanel.on('submit', 'form#filterResults', filterResults);
+  $sidePanel.on('click', 'button#clearFilterResults', clearFilterResults);
+
+  function clearFilterResults(e) {
+    e.preventDefault();
+    var status = 'OK';
+    callback(allResults, status);
+  }
 
   function filterResults(e) {
     e.preventDefault();
 
     var price = $(this).find('[name=price]').val();
     var rating = $(this).find('[name=rating]').val();
+
+    if (price === '--' && rating === '--') {
+      return;
+    }
+
+    var venuesToKeep = [];
     var maxPrice = void 0;
     var minRating = void 0;
 
@@ -420,32 +433,33 @@ $(function () {
     if (rating === '****') minRating = 4;
     if (rating === '*****') minRating = 5;
 
-    nearbySearch(maxPrice);
-    removeRatingsBelow(minRating);
-  }
-
-  function removeRatingsBelow(minRating) {
-    var venuesToKeep = [];
-
     allResults.forEach(function (venue) {
-      if (venue.rating > minRating) {
-        venuesToKeep.push(venue);
+
+      if (!!venue.price_level && !!venue.rating) {
+        if (venue.rating > minRating && venue.price_level <= maxPrice) {
+          venuesToKeep.push(venue);
+        }
+      } else if (!!venue.price_level || !!venue.rating) {
+        if (venue.rating > minRating) {
+          venuesToKeep.push(venue);
+        }
+        if (venue.price_level <= maxPrice) {
+          venuesToKeep.push(venue);
+        }
       }
     });
-    console.log('venuesToKeep');
-    console.log(venuesToKeep);
+    // console.log(`venuesToKeep`);
+    // console.log(venuesToKeep);
     populateCarousel(venuesToKeep);
   }
 
-  function buildCarousel(venues) {
-    $sidePanel.empty();
-  }
+  function removePriceAbove(maxPrice) {}
+  function removeRatingsBelow(minRating) {}
 
   function populateCarousel(resultsToShow) {
-    console.log('resultsToShow');
-    console.log(resultsToShow);
+    $sidePanel.empty();
 
-    var $carousel = $('<div id=\'carousel-custom\' class=\'carousel slide\' data-ride=\'carousel\'>\n        <div id=\'filter\'>\n          <h4>Filter Results</h4>\n          <form id="filterResults">\n            <label for=\'price_level\'>Max price</label>\n            <select name="price">\n              <option>--</option>\n              <option id=\'price_level_1\'>\xA3</option>\n              <option id=\'price_level_2\'>\xA3\xA3</option>\n              <option id=\'price_level_3\'>\xA3\xA3\xA3</option>\n              <option id=\'price_level_4\'>\xA3\xA3\xA3\xA3</option>\n            </select>\n            <br>\n            <label for=\'rating\'>Rating</label>\n            <select name="rating">\n              <option>--</option>\n              <option id=\'rating_1\'>*</option>\n              <option id=\'rating_2\'>**</option>\n              <option id=\'rating_3\'>***</option>\n              <option id=\'rating_4\'>****</option>\n              <option id=\'rating_5\'>*****</option>\n            </select>\n            <br>\n            <button id="filterResultsBtn" class="btn btn-secondary" type="submit">Update</button>\n          <form>\n          <hr>\n        </div>\n        <div class=\'carousel-outer\'>\n          <div class=\'carousel-inner\'>\n          </div>\n        </div>\n      </div>');
+    var $carousel = $('<div id=\'carousel-custom\' class=\'carousel slide\' data-ride=\'carousel\'>\n        <div id=\'filter\'>\n          <h4>Filter Results</h4>\n          <form id="filterResults">\n            <label for=\'price_level\'>Max price</label>\n            <select name="price">\n              <option>--</option>\n              <option id=\'price_level_1\'>\xA3</option>\n              <option id=\'price_level_2\'>\xA3\xA3</option>\n              <option id=\'price_level_3\'>\xA3\xA3\xA3</option>\n              <option id=\'price_level_4\'>\xA3\xA3\xA3\xA3</option>\n            </select>\n            <br>\n            <label for=\'rating\'>Rating</label>\n            <select name="rating">\n              <option>--</option>\n              <option id=\'rating_1\'>*</option>\n              <option id=\'rating_2\'>**</option>\n              <option id=\'rating_3\'>***</option>\n              <option id=\'rating_4\'>****</option>\n              <option id=\'rating_5\'>*****</option>\n            </select>\n            <br>\n            <button id="filterResultsBtn" class="btn btn-danger" type="submit">Update</button>\n            <button id="clearFilterResults" class="btn btn-secondary" type="submit">Clear filter</button>\n          <form>\n          <hr>\n        </div>\n      </div>');
 
     resultsToShow.forEach(function (venue) {
       var imgSrc = '';

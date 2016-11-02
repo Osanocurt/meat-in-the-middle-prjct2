@@ -4,6 +4,7 @@ $(() =>{
   let $mapDiv = $('#map');
   let midPoint = { lat: 0, lng: 0};
   let resource;
+  let allResults =[];
 
   $('.register').on('click', showRegisterForm);
   $('.login').on('click', showLoginForm);
@@ -488,17 +489,17 @@ $(() =>{
     service.nearbySearch(request, callback);
   }
 
-  let allResults =[];
 
   function callback(results, status) {
     allResults = results;
     let maxResults = 100;
-    let resultsToShow = [];
 
     if (status === 'ZERO_RESULTS'){
       alert("No results found");
     } else if (status == google.maps.places.PlacesServiceStatus.OK) {
       let LatLngList = [];
+      let resultsToShow = [];
+      mapInit();
 
       if (results.length <= maxResults) {
         maxResults = results.length;
@@ -515,12 +516,25 @@ $(() =>{
     }
   }
   $sidePanel.on('submit', 'form#filterResults', filterResults);
+  $sidePanel.on('click', 'button#clearFilterResults', clearFilterResults);
+
+  function clearFilterResults(e) {
+    e.preventDefault();
+    let status = 'OK';
+    callback(allResults, status);
+  }
 
   function filterResults(e){
     e.preventDefault();
 
     let price = $(this).find('[name=price]').val();
     let rating = $(this).find('[name=rating]').val();
+
+    if (price === '--' && rating==='--'){
+      return;
+    }
+
+    let venuesToKeep = [];
     let maxPrice;
     let minRating;
 
@@ -535,33 +549,34 @@ $(() =>{
     if (rating === '****') minRating = 4;
     if (rating === '*****') minRating = 5;
 
+    allResults.forEach((venue) => {
 
-    nearbySearch(maxPrice);
-    removeRatingsBelow(minRating);
-  }
-
-  function removeRatingsBelow(minRating){
-      let venuesToKeep = [];
-
-      allResults.forEach((venue) => {
-        if (venue.rating > minRating){
+      if (!!venue.price_level && !!venue.rating) {
+        if (venue.rating > minRating && venue.price_level <= maxPrice) {
           venuesToKeep.push(venue);
         }
-      });
-      console.log(`venuesToKeep`);
-      console.log(venuesToKeep);
-      populateCarousel(venuesToKeep);
+      } else if (!!venue.price_level || !!venue.rating) {
+        if (venue.rating > minRating) {
+          venuesToKeep.push(venue);
+        }
+        if (venue.price_level <= maxPrice){
+          venuesToKeep.push(venue);
+        }
+      }
+    });
+    // console.log(`venuesToKeep`);
+    // console.log(venuesToKeep);
+    populateCarousel(venuesToKeep);
   }
 
-  function buildCarousel(venues) {
-    $sidePanel.empty();
-    
+  function removePriceAbove(maxPrice){
+
+  }
+  function removeRatingsBelow(minRating){
   }
 
   function populateCarousel(resultsToShow){
-    console.log(`resultsToShow`);
-    console.log(resultsToShow);
-
+    $sidePanel.empty();
 
     let $carousel = $(
       `<div id='carousel-custom' class='carousel slide' data-ride='carousel'>
@@ -587,13 +602,10 @@ $(() =>{
               <option id='rating_5'>*****</option>
             </select>
             <br>
-            <button id="filterResultsBtn" class="btn btn-secondary" type="submit">Update</button>
+            <button id="filterResultsBtn" class="btn btn-danger" type="submit">Update</button>
+            <button id="clearFilterResults" class="btn btn-secondary" type="submit">Clear filter</button>
           <form>
           <hr>
-        </div>
-        <div class='carousel-outer'>
-          <div class='carousel-inner'>
-          </div>
         </div>
       </div>`);
 
