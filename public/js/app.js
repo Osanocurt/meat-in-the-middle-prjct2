@@ -64,7 +64,7 @@ $(function () {
       var lat = newAddress.geometry.location.lat();
       var lng = newAddress.geometry.location.lng();
       var address = newAddress.formatted_address;
-      console.log(address);
+      // console.log(address);
       document.getElementById("newFriendAdd").value = address;
       document.getElementById("input-lat").value = lat;
       document.getElementById("input-lng").value = lng;
@@ -73,34 +73,42 @@ $(function () {
 
   function handleForm() {
     if (event) event.preventDefault();
-    var token = localStorage.getItem('token');
     var $form = $(this);
-    var nextView = $form.data('target');
-
-    var url = $form.attr('action');
-    var method = $form.attr('method');
     var data = $form.serialize();
 
-    $.ajax({
-      url: url,
-      method: method,
-      data: data,
-      beforeSend: function beforeSend(jqXHR) {
-        if (token) return jqXHR.setRequestHeader('Authorization', 'Bearer ' + token);
-      }
-    }).done(function (data) {
-      if (!!data.user) {
-        var userId = data.user._id;
-        if (userId) localStorage.setItem('id', userId);
-        if (data.token) localStorage.setItem('token', data.token);
-      }
-      if (nextView === 'showUserForm') {
-        showUserForm();
-      } else if (nextView === 'viewProfile') {
-        getFriends();
-      }
-    });
-    // .fail(showLoginForm);
+    if ($form[0].id === 'filterResults') {
+      return;
+    } else {
+      (function () {
+        var token = localStorage.getItem('token');
+        var nextView = $form.data('target');
+
+        var url = $form.attr('action');
+        var method = $form.attr('method');
+        // let data = $form.serialize();
+
+        $.ajax({
+          url: url,
+          method: method,
+          data: data,
+          beforeSend: function beforeSend(jqXHR) {
+            if (token) return jqXHR.setRequestHeader('Authorization', 'Bearer ' + token);
+          }
+        }).done(function (data) {
+          if (!!data.user) {
+            var userId = data.user._id;
+            if (userId) localStorage.setItem('id', userId);
+            if (data.token) localStorage.setItem('token', data.token);
+          }
+          if (nextView === 'showUserForm') {
+            showUserForm();
+          } else if (nextView === 'viewProfile') {
+            getFriends();
+          }
+        });
+        // .fail(showLoginForm);
+      })();
+    }
   }
 
   //-------------------------------------------------------------//
@@ -349,23 +357,27 @@ $(function () {
     addMarker(midPoint);
 
     map.panTo(midPoint);
-    nearbySearch(midPoint);
+    nearbySearch();
   }
 
-  function nearbySearch(midPoint) {
+  function nearbySearch(maxPrice) {
 
     var request = {
       location: midPoint,
       types: [resource],
-      rankBy: google.maps.places.RankBy.DISTANCE
+      rankBy: google.maps.places.RankBy.DISTANCE,
+      maxPriceLevel: maxPrice
     };
 
     var service = new google.maps.places.PlacesService(map);
     service.nearbySearch(request, callback);
   }
 
+  var allResults = [];
+
   function callback(results, status) {
-    var maxResults = 10;
+    allResults = results;
+    var maxResults = 100;
     var resultsToShow = [];
 
     if (status === 'ZERO_RESULTS') {
@@ -387,31 +399,74 @@ $(function () {
       populateCarousel(resultsToShow);
     }
   }
+  $sidePanel.on('submit', 'form#filterResults', filterResults);
+
+  function filterResults(e) {
+    e.preventDefault();
+
+    var price = $(this).find('[name=price]').val();
+    var rating = $(this).find('[name=rating]').val();
+    var maxPrice = void 0;
+    var minRating = void 0;
+
+    if (price === '£') maxPrice = 1;
+    if (price === '££') maxPrice = 2;
+    if (price === '£££') maxPrice = 3;
+    if (price === '££££') maxPrice = 4;
+
+    if (rating === '*') minRating = 1;
+    if (rating === '**') minRating = 2;
+    if (rating === '***') minRating = 3;
+    if (rating === '****') minRating = 4;
+    if (rating === '*****') minRating = 5;
+
+    nearbySearch(maxPrice);
+    removeRatingsBelow(minRating);
+  }
+
+  function removeRatingsBelow(minRating) {
+    var venuesToKeep = [];
+
+    allResults.forEach(function (venue) {
+      if (venue.rating > minRating) {
+        venuesToKeep.push(venue);
+      }
+    });
+    console.log('venuesToKeep');
+    console.log(venuesToKeep);
+    populateCarousel(venuesToKeep);
+  }
+
+  function buildCarousel(venues) {
+    $sidePanel.empty();
+  }
 
   function populateCarousel(resultsToShow) {
-    var $carousel = $('<div id=\'carousel-custom\' class=\'carousel slide\' data-ride=\'carousel\'>\n        <div class=\'carousel-outer\'>\n          <div class=\'carousel-inner\'>\n          </div>\n        </div>\n      </div>');
+    console.log('resultsToShow');
+    console.log(resultsToShow);
 
-    resultsToShow.forEach(function (result) {
+    var $carousel = $('<div id=\'carousel-custom\' class=\'carousel slide\' data-ride=\'carousel\'>\n        <div id=\'filter\'>\n          <h4>Filter Results</h4>\n          <form id="filterResults">\n            <label for=\'price_level\'>Max price</label>\n            <select name="price">\n              <option>--</option>\n              <option id=\'price_level_1\'>\xA3</option>\n              <option id=\'price_level_2\'>\xA3\xA3</option>\n              <option id=\'price_level_3\'>\xA3\xA3\xA3</option>\n              <option id=\'price_level_4\'>\xA3\xA3\xA3\xA3</option>\n            </select>\n            <br>\n            <label for=\'rating\'>Rating</label>\n            <select name="rating">\n              <option>--</option>\n              <option id=\'rating_1\'>*</option>\n              <option id=\'rating_2\'>**</option>\n              <option id=\'rating_3\'>***</option>\n              <option id=\'rating_4\'>****</option>\n              <option id=\'rating_5\'>*****</option>\n            </select>\n            <br>\n            <button id="filterResultsBtn" class="btn btn-secondary" type="submit">Update</button>\n          <form>\n          <hr>\n        </div>\n        <div class=\'carousel-outer\'>\n          <div class=\'carousel-inner\'>\n          </div>\n        </div>\n      </div>');
+
+    resultsToShow.forEach(function (venue) {
       var imgSrc = '';
-
       var imgHtml = '';
       var ratingHtml = '';
       var priceHtml = '';
-      var lat = result.geometry.location.lat();
-      var lng = result.geometry.location.lng();
+      var lat = venue.geometry.location.lat();
+      var lng = venue.geometry.location.lng();
 
-      if (!!result.rating) {
-        ratingHtml = '<p>' + result.rating + ' stars</p>';
+      if (!!venue.rating) {
+        ratingHtml = '<p>' + venue.rating + ' stars</p>';
       }
 
-      if (!!result.photos) {
-        imgSrc = result.photos[0].getUrl({ maxWidth: 300, maxHeight: 500 });
+      if (!!venue.photos) {
+        imgSrc = venue.photos[0].getUrl({ maxWidth: 300, maxHeight: 500 });
         imgHtml = '<br><img src="' + imgSrc + '">';
       }
 
-      if (!!result.price_level) {
+      if (!!venue.price_level) {
         var priceImg = '<img class="priceLevel" src="../images/pound.png">';
-        switch (result.price_level) {
+        switch (venue.price_level) {
           case 1:
             priceHtml = priceImg;
             break;
@@ -427,21 +482,17 @@ $(function () {
         }
       }
 
-      $carousel.append('\n        <div class="item" id="carouselItem">\n          <h4>' + result.name + '</h4>\n          <p>' + result.vicinity + '</p>\n          ' + ratingHtml + priceHtml + '\n          ' + imgHtml + '\n          <button class="directionButton btn btn-primary" data-lat=' + lat + ' data-lng=' + lng + '>Directions</button>\n        </div>\n        <hr>');
+      $carousel.append('\n        <div class="item" id="carouselItem">\n          <h4>' + venue.name + '</h4>\n          <p>' + venue.vicinity + '</p>\n          ' + ratingHtml + priceHtml + '\n          ' + imgHtml + '\n          <button class="directionButton btn btn-primary" data-lat=' + lat + ' data-lng=' + lng + '>Directions</button>\n        </div>\n        <hr>');
     });
 
     $sidePanel.html($carousel);
   }
 
   function setMapBounds(latLngList) {
-    //  Create a new viewpoint bound
     var bounds = new google.maps.LatLngBounds();
-    //  Go through each marker...
     for (var j = 0, LatLngLen = latLngList.length; j < LatLngLen; j++) {
-      // increase the bounds to take marker
       bounds.extend(latLngList[j]);
     }
-    //  Fit  bonds to the map
     map.fitBounds(bounds);
   }
 
@@ -456,7 +507,7 @@ $(function () {
       var infowindow = new google.maps.InfoWindow();
 
       infowindow.setContent('<h2>' + place.name + '</h2><br><button class="directionButton btn btn-secondary"  data-lat=  ' + place.geometry.location.lat() + ' data-lng=' + place.geometry.location.lng() + '>Directions</button>');
-      console.log(place.geometry.location.lng());
+      //  console.log(place.geometry.location.lng());
       infowindow.open(map, this);
     });
   }
@@ -502,7 +553,7 @@ $(function () {
         lng: position.coords.longitude
       };
       people.push(personsPosition);
-      console.log(people);
+      // console.log(people);
       addMarker(personsPosition);
       setMapBounds(people);
     });
