@@ -29,7 +29,7 @@ $(() =>{
   $landing.on('submit', 'form', handleForm);
   $landing.on('click', 'button#landingGetStarted', landingRegForm);
   $landing.on('click', 'button#landingLogin', landingLoginForm);
-  $landing.on('click', 'button#landingSubmit', clearLandingPage);
+  $landing.on('click', 'button#resource', clearLandingPage);
 
   function isLoggedIn() {
     return !!localStorage.getItem('token');
@@ -101,17 +101,49 @@ $(() =>{
         <div class="col-md-4">
           <div class="card">
             <div class="card-block">
-              <h4 class="card-title">Drinking</h4>
+              <h4 class="card-title">Eating & Drinking</h4>
+              <button id="resource" data-id='restaurant'>Restaurant</button>
+              <button id="resource" data-id='bar'>Bar</button>
+              <button id="resource" data-id='cafe'>Cafe</button>
+
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-block">
+              <h4 class="card-title">Night Out</h4>
+              <button id="resource" data-id='casino'>Casino</button>
+              <button id="resource" data-id='night_club'>Night Club</button>
+              <button id="resource" data-id='movie_theater'>Theater</button>
+              <button id="resource" data-id='liquor_store'>Off-licence</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-block">
+              <h4 class="card-title">Shopping</h4>
+              <button id="resource" data-id='shopping_mall'>Shopping</button>
+              <button id="resource" data-id='clothing_store'>Clothes</button>
+              <button id="resource" data-id='florist'>Florist</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-block">
+              <h4 class="card-title">Day Out</h4>
+              <button id="resource" data-id='zoo'>Zoo</button>
+              <button id="resource" data-id='park'>Park</button>
+              <button id="resource" data-id='spa'>Spa</button>
+              <button id="resource" data-id='gym'>Gym</button>
             </div>
           </div>
         </div>
-        <br>
-        <button id="landingSubmit" class="btn btn-primary">Make the magic happen</button>
       </div>`);
   }
 
   function clearLandingPage(){
+    resource = $(this).data('id');
+    console.log(resource);
     $landing.remove();
+    mapInit();
+    showUserForm();
   }
 
   function saved() {
