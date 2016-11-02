@@ -23,7 +23,7 @@ $(function () {
   var $sidePanel = $("#sidePanel");
   $main.on("click", "button#resource", updateResourceChoice);
   var $friendCarouselDiv = $("#friendCarouselDiv");
-  // const $friendCarouselInner = $("#friendCarouselInner");
+  $sidePanel.on('click', 'button#locationButton', getUserCurrentPos);
 
   function saved() {
     $(this).html("Saved");
@@ -262,7 +262,7 @@ $(function () {
   // mapInit();
 
   function showResourceForm() {
-    $main.prepend('<h1>What are you in the mood for?</h1>\n      <button id="resource" data-id=\'restaurant\'>Restaurant</button>\n      <button id="resource" data-id=\'casino\'>Casino</button>\n      <button id="resource" data-id=\'night_club\'>Night Club</button>\n      <button id="resource" data-id=\'movie_theater\'>Theater</button>\n      <button id="resource" data-id=\'liquor_store\'>Off-licence</button>\n      <button id="resource" data-id=\'clothing_store\'>Clothes</button>\n      <button id="resource" data-id=\'shoe_store\'>Shoes</button>\n      <button id="resource" data-id=\'shopping_mall\'>Shopping</button>\n      <button id="resource" data-id=\'florist\'>Florist</button>\n      <button id="resource" data-id=\'gym\'>Gym</button>\n      <button id="resource" data-id=\'zoo\'>Zoo</button>\n      <button id="resource" data-id=\'bar\'>Bar</button>\n      <button id="resource" data-id=\'park\'>Park</button>\n      <button id="resource" data-id=\'spa\'>Spa</button>\n      <button id="resource" data-id=\'cafe\'>Cafe</button><br>');
+    $main.prepend('<h1>What are you in the mood for?</h1>\n      <button id="resource" data-id=\'restaurant\'>Restaurant</button>\n      <button id="resource" data-id=\'bar\'>Bar</button>\n      <button id="resource" data-id=\'cafe\'>Cafe</button>\n      <button id="resource" data-id=\'casino\'>Casino</button>\n      <button id="resource" data-id=\'night_club\'>Night Club</button>\n      <button id="resource" data-id=\'movie_theater\'>Theater</button>\n      <button id="resource" data-id=\'liquor_store\'>Off-licence</button>\n      <button id="resource" data-id=\'shopping_mall\'>Shopping</button>\n      <button id="resource" data-id=\'clothing_store\'>Clothes</button>\n      <button id="resource" data-id=\'florist\'>Florist</button>\n      <button id="resource" data-id=\'zoo\'>Zoo</button>\n      <button id="resource" data-id=\'park\'>Park</button>\n      <button id="resource" data-id=\'spa\'>Spa</button>\n      <button id="resource" data-id=\'gym\'>Gym</button><br>');
   }
   showResourceForm();
 
@@ -279,7 +279,7 @@ $(function () {
     createSearchBar();
   }
 
-  // showUserForm();
+  showUserForm();
 
   var latLngList = [];
   $sidePanel.on('click', 'button#useSavedAdd', useHome);
@@ -494,10 +494,9 @@ $(function () {
     });
   }
 
-  //directions and route live update based on choice of travel method from drop down menu which spawns on function firing.
   $("#travelSelect").on('change', showDirections);
 
-  document.getElementById("locationButton").addEventListener("click", function () {
+  function getUserCurrentPos() {
     navigator.geolocation.getCurrentPosition(function (position) {
       var personsPosition = {
         lat: position.coords.latitude,
@@ -509,7 +508,7 @@ $(function () {
       setMapBounds(people);
     });
     getFriends();
-  });
+  }
 
   function showFriendCarousel() {
     $friendCarouselDiv.css("visibility", "visible");
