@@ -103,40 +103,38 @@ $(() =>{
     $landing.html(`
       <div class="landing">
         <h1>What are you in the mood for?</h1>
-        <div class="col-md-4">
+        <div class="row">
           <div class="card">
             <div class="card-block">
               <h4 class="card-title">Eating & Drinking</h4>
-              <button id="resource" data-id='restaurant'>Restaurant</button>
-              <button id="resource" data-id='bar'>Bar</button>
-              <button id="resource" data-id='cafe'>Cafe</button>
-
+              <button id="resource" class="btn btn-secondary" data-id='restaurant'>Restaurant</button>
+              <button id="resource" class="btn btn-secondary" data-id='bar'>Bar</button>
+              <button id="resource" class="btn btn-secondary" data-id='cafe'>Cafe</button>
             </div>
           </div>
           <div class="card">
             <div class="card-block">
               <h4 class="card-title">Night Out</h4>
-              <button id="resource" data-id='casino'>Casino</button>
-              <button id="resource" data-id='night_club'>Night Club</button>
-              <button id="resource" data-id='movie_theater'>Theater</button>
-              <button id="resource" data-id='liquor_store'>Off-licence</button>
+              <button id="resource" class="btn btn-secondary" data-id='casino'>Casino</button>
+              <button id="resource" class="btn btn-secondary" data-id='night_club'>Night Club</button>
+              <button id="resource" class="btn btn-secondary" data-id='movie_theater'>Theater</button>
             </div>
           </div>
           <div class="card">
             <div class="card-block">
               <h4 class="card-title">Shopping</h4>
-              <button id="resource" data-id='shopping_mall'>Shopping</button>
-              <button id="resource" data-id='clothing_store'>Clothes</button>
-              <button id="resource" data-id='florist'>Florist</button>
+              <button id="resource" class="btn btn-secondary" data-id='shopping_mall'>Shopping</button>
+              <button id="resource" class="btn btn-secondary" data-id='clothing_store'>Clothes</button>
+              <button id="resource" class="btn btn-secondary" data-id='florist'>Florist</button>
             </div>
           </div>
           <div class="card">
             <div class="card-block">
               <h4 class="card-title">Day Out</h4>
-              <button id="resource" data-id='zoo'>Zoo</button>
-              <button id="resource" data-id='park'>Park</button>
-              <button id="resource" data-id='spa'>Spa</button>
-              <button id="resource" data-id='gym'>Gym</button>
+              <button id="resource" class="btn btn-secondary" data-id='zoo'>Zoo</button>
+              <button id="resource" class="btn btn-secondary" data-id='park'>Park</button>
+              <button id="resource" class="btn btn-secondary" data-id='spa'>Spa</button>
+              <button id="resource" class="btn btn-secondary" data-id='gym'>Gym</button>
             </div>
           </div>
         </div>
@@ -469,7 +467,6 @@ $(() =>{
       <button id="resource" data-id='casino'>Casino</button>
       <button id="resource" data-id='night_club'>Night Club</button>
       <button id="resource" data-id='movie_theater'>Theater</button>
-      <button id="resource" data-id='liquor_store'>Off-licence</button>
       <button id="resource" data-id='shopping_mall'>Shopping</button>
       <button id="resource" data-id='clothing_store'>Clothes</button>
       <button id="resource" data-id='florist'>Florist</button>
