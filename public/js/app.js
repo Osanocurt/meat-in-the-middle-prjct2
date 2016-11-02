@@ -443,20 +443,37 @@ $(function () {
       var hasPrice = !!venue.price_level;
       var hasRating = !!venue.rating;
       if (hasPrice && hasRating) {
-        if (venue.rating > minRating || venue.price_level <= maxPrice) {
-          if (!minRating || !maxPrice) {
+        if (!!minRating && !!maxPrice) {
+          if (venue.rating > minRating && venue.price_level === maxPrice) {
+            venuesToKeep.push(venue);
+          }
+        } else if (!minRating) {
+          if (venue.price_level <= maxPrice) {
+            venuesToKeep.push(venue);
+          }
+        } else if (!maxPrice) {
+          if (venue.rating <= minRating) {
             venuesToKeep.push(venue);
           }
         }
       } else if (hasPrice || hasRating) {
-        if (venue.rating > minRating || venue.price_level <= maxPrice) {
-          venuesToKeep.push(venue);
+        if (!minRating && !maxPrice) {
+          if (venue.rating > minRating || venue.price_level <= maxPrice) {
+            venuesToKeep.push(venue);
+          }
+        } else if (!minRating) {
+          if (venue.price_level <= maxPrice) {
+            venuesToKeep.push(venue);
+          }
+        } else if (!maxPrice) {
+          if (venue.rating > minRating) {
+            venuesToKeep.push(venue);
+          }
         }
       }
     });
 
     if (venuesToKeep.length === 0) {
-      console.log("No results");
       mapInit();
       populateCarousel(venuesToKeep);
       return;
