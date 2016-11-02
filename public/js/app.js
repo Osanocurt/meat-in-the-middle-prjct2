@@ -25,6 +25,8 @@ $(function () {
   var $friendCarouselDiv = $("#friendCarouselDiv");
   $sidePanel.on('click', 'button#locationButton', getUserCurrentPos);
 
+  var iwindow = new google.maps.InfoWindow();
+
   function saved() {
     $(this).html("Saved");
   }
@@ -347,7 +349,6 @@ $(function () {
       lat: midLat,
       lng: midLng
     };
-    addMarker(midPoint);
 
     map.panTo(midPoint);
     nearbySearch(midPoint);
@@ -428,7 +429,13 @@ $(function () {
         }
       }
 
-      $carousel.append('\n        <div class="item" id="carouselItem">\n          <h4>' + result.name + '</h4>\n          <p>' + result.vicinity + '</p>\n          ' + ratingHtml + priceHtml + '\n          ' + imgHtml + '\n          <button class="directionButton btn btn-primary" data-lat=' + lat + ' data-lng=' + lng + '>Directions</button>\n        </div>\n        <hr>');
+      $carousel.append('\n        <div class="item" id="carouselItem">\n          <a name="' + result.name + '" data-lat="' + result.geometry.location.lat() + '" data-lng="' + result.geometry.location.lng() + '" id="carouselChoice"><h4>' + result.name + '</h4>\n          <p>' + result.vicinity + '</p>\n          ' + ratingHtml + priceHtml + '\n          ' + imgHtml + '</a>\n          <button class="directionButton btn btn-primary" data-lat=' + lat + ' data-lng=' + lng + '>Directions</button>\n        </div>\n        <hr>');
+      $main.on("click", "#carouselChoice", function () {
+        console.log(result);
+        iwindow.setPosition({ lat: $(this).data("lat"), lng: $(this).data("lng") });
+        iwindow.setContent('<h4>' + this.name + '</h4>');
+        iwindow.open(map);
+      });
     });
 
     $sidePanel.html($carousel);

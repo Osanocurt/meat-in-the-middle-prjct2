@@ -23,6 +23,8 @@ $(() =>{
   const $friendCarouselDiv = $("#friendCarouselDiv");
   $sidePanel.on('click', 'button#locationButton', getUserCurrentPos);
 
+  var iwindow = new google.maps.InfoWindow();
+
 
   function saved() {
     $(this).html("Saved");
@@ -463,7 +465,6 @@ $(() =>{
       lat: midLat,
       lng: midLng
     };
-    addMarker(midPoint);
 
     map.panTo(midPoint);
     nearbySearch(midPoint);
@@ -553,16 +554,23 @@ $(() =>{
 
       $carousel.append(`
         <div class="item" id="carouselItem">
-          <h4>${result.name}</h4>
+          <a name="${result.name}" data-lat="${result.geometry.location.lat()}" data-lng="${result.geometry.location.lng()}" id="carouselChoice"><h4>${result.name}</h4>
           <p>${result.vicinity}</p>
           ${ratingHtml}${priceHtml}
-          ${imgHtml}
+          ${imgHtml}</a>
           <button class="directionButton btn btn-primary" data-lat=${lat} data-lng=${lng}>Directions</button>
         </div>
         <hr>`);
+        $main.on("click", "#carouselChoice", function() {
+          console.log(result);
+          iwindow.setPosition({ lat: $(this).data("lat"), lng: $(this).data("lng")});
+          iwindow.setContent(`<h4>${this.name}</h4>`);
+          iwindow.open(map);
+        });
      });
 
     $sidePanel.html($carousel);
+
   }
 
   function setMapBounds(latLngList){
