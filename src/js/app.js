@@ -435,7 +435,7 @@ $(() =>{
       <button id="resource" data-id='spa'>Spa</button>
       <button id="resource" data-id='gym'>Gym</button><br>`);
   }
-  showResourceForm();
+  // showResourceForm();
 
   function updateResourceChoice(){
     resource = $(this).data('id');
@@ -467,7 +467,7 @@ $(() =>{
     createSearchBar();
   }
 
-  showUserForm();
+  // showUserForm();
 
   let latLngList = [];
   $sidePanel.on('click', 'button#useSavedAdd', useHome);
