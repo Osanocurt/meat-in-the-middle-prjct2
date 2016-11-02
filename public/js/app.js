@@ -43,11 +43,15 @@ $(function () {
 
   function showRegisterForm() {
     if (event) event.preventDefault();
+    $friendCarouselDiv.css("visibility", "hidden");
+    $("#travelModeDiv").css("visibility", "hidden");
     $sidePanel.html('\n      <h2>Register</h2>\n      <form method="post" action="/api/register" data-target="showUserForm">\n        <div class="form-group">\n          <input class="form-control" name="user[username]" placeholder="Username">\n        </div>\n        <div class="form-group">\n          <input class="form-control" name="user[email]" placeholder="Email">\n        </div>\n        <div class="form-group">\n          <input class="form-control" type="password" name="user[password]" placeholder="Password">\n        </div>\n        <div class="form-group">\n          <input class="form-control" type="password" name="user[passwordConfirmation]" placeholder="Password Confirmation">\n        </div>\n        <button class="btn btn-primary">Register</button>\n      </form>\n    ');
   }
 
   function showLoginForm() {
     if (event) event.preventDefault();
+    $friendCarouselDiv.css("visibility", "hidden");
+    $("#travelModeDiv").css("visibility", "hidden");
     $sidePanel.html('\n      <h2>Login</h2>\n      <form method="post" action="/api/login" data-target="showUserForm">\n        <div class="form-group">\n          <input class="form-control" name="email" placeholder="Email">\n        </div>\n        <div class="form-group">\n          <input class="form-control" type="password" name="password" placeholder="Password">\n        </div>\n        <button class="btn btn-primary">Login</button>\n      </form>\n    ');
   }
 
@@ -107,6 +111,9 @@ $(function () {
   //-------------------------------------------------------------//
 
   function getFriends() {
+    $friendCarouselDiv.css("visibility", "hidden");
+    $("#travelModeDiv").css("visibility", "hidden");
+
     var nextView = "";
 
     if (!$(this).data('target')) {
@@ -242,6 +249,8 @@ $(function () {
 
   function logout() {
     if (event) event.preventDefault();
+    $friendCarouselDiv.css("visibility", "hidden");
+    $("#travelModeDiv").css("visibility", "hidden");
     localStorage.removeItem('token');
     localStorage.removeItem('id');
     showLoginForm();
@@ -347,7 +356,6 @@ $(function () {
       lat: midLat,
       lng: midLng
     };
-    addMarker(midPoint);
 
     map.panTo(midPoint);
     nearbySearch(midPoint);

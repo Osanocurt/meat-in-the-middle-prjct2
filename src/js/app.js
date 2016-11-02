@@ -42,6 +42,8 @@ $(() =>{
 
   function showRegisterForm() {
     if(event) event.preventDefault();
+    $friendCarouselDiv.css("visibility", "hidden");
+    $("#travelModeDiv").css("visibility", "hidden");
     $sidePanel.html(`
       <h2>Register</h2>
       <form method="post" action="/api/register" data-target="showUserForm">
@@ -64,6 +66,8 @@ $(() =>{
 
   function showLoginForm() {
     if(event) event.preventDefault();
+    $friendCarouselDiv.css("visibility", "hidden");
+    $("#travelModeDiv").css("visibility", "hidden");
     $sidePanel.html(`
       <h2>Login</h2>
       <form method="post" action="/api/login" data-target="showUserForm">
@@ -150,6 +154,9 @@ $(() =>{
   //-------------------------------------------------------------//
 
   function getFriends() {
+    $friendCarouselDiv.css("visibility", "hidden");
+    $("#travelModeDiv").css("visibility", "hidden");
+
     let nextView = "";
 
     if (!$(this).data('target')) {
@@ -310,6 +317,8 @@ $(() =>{
 
   function logout() {
     if(event) event.preventDefault();
+    $friendCarouselDiv.css("visibility", "hidden");
+    $("#travelModeDiv").css("visibility", "hidden");
     localStorage.removeItem('token');
     localStorage.removeItem('id');
     showLoginForm();
@@ -463,7 +472,6 @@ $(() =>{
       lat: midLat,
       lng: midLng
     };
-    addMarker(midPoint);
 
     map.panTo(midPoint);
     nearbySearch(midPoint);
