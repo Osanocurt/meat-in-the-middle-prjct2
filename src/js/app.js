@@ -22,7 +22,7 @@ $(() =>{
   $main.on('click', 'button.delete', deleteFriend);
   $main.on('click', 'button.edit', getFriend);
   $main.on("click", ".directionButton", selectVenue);
-  $main.on("click", "button#resource", updateResourceChoice);
+  $main.on("click", "a#resource", updateResourceChoice);
   $sidePanel.on('click', 'button#locationButton', getUserCurrentPos);
   var iwindow = new google.maps.InfoWindow();
   $sidePanel.on('submit', 'form#filterResults', filterResults);
@@ -463,43 +463,43 @@ $(() =>{
     $main.prepend(`
       <ul class="nav nav-tabs">
         <li class="nav-item">
-          <p class="nav-link" id="resource" data-id='restaurant'>Restaurant</p>
+          <a class="nav-link" id="resource" data-id='restaurant'>Restaurant</a>
         </li>
         <li class="nav-item">
-          <p class="nav-link" id="resource" data-id='bar'>Bar</p>
+          <a class="nav-link" id="resource" data-id='bar'>Bar</a>
         </li>
         <li class="nav-item">
-          <p class="nav-link" id="resource" data-id='cafe'>Cafe</p>
+          <a class="nav-link" id="resource" data-id='cafe'>Cafe</a>
         </li>
         <li class="nav-item">
-          <p class="nav-link" id="resource" data-id='casino'>Casino</p>
+          <a class="nav-link" id="resource" data-id='casino'>Casino</a>
         </li>
         <li class="nav-item">
-          <p class="nav-link" id="night_club" data-id='casino'>Night Club</p>
+          <a class="nav-link" id="resource" data-id='night_club'>Night Club</a>
         </li>
         <li class="nav-item">
-          <p class="nav-link" id="movie_theater" data-id='casino'>Theater</p>
+          <a class="nav-link" id="resource" data-id='movie_theater'>Theater</a>
         </li>
         <li class="nav-item">
-          <p class="nav-link" id="shopping_mall" data-id='casino'>Shopping</p>
+          <a class="nav-link" id="resource" data-id='shopping_mall'>Shopping</a>
         </li>
         <li class="nav-item">
-          <p class="nav-link" id="clothing_store" data-id='casino'>Clothes</p>
+          <a class="nav-link" id="resource" data-id='clothing_store'>Clothes</a>
         </li>
         <li class="nav-item">
-          <p class="nav-link" id="florist" data-id='casino'>Florist</p>
+          <a class="nav-link" id="resource" data-id='florist'>Florist</a>
         </li>
         <li class="nav-item">
-          <p class="nav-link" id="zoo" data-id='casino'>Zoo</p>
+          <a class="nav-link" id="resource" data-id='casino'>Zoo</a>
         </li>
         <li class="nav-item">
-          <p class="nav-link" id="park" data-id='casino'>Park</p>
+          <a class="nav-link" id="resource" data-id='park'>Park</a>
         </li>
         <li class="nav-item">
-          <p class="nav-link" id="spa" data-id='casino'>Spa</p>
+          <a class="nav-link" id="resource" data-id='spa'>Spa</a>
         </li>
         <li class="nav-item">
-          <p class="nav-link" id="gym" data-id='casino'>Gym</p>
+          <a class="nav-link" id="resource" data-id='gym'>Gym</a>
         </li>
       </ul>`);
   }
