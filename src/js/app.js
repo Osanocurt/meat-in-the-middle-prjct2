@@ -659,35 +659,19 @@ $(() =>{
 
   function clearFilterResults(e) {
     e.preventDefault();
-    // let status = 'OK';
     populateMap(allResults);
   }
 
   function filterResults(e){
     e.preventDefault();
-    // let status= 'OK';
+    let maxPrice = parseInt($(this).find('[name=price]').val());
+    let minRating = parseInt($(this).find('[name=rating]').val());
 
-    let price = $(this).find('[name=price]').val();
-    let rating = $(this).find('[name=rating]').val();
-
-    if (price === '--' && rating==='--'){
+    if (maxPrice === '--' && minRating==='--'){
       return;
     }
 
     let venuesToKeep = [];
-    let maxPrice;
-    let minRating;
-
-    if (price === '£') maxPrice = 1;
-    if (price === '££') maxPrice = 2;
-    if (price === '£££') maxPrice = 3;
-    if (price === '££££') maxPrice = 4;
-
-    if (rating === '*') minRating = 1;
-    if (rating === '**') minRating = 2;
-    if (rating === '***') minRating = 3;
-    if (rating === '****') minRating = 4;
-    if (rating === '*****') minRating = 5;
 
     allResults.forEach((venue) => {
       let hasPrice = !!venue.price_level;
@@ -726,7 +710,6 @@ $(() =>{
     if (venuesToKeep.length === 0){
       mapInit();
       populateCarousel(venuesToKeep);
-      return;
     } else {
       populateMap(venuesToKeep);
       populateCarousel(venuesToKeep);
@@ -741,23 +724,23 @@ $(() =>{
         <div id='filter'>
           <h4>Filter Results</h4>
           <form id="filterResults">
-            <label for='price_level'>Max price</label>
+            <label for='price'>Max price</label>
             <select name="price">
-              <option>--</option>
-              <option id='price_level_1'>£</option>
-              <option id='price_level_2'>££</option>
-              <option id='price_level_3'>£££</option>
-              <option id='price_level_4'>££££</option>
+              <option value='null'>--</option>
+              <option value='1'>£</option>
+              <option value='2'>££</option>
+              <option value='3'>£££</option>
+              <option value='4'>££££</option>
             </select>
             <br>
             <label for='rating'>Rating</label>
             <select name="rating">
-              <option>--</option>
-              <option id='rating_1'>*</option>
-              <option id='rating_2'>**</option>
-              <option id='rating_3'>***</option>
-              <option id='rating_4'>****</option>
-              <option id='rating_5'>*****</option>
+              <option value='null'>--</option>
+              <option value='1'>*</option>
+              <option value='2'>**</option>
+              <option value='3'>***</option>
+              <option value='4'>****</option>
+              <option value='5'>*****</option>
             </select>
             <br>
             <button id="filterResultsBtn" class="btn btn-danger" type="submit">Update</button>
@@ -923,7 +906,6 @@ $(() =>{
     let startingLat = $(this).data("lat");
     let startingLng =  $(this).data("lng");
     startingPos = { lat: startingLat, lng: startingLng};
-    console.log(startingPos);
     showDirections();
   }
 

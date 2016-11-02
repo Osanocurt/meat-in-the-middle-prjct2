@@ -448,35 +448,19 @@ $(function () {
 
   function clearFilterResults(e) {
     e.preventDefault();
-    // let status = 'OK';
     populateMap(allResults);
   }
 
   function filterResults(e) {
     e.preventDefault();
-    // let status= 'OK';
+    var maxPrice = parseInt($(this).find('[name=price]').val());
+    var minRating = parseInt($(this).find('[name=rating]').val());
 
-    var price = $(this).find('[name=price]').val();
-    var rating = $(this).find('[name=rating]').val();
-
-    if (price === '--' && rating === '--') {
+    if (maxPrice === '--' && minRating === '--') {
       return;
     }
 
     var venuesToKeep = [];
-    var maxPrice = void 0;
-    var minRating = void 0;
-
-    if (price === '£') maxPrice = 1;
-    if (price === '££') maxPrice = 2;
-    if (price === '£££') maxPrice = 3;
-    if (price === '££££') maxPrice = 4;
-
-    if (rating === '*') minRating = 1;
-    if (rating === '**') minRating = 2;
-    if (rating === '***') minRating = 3;
-    if (rating === '****') minRating = 4;
-    if (rating === '*****') minRating = 5;
 
     allResults.forEach(function (venue) {
       var hasPrice = !!venue.price_level;
@@ -515,7 +499,6 @@ $(function () {
     if (venuesToKeep.length === 0) {
       mapInit();
       populateCarousel(venuesToKeep);
-      return;
     } else {
       populateMap(venuesToKeep);
       populateCarousel(venuesToKeep);
@@ -525,7 +508,7 @@ $(function () {
   function populateCarousel(resultsToShow) {
     $sidePanel.empty();
 
-    var $carousel = $('<div id=\'carousel-custom\' class=\'carousel slide\' data-ride=\'carousel\'>\n        <div id=\'filter\'>\n          <h4>Filter Results</h4>\n          <form id="filterResults">\n            <label for=\'price_level\'>Max price</label>\n            <select name="price">\n              <option>--</option>\n              <option id=\'price_level_1\'>\xA3</option>\n              <option id=\'price_level_2\'>\xA3\xA3</option>\n              <option id=\'price_level_3\'>\xA3\xA3\xA3</option>\n              <option id=\'price_level_4\'>\xA3\xA3\xA3\xA3</option>\n            </select>\n            <br>\n            <label for=\'rating\'>Rating</label>\n            <select name="rating">\n              <option>--</option>\n              <option id=\'rating_1\'>*</option>\n              <option id=\'rating_2\'>**</option>\n              <option id=\'rating_3\'>***</option>\n              <option id=\'rating_4\'>****</option>\n              <option id=\'rating_5\'>*****</option>\n            </select>\n            <br>\n            <button id="filterResultsBtn" class="btn btn-danger" type="submit">Update</button>\n            <button id="clearFilterResults" class="btn btn-secondary" type="submit">Clear filter</button>\n          <form>\n          <hr>\n        </div>\n      </div>');
+    var $carousel = $('<div id=\'carousel-custom\' class=\'carousel slide\' data-ride=\'carousel\'>\n        <div id=\'filter\'>\n          <h4>Filter Results</h4>\n          <form id="filterResults">\n            <label for=\'price\'>Max price</label>\n            <select name="price">\n              <option value=\'null\'>--</option>\n              <option value=\'1\'>\xA3</option>\n              <option value=\'2\'>\xA3\xA3</option>\n              <option value=\'3\'>\xA3\xA3\xA3</option>\n              <option value=\'4\'>\xA3\xA3\xA3\xA3</option>\n            </select>\n            <br>\n            <label for=\'rating\'>Rating</label>\n            <select name="rating">\n              <option value=\'null\'>--</option>\n              <option value=\'1\'>*</option>\n              <option value=\'2\'>**</option>\n              <option value=\'3\'>***</option>\n              <option value=\'4\'>****</option>\n              <option value=\'5\'>*****</option>\n            </select>\n            <br>\n            <button id="filterResultsBtn" class="btn btn-danger" type="submit">Update</button>\n            <button id="clearFilterResults" class="btn btn-secondary" type="submit">Clear filter</button>\n          <form>\n          <hr>\n        </div>\n      </div>');
 
     resultsToShow.forEach(function (venue) {
       var imgSrc = '';
@@ -653,7 +636,6 @@ $(function () {
     var startingLat = $(this).data("lat");
     var startingLng = $(this).data("lng");
     startingPos = { lat: startingLat, lng: startingLng };
-    console.log(startingPos);
     showDirections();
   }
 
