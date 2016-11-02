@@ -6,6 +6,12 @@ $(() =>{
   let resource;
   let allResults =[];
   let $landing = $('#landing');
+  let uniqueId = 0;
+  let venueMarkers = [];
+  let ids = [];
+  let markerId = [];
+  const pinImage = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2%7C00FFFF");
+  const pinDefault = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2%7CEE99EE");
   const $sidePanel = $("#sidePanel");
   const $friendCarouselDiv = $("#friendCarouselDiv");
 
@@ -24,7 +30,7 @@ $(() =>{
   $main.on("click", ".directionButton", selectVenue);
   $main.on("click", "a#resource", updateResourceChoice);
   $sidePanel.on('click', 'button#locationButton', getUserCurrentPos);
-  var iwindow = new google.maps.InfoWindow();
+  // var iwindow = new google.maps.InfoWindow();
   $sidePanel.on('submit', 'form#filterResults', filterResults);
   $sidePanel.on('click', 'button#clearFilterResults', clearFilterResults);
   $landing.on('submit', 'form', handleForm);
@@ -812,19 +818,20 @@ $(() =>{
 
       $carousel.append(`
         <div class="item" id="carouselItem">
-          <a name="${venue.name}" data-lat="${venue.geometry.location.lat()}" data-lng="${venue.geometry.location.lng()}" id="carouselChoice"><h4>${venue.name}</h4>
+          <a id="carouselChoice" data-id="${uniqueId}"><h4>${venue.name}</h4>
           <p>${venue.vicinity}</p>
-
           ${ratingHtml}${priceHtml}
           ${imgHtml}</a>
           <button class="directionButton btn btn-primary" data-lat=${lat} data-lng=${lng}>Directions</button>
         </div>
         <hr>`);
-        $main.on("click", "#carouselChoice", function() {
-          iwindow.setPosition({ lat: $(this).data("lat"), lng: $(this).data("lng")});
-          iwindow.setContent(`<h4>${this.name}</h4>`);
-          iwindow.open(map);
-        });
+        uniqueId ++;
+
+        // $main.on("click", "#carouselChoice", function() {
+        //   iwindow.setPosition({ lat: $(this).data("lat"), lng: $(this).data("lng")});
+        //   iwindow.setContent(`<h4>${this.name}</h4>`);
+        //   iwindow.open(map);
+        // });
      });
 
     $sidePanel.html($carousel);
@@ -840,20 +847,25 @@ $(() =>{
   }
 
   function createMarker(place) {
-     var placeLoc = place.geometry.location;
-     var marker = new google.maps.Marker({
-       map: map,
-       position: place.geometry.location
-     });
+    var placeLoc = place.geometry.location;
+    var marker = new google.maps.Marker({
+      map: map,
+      position: place.geometry.location,
+      icon: pinDefault
+    });
 
-     google.maps.event.addListener(marker, 'click', function() {
-       let infowindow = new google.maps.InfoWindow();
+    marker.id = markerId;
+    venueMarkers.push(marker);
+    markerId++;
 
-       infowindow.setContent(`<h2>${place.name}</h2><br><button class="directionButton btn btn-secondary"  data-lat=  ${place.geometry.location.lat()} data-lng=${place.geometry.location.lng()}>Directions</button>`);
+    google.maps.event.addListener(marker, 'click', function() {
+      let infowindow = new google.maps.InfoWindow();
+
+      infowindow.setContent(`<h2>${place.name}</h2><br><button class="directionButton btn btn-secondary"  data-lat=  ${place.geometry.location.lat()} data-lng=${place.geometry.location.lng()}>Directions</button>`);
       //  console.log(place.geometry.location.lng());
-       infowindow.open(map, this);
-     });
-   }
+      infowindow.open(map, this);
+    });
+  }
 
 
 
@@ -928,15 +940,15 @@ $(() =>{
         </div>
      </div>`);
 
-     people.forEach((person) => {
-       if (people.indexOf(person) !== 0) {
+    people.forEach((person) => {
+      if (people.indexOf(person) !== 0) {
 
-         $("#friendCarouselInner").append(
-           `<div class="carousel-item">
-           <h4 class="chooseStart" data-lat="${person.lat}" data-lng="${person.lng}">Directions for friend ${people.indexOf(person)}</h4>
-           </div>`
-         );
-         $main.on('click', '.chooseStart', chooseStart);
+        $("#friendCarouselInner").append(
+          `<div class="carousel-item">
+          <h4 class="chooseStart" data-lat="${person.lat}" data-lng="${person.lng}">Directions for friend ${people.indexOf(person)}</h4>
+          </div>`
+        );
+        $main.on('click', '.chooseStart', chooseStart);
        }
      });
   }
@@ -948,4 +960,15 @@ $(() =>{
     console.log(startingPos);
     showDirections();
   }
+
+  $main.on("click", "#carouselChoice", function() {
+    console.log("click");
+    for (var i=0; i< venueMarkers.length; i++) {
+      if (venueMarkers[i].id == $(this).data("id")) {
+        venueMarkers[i].setIcon(pinImage);
+      } else {
+        venueMarkers[i].setIcon(pinDefault);
+      }
+    }
+  });
 });

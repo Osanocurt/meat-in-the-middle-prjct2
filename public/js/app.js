@@ -8,6 +8,12 @@ $(function () {
   var resource = void 0;
   var allResults = [];
   var $landing = $('#landing');
+  var uniqueId = 0;
+  var venueMarkers = [];
+  var ids = [];
+  var markerId = [];
+  var pinImage = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2%7C00FFFF");
+  var pinDefault = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2%7CEE99EE");
   var $sidePanel = $("#sidePanel");
   var $friendCarouselDiv = $("#friendCarouselDiv");
 
@@ -26,7 +32,7 @@ $(function () {
   $main.on("click", ".directionButton", selectVenue);
   $main.on("click", "a#resource", updateResourceChoice);
   $sidePanel.on('click', 'button#locationButton', getUserCurrentPos);
-  var iwindow = new google.maps.InfoWindow();
+  // var iwindow = new google.maps.InfoWindow();
   $sidePanel.on('submit', 'form#filterResults', filterResults);
   $sidePanel.on('click', 'button#clearFilterResults', clearFilterResults);
   $landing.on('submit', 'form', handleForm);
@@ -566,12 +572,14 @@ $(function () {
         }
       }
 
-      $carousel.append('\n        <div class="item" id="carouselItem">\n          <a name="' + venue.name + '" data-lat="' + venue.geometry.location.lat() + '" data-lng="' + venue.geometry.location.lng() + '" id="carouselChoice"><h4>' + venue.name + '</h4>\n          <p>' + venue.vicinity + '</p>\n\n          ' + ratingHtml + priceHtml + '\n          ' + imgHtml + '</a>\n          <button class="directionButton btn btn-primary" data-lat=' + lat + ' data-lng=' + lng + '>Directions</button>\n        </div>\n        <hr>');
-      $main.on("click", "#carouselChoice", function () {
-        iwindow.setPosition({ lat: $(this).data("lat"), lng: $(this).data("lng") });
-        iwindow.setContent('<h4>' + this.name + '</h4>');
-        iwindow.open(map);
-      });
+      $carousel.append('\n        <div class="item" id="carouselItem">\n          <a id="carouselChoice" data-id="' + uniqueId + '"><h4>' + venue.name + '</h4>\n          <p>' + venue.vicinity + '</p>\n          ' + ratingHtml + priceHtml + '\n          ' + imgHtml + '</a>\n          <button class="directionButton btn btn-primary" data-lat=' + lat + ' data-lng=' + lng + '>Directions</button>\n        </div>\n        <hr>');
+      uniqueId++;
+
+      // $main.on("click", "#carouselChoice", function() {
+      //   iwindow.setPosition({ lat: $(this).data("lat"), lng: $(this).data("lng")});
+      //   iwindow.setContent(`<h4>${this.name}</h4>`);
+      //   iwindow.open(map);
+      // });
     });
 
     $sidePanel.html($carousel);
@@ -589,8 +597,13 @@ $(function () {
     var placeLoc = place.geometry.location;
     var marker = new google.maps.Marker({
       map: map,
-      position: place.geometry.location
+      position: place.geometry.location,
+      icon: pinDefault
     });
+
+    marker.id = markerId;
+    venueMarkers.push(marker);
+    markerId++;
 
     google.maps.event.addListener(marker, 'click', function () {
       var infowindow = new google.maps.InfoWindow();
@@ -656,7 +669,7 @@ $(function () {
     people.forEach(function (person) {
       if (people.indexOf(person) !== 0) {
 
-        $("#friendCarouselInner").append('<div class="carousel-item">\n           <h4 class="chooseStart" data-lat="' + person.lat + '" data-lng="' + person.lng + '">Directions for friend ' + people.indexOf(person) + '</h4>\n           </div>');
+        $("#friendCarouselInner").append('<div class="carousel-item">\n          <h4 class="chooseStart" data-lat="' + person.lat + '" data-lng="' + person.lng + '">Directions for friend ' + people.indexOf(person) + '</h4>\n          </div>');
         $main.on('click', '.chooseStart', chooseStart);
       }
     });
@@ -669,4 +682,15 @@ $(function () {
     console.log(startingPos);
     showDirections();
   }
+
+  $main.on("click", "#carouselChoice", function () {
+    console.log("click");
+    for (var i = 0; i < venueMarkers.length; i++) {
+      if (venueMarkers[i].id == $(this).data("id")) {
+        venueMarkers[i].setIcon(pinImage);
+      } else {
+        venueMarkers[i].setIcon(pinDefault);
+      }
+    }
+  });
 });
