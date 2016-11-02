@@ -5,6 +5,7 @@ $(function () {
   var $main = $('main');
   var $mapDiv = $('#map');
   var midPoint = { lat: 0, lng: 0 };
+  var resource = void 0;
 
   $('.register').on('click', showRegisterForm);
   $('.login').on('click', showLoginForm);
@@ -20,6 +21,7 @@ $(function () {
   $main.on('click', 'button.edit', getFriend);
   $main.on("click", ".directionButton", selectVenue);
   var $sidePanel = $("#sidePanel");
+  $main.on("click", "button#resource", updateResourceChoice);
 
   function saved() {
     $(this).html("Saved");
@@ -255,7 +257,18 @@ $(function () {
       zoom: 7
     });
   }
-  mapInit();
+  // mapInit();
+
+  function showResourceForm() {
+    $main.prepend('<h1>What are you in the mood for?</h1>\n      <button id="resource" data-id=\'restaurant\'>Restaurant</button>\n      <button id="resource" data-id=\'casino\'>Casino</button>\n      <button id="resource" data-id=\'night_club\'>Night Club</button>\n      <button id="resource" data-id=\'movie_theater\'>Theater</button>\n      <button id="resource" data-id=\'liquor_store\'>Off-licence</button>\n      <button id="resource" data-id=\'clothing_store\'>Clothes</button>\n      <button id="resource" data-id=\'shoe_store\'>Shoes</button>\n      <button id="resource" data-id=\'shopping_mall\'>Shopping</button>\n      <button id="resource" data-id=\'florist\'>Florist</button>\n      <button id="resource" data-id=\'gym\'>Gym</button>\n      <button id="resource" data-id=\'zoo\'>Zoo</button>\n      <button id="resource" data-id=\'bar\'>Bar</button>\n      <button id="resource" data-id=\'park\'>Park</button>\n      <button id="resource" data-id=\'spa\'>Spa</button>\n      <button id="resource" data-id=\'cafe\'>Cafe</button><br>');
+  }
+  showResourceForm();
+
+  function updateResourceChoice() {
+    resource = $(this).data('id');
+    mapInit();
+    showUserForm();
+  }
 
   function showUserForm() {
     if (event) event.preventDefault();
@@ -264,7 +277,7 @@ $(function () {
     createSearchBar();
   }
 
-  showUserForm();
+  // showUserForm();
 
   var latLngList = [];
   $sidePanel.on('click', 'button#useSavedAdd', useHome);
@@ -342,8 +355,7 @@ $(function () {
 
     var request = {
       location: midPoint,
-      types: ['restaurant'],
-      openNow: true,
+      types: [resource],
       rankBy: google.maps.places.RankBy.DISTANCE
     };
 

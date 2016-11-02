@@ -3,6 +3,7 @@ $(() =>{
   let $main = $('main');
   let $mapDiv = $('#map');
   let midPoint = { lat: 0, lng: 0};
+  let resource;
 
   $('.register').on('click', showRegisterForm);
   $('.login').on('click', showLoginForm);
@@ -18,6 +19,9 @@ $(() =>{
   $main.on('click', 'button.edit', getFriend);
   $main.on("click", ".directionButton", selectVenue);
   const $sidePanel = $("#sidePanel") ;
+  $main.on("click", "button#resource", updateResourceChoice);
+
+
 
   function saved() {
     $(this).html("Saved");
@@ -325,8 +329,33 @@ $(() =>{
       zoom: 7
     });
   }
-  mapInit();
+  // mapInit();
 
+  function showResourceForm(){
+    $main.prepend(`<h1>What are you in the mood for?</h1>
+      <button id="resource" data-id='restaurant'>Restaurant</button>
+      <button id="resource" data-id='casino'>Casino</button>
+      <button id="resource" data-id='night_club'>Night Club</button>
+      <button id="resource" data-id='movie_theater'>Theater</button>
+      <button id="resource" data-id='liquor_store'>Off-licence</button>
+      <button id="resource" data-id='clothing_store'>Clothes</button>
+      <button id="resource" data-id='shoe_store'>Shoes</button>
+      <button id="resource" data-id='shopping_mall'>Shopping</button>
+      <button id="resource" data-id='florist'>Florist</button>
+      <button id="resource" data-id='gym'>Gym</button>
+      <button id="resource" data-id='zoo'>Zoo</button>
+      <button id="resource" data-id='bar'>Bar</button>
+      <button id="resource" data-id='park'>Park</button>
+      <button id="resource" data-id='spa'>Spa</button>
+      <button id="resource" data-id='cafe'>Cafe</button><br>`);
+  }
+  showResourceForm();
+
+  function updateResourceChoice(){
+    resource = $(this).data('id');
+    mapInit();
+    showUserForm();
+  }
 
 
   function showUserForm() {
@@ -352,7 +381,7 @@ $(() =>{
     createSearchBar();
   }
 
-  showUserForm();
+  // showUserForm();
 
   let latLngList = [];
   $sidePanel.on('click', 'button#useSavedAdd', useHome);
@@ -444,8 +473,7 @@ $(() =>{
 
     let request = {
       location: midPoint,
-      types: ['restaurant'],
-      openNow: true,
+      types: [resource],
       rankBy: google.maps.places.RankBy.DISTANCE
     };
 
@@ -582,7 +610,7 @@ $(() =>{
   }
 
   function showDirections() {
-    $sidePanel.empty();
+    $sidePanel.empty()
     $("#travelModeDiv").css("visibility", "visible");
     directionsDisplay.setMap(map);
     directionsDisplay.setPanel(document.getElementById('sidePanel'));
