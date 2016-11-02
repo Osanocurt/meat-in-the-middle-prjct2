@@ -24,6 +24,8 @@ $(function () {
   var $sidePanel = $("#sidePanel");
   $main.on("click", "button#resource", updateResourceChoice);
   $sidePanel.on('click', 'button#locationButton', getUserCurrentPos);
+  $sidePanel.on('submit', 'form#filterResults', filterResults);
+  $sidePanel.on('click', 'button#clearFilterResults', clearFilterResults);
 
   function saved() {
     $(this).html("Saved");
@@ -376,36 +378,39 @@ $(function () {
 
   function callback(results, status) {
     allResults = results;
-    var maxResults = 100;
-
     if (status === 'ZERO_RESULTS') {
       alert("No results found");
     } else if (status == google.maps.places.PlacesServiceStatus.OK) {
-      var LatLngList = [];
-      var resultsToShow = [];
-      mapInit();
-
-      if (results.length <= maxResults) {
-        maxResults = results.length;
-      }
-
-      for (var i = 1; i < maxResults; i++) {
-        var resource = results[i];
-        resultsToShow.push(resource);
-        LatLngList.push(resource.geometry.location);
-        createMarker(resource);
-      }
-      setMapBounds(LatLngList);
-      populateCarousel(resultsToShow);
+      populateMap(allResults);
     }
   }
-  $sidePanel.on('submit', 'form#filterResults', filterResults);
-  $sidePanel.on('click', 'button#clearFilterResults', clearFilterResults);
+
+  function populateMap(results) {
+    var maxResults = 100;
+    var LatLngList = [];
+    var resultsToShow = [];
+    mapInit();
+
+    if (results.length <= maxResults) {
+      maxResults = results.length;
+    }
+
+    for (var i = 1; i < maxResults; i++) {
+      console.log("result");
+      var resource = results[i];
+      resultsToShow.push(resource);
+      LatLngList.push(resource.geometry.location);
+      createMarker(resource);
+    }
+    console.log(allResults.length);
+    setMapBounds(LatLngList);
+    populateCarousel(resultsToShow);
+  }
 
   function clearFilterResults(e) {
     e.preventDefault();
     var status = 'OK';
-    callback(allResults, status);
+    populateMap(allResults);
   }
 
   function filterResults(e) {
@@ -456,7 +461,7 @@ $(function () {
       populateCarousel(venuesToKeep);
       return;
     }
-    callback(venuesToKeep, status);
+    populateMap(venuesToKeep);
     populateCarousel(venuesToKeep);
   }
 
