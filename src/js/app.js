@@ -24,12 +24,17 @@ $(() =>{
   $main.on("click", ".directionButton", selectVenue);
   $main.on("click", "button#resource", updateResourceChoice);
   $sidePanel.on('click', 'button#locationButton', getUserCurrentPos);
+  var iwindow = new google.maps.InfoWindow();
   $sidePanel.on('submit', 'form#filterResults', filterResults);
   $sidePanel.on('click', 'button#clearFilterResults', clearFilterResults);
   $landing.on('submit', 'form', handleForm);
   $landing.on('click', 'button#landingGetStarted', landingRegForm);
   $landing.on('click', 'button#landingLogin', landingLoginForm);
   $landing.on('click', 'button#resource', clearLandingPage);
+
+  function saved() {
+    $(this).html("Saved");
+  }
 
   function isLoggedIn() {
     return !!localStorage.getItem('token');
@@ -146,12 +151,10 @@ $(() =>{
     showUserForm();
   }
 
-  function saved() {
-    $(this).html("Saved");
-  }
-
   function showRegisterForm() {
     if(event) event.preventDefault();
+    $friendCarouselDiv.css("visibility", "hidden");
+    $("#travelModeDiv").css("visibility", "hidden");
     $sidePanel.html(`
       <h2>Register</h2>
       <form method="post" action="/api/register" data-target="showUserForm">
@@ -174,6 +177,8 @@ $(() =>{
 
   function showLoginForm() {
     if(event) event.preventDefault();
+    $friendCarouselDiv.css("visibility", "hidden");
+    $("#travelModeDiv").css("visibility", "hidden");
     $sidePanel.html(`
       <h2>Login</h2>
       <form method="post" action="/api/login" data-target="showUserForm">
@@ -268,6 +273,9 @@ $(() =>{
   //-------------------------------------------------------------//
 
   function getFriends() {
+    $friendCarouselDiv.css("visibility", "hidden");
+    $("#travelModeDiv").css("visibility", "hidden");
+
     let nextView = "";
 
     if (!$(this).data('target')) {
@@ -428,6 +436,8 @@ $(() =>{
 
   function logout() {
     if(event) event.preventDefault();
+    $friendCarouselDiv.css("visibility", "hidden");
+    $("#travelModeDiv").css("visibility", "hidden");
     localStorage.removeItem('token');
     localStorage.removeItem('id');
     $main.empty();
@@ -581,7 +591,6 @@ $(() =>{
       lat: midLat,
       lng: midLng
     };
-    addMarker(midPoint);
 
     map.panTo(midPoint);
     nearbySearch();
@@ -777,16 +786,23 @@ $(() =>{
 
       $carousel.append(`
         <div class="item" id="carouselItem">
-          <h4>${venue.name}</h4>
+          <a name="${venue.name}" data-lat="${venue.geometry.location.lat()}" data-lng="${venue.geometry.location.lng()}" id="carouselChoice"><h4>${venue.name}</h4>
           <p>${venue.vicinity}</p>
+
           ${ratingHtml}${priceHtml}
-          ${imgHtml}
+          ${imgHtml}</a>
           <button class="directionButton btn btn-primary" data-lat=${lat} data-lng=${lng}>Directions</button>
         </div>
         <hr>`);
+        $main.on("click", "#carouselChoice", function() {
+          iwindow.setPosition({ lat: $(this).data("lat"), lng: $(this).data("lng")});
+          iwindow.setContent(`<h4>${this.name}</h4>`);
+          iwindow.open(map);
+        });
      });
 
     $sidePanel.html($carousel);
+
   }
 
   function setMapBounds(latLngList){
