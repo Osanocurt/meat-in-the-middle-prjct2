@@ -410,6 +410,7 @@ $(function () {
 
   function filterResults(e) {
     e.preventDefault();
+    var status = 'OK';
 
     var price = $(this).find('[name=price]').val();
     var rating = $(this).find('[name=rating]').val();
@@ -434,22 +435,28 @@ $(function () {
     if (rating === '*****') minRating = 5;
 
     allResults.forEach(function (venue) {
-
-      if (!!venue.price_level && !!venue.rating) {
-        if (venue.rating > minRating && venue.price_level <= maxPrice) {
-          venuesToKeep.push(venue);
+      var hasPrice = !!venue.price_level;
+      var hasRating = !!venue.rating;
+      if (hasPrice && hasRating) {
+        if (venue.rating > minRating || venue.price_level <= maxPrice) {
+          if (!minRating || !maxPrice) {
+            venuesToKeep.push(venue);
+          }
         }
-      } else if (!!venue.price_level || !!venue.rating) {
-        if (venue.rating > minRating) {
-          venuesToKeep.push(venue);
-        }
-        if (venue.price_level <= maxPrice) {
+      } else if (hasPrice || hasRating) {
+        if (venue.rating > minRating || venue.price_level <= maxPrice) {
           venuesToKeep.push(venue);
         }
       }
     });
-    // console.log(`venuesToKeep`);
-    // console.log(venuesToKeep);
+
+    if (venuesToKeep.length === 0) {
+      console.log("No results");
+      mapInit();
+      populateCarousel(venuesToKeep);
+      return;
+    }
+    callback(venuesToKeep, status);
     populateCarousel(venuesToKeep);
   }
 

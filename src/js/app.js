@@ -526,6 +526,7 @@ $(() =>{
 
   function filterResults(e){
     e.preventDefault();
+    let status= 'OK';
 
     let price = $(this).find('[name=price]').val();
     let rating = $(this).find('[name=rating]').val();
@@ -550,22 +551,28 @@ $(() =>{
     if (rating === '*****') minRating = 5;
 
     allResults.forEach((venue) => {
-
-      if (!!venue.price_level && !!venue.rating) {
-        if (venue.rating > minRating && venue.price_level <= maxPrice) {
-          venuesToKeep.push(venue);
+      let hasPrice = !!venue.price_level;
+      let hasRating = !!venue.rating;
+      if (hasPrice && hasRating) {
+        if (venue.rating > minRating || venue.price_level <= maxPrice) {
+          if (!minRating || !maxPrice) {
+            venuesToKeep.push(venue);
+          }
         }
-      } else if (!!venue.price_level || !!venue.rating) {
-        if (venue.rating > minRating) {
-          venuesToKeep.push(venue);
-        }
-        if (venue.price_level <= maxPrice){
+      } else if (hasPrice || hasRating) {
+        if (venue.rating > minRating || venue.price_level <= maxPrice){
           venuesToKeep.push(venue);
         }
       }
     });
-    // console.log(`venuesToKeep`);
-    // console.log(venuesToKeep);
+
+    if (venuesToKeep.length === 0){
+      console.log("No results");
+      mapInit();
+      populateCarousel(venuesToKeep);
+      return;
+    }
+    callback(venuesToKeep, status);
     populateCarousel(venuesToKeep);
   }
 
