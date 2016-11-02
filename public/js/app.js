@@ -7,6 +7,9 @@ $(function () {
   var midPoint = { lat: 0, lng: 0 };
   var resource = void 0;
   var allResults = [];
+  var $landing = $('#landing');
+  var $sidePanel = $("#sidePanel");
+  var $friendCarouselDiv = $("#friendCarouselDiv");
 
   $('.register').on('click', showRegisterForm);
   $('.login').on('click', showLoginForm);
@@ -21,27 +24,50 @@ $(function () {
   $main.on('click', 'button.delete', deleteFriend);
   $main.on('click', 'button.edit', getFriend);
   $main.on("click", ".directionButton", selectVenue);
-  var $sidePanel = $("#sidePanel");
   $main.on("click", "button#resource", updateResourceChoice);
-  var $friendCarouselDiv = $("#friendCarouselDiv");
   $sidePanel.on('click', 'button#locationButton', getUserCurrentPos);
   $sidePanel.on('submit', 'form#filterResults', filterResults);
   $sidePanel.on('click', 'button#clearFilterResults', clearFilterResults);
-
-  function saved() {
-    $(this).html("Saved");
-  }
+  $landing.on('submit', 'form', handleForm);
+  $landing.on('click', 'button#landingGetStarted', landingRegForm);
+  $landing.on('click', 'button#landingLogin', landingLoginForm);
+  $landing.on('click', 'button#landingSubmit', clearLandingPage);
 
   function isLoggedIn() {
     return !!localStorage.getItem('token');
   }
 
   if (isLoggedIn()) {
-    // getFriends();
+    landingResourceForm();
     console.log("logged in");
   } else {
-    // showLoginForm();
+    landingPage();
     console.log("logged out");
+  }
+
+  function landingPage() {
+    $main.empty();
+    $landing.html('\n      <div class="landing">\n        <h1>Welcome</h1>\n        <p>We\'ve made finding somewhere to hang out with your mates super easy. Whether you\'re looking for a bite to eat, or your planning a trip to the zoo, we\'ve got you covered.</p>\n        <button id="landingGetStarted" class="btn btn-primary">Get started</button>\n      </div>');
+  }
+
+  function landingRegForm() {
+    $landing.html('\n      <div class="landing">\n        <h1>Register</h1>\n        <p>Already registered? <button class="btn btn-secondary" id="landingLogin">Sign in</button></p>\n        <form method="post" action="/api/register" data-target="landingResourceForm">\n          <div class="form-group">\n            <input class="form-control" name="user[username]" placeholder="Username">\n          </div>\n          <div class="form-group">\n            <input class="form-control" name="user[email]" placeholder="Email">\n          </div>\n          <div class="form-group">\n            <input class="form-control" type="password" name="user[password]" placeholder="Password">\n          </div>\n          <div class="form-group">\n            <input class="form-control" type="password" name="user[passwordConfirmation]" placeholder="Password Confirmation">\n          </div>\n          <button class="btn btn-primary">Register</button>\n        </form>\n      </div>');
+  }
+
+  function landingLoginForm() {
+    $landing.html('\n      <div class="landing">\n        <h2>Login</h2>\n        <form method="post" action="/api/login" data-target="landingResourceForm">\n          <div class="form-group">\n            <input class="form-control" name="email" placeholder="Email">\n          </div>\n          <div class="form-group">\n            <input class="form-control" type="password" name="password" placeholder="Password">\n          </div>\n          <button class="btn btn-primary">Login</button>\n        </form>\n      </div>\n    ');
+  }
+
+  function landingResourceForm() {
+    $landing.html('\n      <div class="landing">\n        <h1>What are you in the mood for?</h1>\n        <div class="col-md-4">\n          <div class="card">\n            <div class="card-block">\n              <h4 class="card-title">Drinking</h4>\n            </div>\n          </div>\n        </div>\n        <br>\n        <button id="landingSubmit" class="btn btn-primary">Make the magic happen</button>\n      </div>');
+  }
+
+  function clearLandingPage() {
+    $landing.remove();
+  }
+
+  function saved() {
+    $(this).html("Saved");
   }
 
   function showRegisterForm() {
@@ -89,7 +115,7 @@ $(function () {
 
         var url = $form.attr('action');
         var method = $form.attr('method');
-        // let data = $form.serialize();
+        var data = $form.serialize();
 
         $.ajax({
           url: url,
@@ -108,6 +134,8 @@ $(function () {
             showUserForm();
           } else if (nextView === 'viewProfile') {
             getFriends();
+          } else if (nextView === 'landingResourceForm') {
+            landingResourceForm();
           }
         });
         // .fail(showLoginForm);
@@ -255,7 +283,7 @@ $(function () {
     if (event) event.preventDefault();
     localStorage.removeItem('token');
     localStorage.removeItem('id');
-    showLoginForm();
+    landingPage();
   }
 
   //------------------------------------------------------------------------------------------------------------------------------------
@@ -482,9 +510,6 @@ $(function () {
     populateMap(venuesToKeep);
     populateCarousel(venuesToKeep);
   }
-
-  function removePriceAbove(maxPrice) {}
-  function removeRatingsBelow(minRating) {}
 
   function populateCarousel(resultsToShow) {
     $sidePanel.empty();

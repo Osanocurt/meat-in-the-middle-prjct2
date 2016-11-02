@@ -104,5 +104,17 @@ img.priceLevel{
 }
 
 h4 {
-   cursor: pointer; cursor: hand; 
+   cursor: pointer; cursor: hand;
+}
+
+#landing {
+  background-color: #fff;
+  height: 100vh;
+
+  .landing {
+    width: 400px;
+    margin: 0 auto;
+    padding-top: 100px;
+    text-align: center;
+  }
 }
