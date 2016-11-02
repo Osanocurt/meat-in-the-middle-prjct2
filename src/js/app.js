@@ -598,8 +598,10 @@ $(() =>{
         window.alert('Directions request failed due to ' + status);
       }
     });
-
   }
+
+//write a listener on friend select buttons which runs a function which changes startingpos to id of that button, then runs show directions
+
 
 //directions and route live update based on choice of travel method from drop down menu which spawns on function firing.
   $("#travelSelect").on('change', showDirections);
