@@ -253,12 +253,12 @@ $(() =>{
           if(userId) localStorage.setItem('id', userId);
           if(data.token) localStorage.setItem('token', data.token);
         }
-        if (nextView === 'showUserForm') {
+        if (nextView === 'landingResourceForm') {
+          location.reload();
+        } else if (nextView === 'showUserForm') {
           showUserForm();
         } else if (nextView === 'viewProfile') {
           getFriends();
-        } else if (nextView === 'landingResourceForm') {
-          landingResourceForm();
         }
       });
       // .fail(showLoginForm);
@@ -430,6 +430,7 @@ $(() =>{
     if(event) event.preventDefault();
     localStorage.removeItem('token');
     localStorage.removeItem('id');
+    $main.empty();
     landingPage();
   }
 
@@ -814,7 +815,7 @@ $(() =>{
 
 
 
-//user and venue variables for directions function
+  //user and venue variables for directions function
   let startingPos = null;
   let venueChosen = null;
   var directionsDisplay = new google.maps.DirectionsRenderer();
@@ -868,24 +869,23 @@ $(() =>{
     $friendCarouselDiv.css("visibility", "visible");
     $friendCarouselDiv.html(
     `<div id="friendCarousel">
-    <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
-
-<div id="friendCarouselInner" class="carousel-inner" role="listbox">
-  <div class="carousel-item active">
-    <h4 class="chooseStart" data-lat="${people[0].lat}" data-lng="${people[0].lng}">Your directions</h4>
-  </div>
-</div>
-<a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
-  <span class="icon-prev" aria-hidden="true"></span>
-  <span class="sr-only">Previous</span>
-</a>
-<a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
-  <span class="icon-next" aria-hidden="true"></span>
-  <span class="sr-only">Next</span>
-</a>
-</div>
-
+      <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+        <div id="friendCarouselInner" class="carousel-inner" role="listbox">
+          <div class="carousel-item active">
+            <h4 class="chooseStart" data-lat="${people[0].lat}" data-lng="${people[0].lng}">Your directions</h4>
+          </div>
+        </div>
+        <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+          <span class="icon-prev" aria-hidden="true"></span>
+          <span class="sr-only">Previous</span>
+        </a>
+        <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+          <span class="icon-next" aria-hidden="true"></span>
+          <span class="sr-only">Next</span>
+        </a>
+        </div>
      </div>`);
+
      people.forEach((person) => {
        if (people.indexOf(person) !== 0) {
 
@@ -899,18 +899,11 @@ $(() =>{
      });
   }
 
-
-
-function chooseStart() {
-  let startingLat = $(this).data("lat");
-  let startingLng =  $(this).data("lng");
-  startingPos = { lat: startingLat, lng: startingLng};
-  console.log(startingPos);
-  showDirections();
-}
-
-
-
-
-
+  function chooseStart() {
+    let startingLat = $(this).data("lat");
+    let startingLng =  $(this).data("lng");
+    startingPos = { lat: startingLat, lng: startingLng};
+    console.log(startingPos);
+    showDirections();
+  }
 });

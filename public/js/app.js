@@ -134,12 +134,12 @@ $(function () {
             if (userId) localStorage.setItem('id', userId);
             if (data.token) localStorage.setItem('token', data.token);
           }
-          if (nextView === 'showUserForm') {
+          if (nextView === 'landingResourceForm') {
+            location.reload();
+          } else if (nextView === 'showUserForm') {
             showUserForm();
           } else if (nextView === 'viewProfile') {
             getFriends();
-          } else if (nextView === 'landingResourceForm') {
-            landingResourceForm();
           }
         });
         // .fail(showLoginForm);
@@ -287,6 +287,7 @@ $(function () {
     if (event) event.preventDefault();
     localStorage.removeItem('token');
     localStorage.removeItem('id');
+    $main.empty();
     landingPage();
   }
 
@@ -635,7 +636,8 @@ $(function () {
 
   function showFriendCarousel() {
     $friendCarouselDiv.css("visibility", "visible");
-    $friendCarouselDiv.html('<div id="friendCarousel">\n    <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">\n\n<div id="friendCarouselInner" class="carousel-inner" role="listbox">\n  <div class="carousel-item active">\n    <h4 class="chooseStart" data-lat="' + people[0].lat + '" data-lng="' + people[0].lng + '">Your directions</h4>\n  </div>\n</div>\n<a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">\n  <span class="icon-prev" aria-hidden="true"></span>\n  <span class="sr-only">Previous</span>\n</a>\n<a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">\n  <span class="icon-next" aria-hidden="true"></span>\n  <span class="sr-only">Next</span>\n</a>\n</div>\n\n     </div>');
+    $friendCarouselDiv.html('<div id="friendCarousel">\n      <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">\n        <div id="friendCarouselInner" class="carousel-inner" role="listbox">\n          <div class="carousel-item active">\n            <h4 class="chooseStart" data-lat="' + people[0].lat + '" data-lng="' + people[0].lng + '">Your directions</h4>\n          </div>\n        </div>\n        <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">\n          <span class="icon-prev" aria-hidden="true"></span>\n          <span class="sr-only">Previous</span>\n        </a>\n        <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">\n          <span class="icon-next" aria-hidden="true"></span>\n          <span class="sr-only">Next</span>\n        </a>\n        </div>\n     </div>');
+
     people.forEach(function (person) {
       if (people.indexOf(person) !== 0) {
 
