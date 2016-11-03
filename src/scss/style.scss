@@ -7,18 +7,14 @@ body, html {
   font-family: 'Lato', sans-serif;
 }
 
-
-
 #map {
-  width: 64vw;
+  width: 64%;
   height: 87vh;
   display: inline-block;
   margin: 5px 0px 5px 5px;
   border: 2px solid lightgrey;
   border-radius: 5px;
   box-shadow: -5px 0px 5px #888888;
-
-
 }
 
 #travelModeDiv {
@@ -26,7 +22,7 @@ body, html {
   position: relative;
   top: -643px;
   float: right;
-  width: 34.95vw;
+  width: 33.9%;
   height: 38px;
   background-color: #fff;
   padding: 5px;
@@ -43,7 +39,7 @@ body, html {
   top: 0px;
   padding-left: 10px;
   margin: 5px;
-  width: 34.95vw;
+  width: 33.9%;
   height: 87vh;
   float: right;
   overflow: auto;
@@ -59,7 +55,7 @@ body, html {
    height: 70px;
    text-align: center;
   //  color: black;
-   width: 34.95vw;
+   width: 33.9%;
    position:absolute;
    top: 102px;
    left: 73%;
@@ -68,8 +64,6 @@ body, html {
    box-shadow: -5px 0px 5px #888888;
    border-radius: 5px;
 }
-
-
 
 #pac-input {
   width: 300px;
@@ -93,34 +87,36 @@ body, html {
 #placesItem {
   min-height: 162px;
   overflow: hidden;
+
   .textContainer {
     width: calc(100% - 175px);
     float: left;
     vertical-align: top;
     padding-right: 10px;
     word-break: break-all;
-  h6 {
-    font-size: 20px;
-  }
+
+    h6 {
+      font-size: 20px;
+    }
   }
 }
 
 #imageContainer {
-height: 150px;
-width: 150px;
-margin-top: 5px;
-margin-right: 15px;
-background-size: cover;
-display: block;
-float: right;
-border-radius: 5px;
-vertical-align: top;
+  height: 150px;
+  width: 150px;
+  margin-top: 5px;
+  margin-right: 15px;
+  background-size: cover;
+  display: block;
+  float: right;
+  border-radius: 5px;
+  vertical-align: top;
 }
 
 
 a, #placesItem a, #friendCarouselDiv h4 {
-   cursor: pointer; cursor: hand;
-   display: block;
+  cursor: pointer; cursor: hand;
+  display: block;
 }
 
 .btn-primary {
@@ -152,12 +148,13 @@ a, #placesItem a, #friendCarouselDiv h4 {
   }
 
   .form-group {
-      width: 300px;
-      text-align: center;
-      position: relative;
-      left: 50%;
-      transform: translate(-50%, 0%);
+    width: 300px;
+    text-align: center;
+    position: relative;
+    left: 50%;
+    transform: translate(-50%, 0%);
   }
+
   #mainLanding {
 
     h1 {
