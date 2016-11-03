@@ -108,10 +108,10 @@ $(function () {
         displayText = 'dress';
         break;
       case 'florist':
-        displayText = 'decorate';
+        displayText = 'bloom';
         break;
-      case 'monkey around':
-        displayText = 'zoo';
+      case 'zoo':
+        displayText = 'monkey around';
         break;
       case 'spa':
         displayText = 'relax';
@@ -133,12 +133,12 @@ $(function () {
       navHtml = loggedOutHtml;
     }
 
-    $navDiv.html('\n      <nav class="navbar navbar-dark bg-inverse">\n        <div class="container">\n          <a class="navbar-brand" href="/">[ ' + displayText + ' ] in the Middle</a>\n          <button class="navbar-toggler hidden-sm-up" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar2" aria-controls="exCollapsingNavbar2" aria-expanded="false" aria-label="Toggle navigation">\n            &#9776;\n          </button>\n          <div class="collapse right navbar-toggleable-xs" id="exCollapsingNavbar2">\n            <ul class="nav navbar-nav">\n            ' + navHtml + '\n            </ul>\n          </div>\n        </div>\n      </nav>');
+    $navDiv.html('\n      <nav class="navbar navbar-dark bg-inverse">\n        <div class="container">\n          <a class="navbar-brand" href="/">[ ' + displayText + ' ] in the middle</a>\n          <button class="navbar-toggler hidden-sm-up" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar2" aria-controls="exCollapsingNavbar2" aria-expanded="false" aria-label="Toggle navigation">\n            &#9776;\n          </button>\n          <div class="collapse right navbar-toggleable-xs" id="exCollapsingNavbar2">\n            <ul class="nav navbar-nav">\n            ' + navHtml + '\n            </ul>\n          </div>\n        </div>\n      </nav>');
   }
   navBarInit();
 
   function landingPage() {
-    $landing.html('\n      <div class="content" id="mainLanding">\n        <div class="wrapper">\n          <h1>(  <span class="pink">Eat</span>  ||  <span class="blue">Drink</span>  ||  <span class="yellow">Spa</span>  )</h1>\n          <h2>What ever you\'re up to,<br> meet your friends in the middle.</h2>\n          <button id="landingGetStarted" class="btn btn-primary">Get started</button>\n        </div>\n      </div>');
+    $landing.html('\n      <div class="content" id="mainLanding">\n        <div class="wrapper">\n          <h1>(  <span class="pink">Eat</span>  ||  <span class="blue">Drink</span>  ||  <span class="yellow">Gym</span>  )</h1>\n          <h2>What ever you\'re up to,<br> meet your friends in the middle.</h2>\n          <button id="landingGetStarted" class="btn btn-primary">Get started</button>\n        </div>\n      </div>');
   }
 
   function landingRegForm() {
@@ -475,6 +475,8 @@ $(function () {
     mapInit();
     showUserForm();
     navBarInit();
+    $(".nav-link").removeClass("active");
+    $(this).toggleClass('active');
   }
 
   function showUserForm() {

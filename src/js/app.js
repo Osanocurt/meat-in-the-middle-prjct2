@@ -108,10 +108,10 @@ $(() =>{
         displayText = 'dress';
         break;
       case 'florist':
-        displayText = 'decorate';
+        displayText = 'bloom';
         break;
-      case 'monkey around':
-        displayText = 'zoo';
+      case 'zoo':
+        displayText = 'monkey around';
         break;
       case 'spa':
         displayText = 'relax';
@@ -149,7 +149,7 @@ $(() =>{
     $navDiv.html(`
       <nav class="navbar navbar-dark bg-inverse">
         <div class="container">
-          <a class="navbar-brand" href="/">[ ${displayText} ] in the Middle</a>
+          <a class="navbar-brand" href="/">[ ${displayText} ] in the middle</a>
           <button class="navbar-toggler hidden-sm-up" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar2" aria-controls="exCollapsingNavbar2" aria-expanded="false" aria-label="Toggle navigation">
             &#9776;
           </button>
@@ -169,7 +169,7 @@ $(() =>{
     $landing.html(`
       <div class="content" id="mainLanding">
         <div class="wrapper">
-          <h1>(  <span class="pink">Eat</span>  ||  <span class="blue">Drink</span>  ||  <span class="yellow">Spa</span>  )</h1>
+          <h1>(  <span class="pink">Eat</span>  ||  <span class="blue">Drink</span>  ||  <span class="yellow">Gym</span>  )</h1>
           <h2>What ever you're up to,<br> meet your friends in the middle.</h2>
           <button id="landingGetStarted" class="btn btn-primary">Get started</button>
         </div>
@@ -765,6 +765,8 @@ let mapStyle = [
     mapInit();
     showUserForm();
     navBarInit();
+    $(".nav-link").removeClass("active");
+    $(this).toggleClass('active');
   }
 
   function showUserForm() {

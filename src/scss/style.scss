@@ -20,9 +20,9 @@ body, html {
 #travelModeDiv {
   visibility: hidden;
   position: relative;
-  top: -643px;
+  top: -89vh;
   float: right;
-  width: 33.9%;
+  width: 34%;
   height: 38px;
   background-color: #fff;
   padding: 5px;
@@ -39,7 +39,7 @@ body, html {
   top: 0px;
   padding-left: 10px;
   margin: 5px;
-  width: 33.9%;
+  width: 34%;
   height: 87vh;
   float: right;
   overflow: auto;
@@ -129,12 +129,12 @@ body, html {
 
 #friendCarouselDiv {
    visibility: hidden;
-   margin-left: -120px;
    float: right;
+   overflow: auto;
    height: 70px;
    text-align: center;
   //  color: black;
-   width: 33.9%;
+   width: 34%;
    position:absolute;
    top: 102px;
    left: 77.4%;
@@ -327,9 +327,17 @@ a, #placesItem a, #friendCarouselDiv h4 {
 
 
 .nav-tabs {
-  a {
+  .nav-link {
     cursor: pointer;
+    &.active{
+      background-color: $brand-pink;
+      &:hover{
+        background-color: $brand-pink;
+
+      }
+    }
   }
+
 }
 .nav-tabs-mobile {
   display: none;
