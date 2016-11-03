@@ -24,10 +24,10 @@ $(function () {
   var pinImage = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2%7CDDFC74");
   var pinDefault = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2%7CE01A4F");
 
-  $('.register').on('click', showRegisterForm);
-  $('.login').on('click', showLoginForm);
-  $('.profile').on('click', getFriends);
-  $('.logout').on('click', logout);
+  $navDiv.on('click', '.register', landingRegForm);
+  $navDiv.on('click', '.login', landingLoginForm);
+  $navDiv.on('click', '.profile', getFriends);
+  $navDiv.on('click', '.logout', logout);
   $main.on('submit', 'form', handleForm);
   $main.on('click', "#go", calculateMidPoint);
   $main.on('click', '#friendSaveLocation', saved);
@@ -67,14 +67,30 @@ $(function () {
   }
 
   function navBarInit(resource) {
+
+    var navHtml = void 0;
     var displayText = '';
+
     if (!resource) {
       displayText = '';
+    } else if (resource === 'night_club') {
+      displayText = 'night club';
+    } else if (resource === 'movie_theater') {
+      displayText = 'theatre';
     } else {
       displayText = resource;
     }
 
-    $navDiv.html('  <nav class="navbar navbar-dark bg-inverse">\n        <div class="container">\n          <a class="navbar-brand" href="/">[ ' + displayText + ' ] in the Middle</a>\n          <button class="navbar-toggler hidden-sm-up" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar2" aria-controls="exCollapsingNavbar2" aria-expanded="false" aria-label="Toggle navigation">\n            &#9776;\n          </button>\n          <div class="collapse navbar-toggleable-xs" id="exCollapsingNavbar2">\n            <ul class="nav navbar-nav">\n              <li class="nav-item">\n                <a class="nav-link profile" href="#" id="viewProfile" data-target=\'viewProfile\' >Profile</a>\n              </li>\n              <!-- <li class="nav-item">\n                <a class="nav-link register" href="#">Register</a>\n              </li>\n              <li class="nav-item">\n                <a class="nav-link login" href="#">Login</a>\n              </li> -->\n              <li class="nav-item">\n                <a class="nav-link logout" href="#">Logout</a>\n              </li>\n            </ul>\n          </div>\n        </div>\n      </nav>');
+    var loggedInHtml = '\n      <li class="nav-item">\n        <a class="nav-link profile" href="#" id="viewProfile" data-target=\'viewProfile\' >Profile</a>\n      </li>\n      <li class="nav-item">\n        <a class="nav-link logout" href="#">Logout</a>\n      </li>';
+    var loggedOutHtml = '\n      <li class="nav-item">\n        <a class="nav-link register" href="#">Register</a>\n      </li>\n      <li class="nav-item">\n        <a class="nav-link login" href="#">Login</a>\n      </li>';
+
+    if (isLoggedIn()) {
+      navHtml = loggedInHtml;
+    } else {
+      navHtml = loggedOutHtml;
+    }
+
+    $navDiv.html('  <nav class="navbar navbar-dark bg-inverse">\n        <div class="container">\n          <a class="navbar-brand" href="/">[ ' + displayText + ' ] in the Middle</a>\n          <button class="navbar-toggler hidden-sm-up" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar2" aria-controls="exCollapsingNavbar2" aria-expanded="false" aria-label="Toggle navigation">\n            &#9776;\n          </button>\n          <div class="collapse navbar-toggleable-xs" id="exCollapsingNavbar2">\n            <ul class="nav navbar-nav">\n            ' + navHtml + '\n            </ul>\n          </div>\n        </div>\n      </nav>');
   }
   navBarInit();
 
@@ -91,6 +107,7 @@ $(function () {
   }
 
   function landingResourceForm() {
+    navBarInit();
     var username = localStorage.getItem('username');
     var welcomeMessage = 'Hi ' + username + ',';
 
@@ -98,7 +115,7 @@ $(function () {
       welcomeMessage = 'Welcome back';
     }
 
-    $landing.html('\n      <div class="container">\n      <h1>' + welcomeMessage + '</h1>\n        <h2>What are you in the mood for?</h2>\n        <div class="row">\n          <div class="card">\n            <div class="card-block">\n              <h4 class="card-title">Eating & Drinking</h4>\n              <button id="resource" class="btn btn-secondary" data-id=\'restaurant\'>Restaurant</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'bar\'>Bar</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'cafe\'>Cafe</button>\n            </div>\n          </div>\n          <div class="card">\n            <div class="card-block">\n              <h4 class="card-title">Night Out</h4>\n              <button id="resource" class="btn btn-secondary" data-id=\'casino\'>Casino</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'night_club\'>Night Club</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'movie_theater\'>Theater</button>\n            </div>\n          </div>\n          <div class="card">\n            <div class="card-block">\n              <h4 class="card-title">Shopping</h4>\n              <button id="resource" class="btn btn-secondary" data-id=\'shopping_mall\'>Shopping</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'clothing_store\'>Clothes</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'florist\'>Florist</button>\n            </div>\n          </div>\n          <div class="card">\n            <div class="card-block">\n              <h4 class="card-title">Day Out</h4>\n              <button id="resource" class="btn btn-secondary" data-id=\'zoo\'>Zoo</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'park\'>Park</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'spa\'>Spa</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'gym\'>Gym</button>\n            </div>\n          </div>\n        </div>\n      </div>');
+    $landing.html('\n      <div class="container">\n      <h1 class="camelCase">' + welcomeMessage + '</h1>\n        <h2>What are you in the mood for?</h2>\n        <div class="row">\n          <div class="card">\n            <div class="card-block">\n              <h4 class="card-title">Eating & Drinking</h4>\n              <button id="resource" class="btn btn-secondary" data-id=\'restaurant\'>Restaurant</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'bar\'>Bar</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'cafe\'>Cafe</button>\n            </div>\n          </div>\n          <div class="card">\n            <div class="card-block">\n              <h4 class="card-title">Night Out</h4>\n              <button id="resource" class="btn btn-secondary" data-id=\'casino\'>Casino</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'night_club\'>Night Club</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'movie_theater\'>Theater</button>\n            </div>\n          </div>\n          <div class="card">\n            <div class="card-block">\n              <h4 class="card-title">Shopping</h4>\n              <button id="resource" class="btn btn-secondary" data-id=\'shopping_mall\'>Shopping</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'clothing_store\'>Clothes</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'florist\'>Florist</button>\n            </div>\n          </div>\n          <div class="card">\n            <div class="card-block">\n              <h4 class="card-title">Day Out</h4>\n              <button id="resource" class="btn btn-secondary" data-id=\'zoo\'>Zoo</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'park\'>Park</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'spa\'>Spa</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'gym\'>Gym</button>\n            </div>\n          </div>\n        </div>\n      </div>');
   }
 
   function clearLandingPage() {
@@ -330,6 +347,7 @@ $(function () {
     localStorage.removeItem('token');
     localStorage.removeItem('id');
     $main.empty();
+    navBarInit();
     landingPage();
   }
 

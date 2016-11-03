@@ -22,10 +22,10 @@ $(() =>{
   const pinImage = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2%7CDDFC74");
   const pinDefault = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2%7CE01A4F");
 
-  $('.register').on('click', showRegisterForm);
-  $('.login').on('click', showLoginForm);
-  $('.profile').on('click', getFriends);
-  $('.logout').on('click', logout);
+  $navDiv.on('click', '.register', landingRegForm);
+  $navDiv.on('click', '.login', landingLoginForm);
+  $navDiv.on('click', '.profile', getFriends);
+  $navDiv.on('click', '.logout', logout);
   $main.on('submit', 'form', handleForm);
   $main.on('click', "#go", calculateMidPoint);
   $main.on('click', '#friendSaveLocation', saved);
@@ -65,12 +65,41 @@ $(() =>{
   }
 
   function navBarInit(resource){
+
+    let navHtml;
     let displayText = '';
+
     if (!resource) {
       displayText = '';
+    } else if (resource === 'night_club'){
+      displayText = 'night club';
+    } else if (resource === 'movie_theater') {
+      displayText = 'theatre';
     } else {
       displayText = resource;
     }
+
+    let loggedInHtml = (`
+      <li class="nav-item">
+        <a class="nav-link profile" href="#" id="viewProfile" data-target='viewProfile' >Profile</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link logout" href="#">Logout</a>
+      </li>`);
+    let loggedOutHtml = (`
+      <li class="nav-item">
+        <a class="nav-link register" href="#">Register</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link login" href="#">Login</a>
+      </li>`);
+
+
+      if (isLoggedIn()){
+        navHtml = loggedInHtml;
+      } else {
+        navHtml = loggedOutHtml;
+      }
 
     $navDiv.html(`  <nav class="navbar navbar-dark bg-inverse">
         <div class="container">
@@ -80,22 +109,12 @@ $(() =>{
           </button>
           <div class="collapse navbar-toggleable-xs" id="exCollapsingNavbar2">
             <ul class="nav navbar-nav">
-              <li class="nav-item">
-                <a class="nav-link profile" href="#" id="viewProfile" data-target='viewProfile' >Profile</a>
-              </li>
-              <!-- <li class="nav-item">
-                <a class="nav-link register" href="#">Register</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link login" href="#">Login</a>
-              </li> -->
-              <li class="nav-item">
-                <a class="nav-link logout" href="#">Logout</a>
-              </li>
+            ${navHtml}
             </ul>
           </div>
         </div>
       </nav>`);
+
   }
   navBarInit();
 
@@ -151,6 +170,7 @@ $(() =>{
   }
 
   function landingResourceForm(){
+    navBarInit();
     let username = localStorage.getItem('username');
     let welcomeMessage = `Hi ${username},`;
 
@@ -160,7 +180,7 @@ $(() =>{
 
     $landing.html(`
       <div class="container">
-      <h1>${welcomeMessage}</h1>
+      <h1 class="camelCase">${welcomeMessage}</h1>
         <h2>What are you in the mood for?</h2>
         <div class="row">
           <div class="card">
@@ -496,6 +516,7 @@ $(() =>{
     localStorage.removeItem('token');
     localStorage.removeItem('id');
     $main.empty();
+    navBarInit();
     landingPage();
   }
 
