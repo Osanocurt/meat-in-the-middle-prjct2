@@ -823,7 +823,7 @@ let mapStyle = [
         <h3>Add New Friend</h3>
         <input id="pac-input" class="controls" type="text" placeholder="Where's your friend?">
         <form id="friendLocation" data-target="current" method="post" action="/api/users/${userId}/friends">
-          <input id="input-name" name="name" class='controls' placeholder="What's thier name?">
+          <input id="input-name" name="name" class='controls' placeholder="What's their name?">
           <input type='hidden' id="input-location" name="address">
           <input type='hidden' id="input-lat" name="lat">
           <input type='hidden' id="input-lng" name="lng">
