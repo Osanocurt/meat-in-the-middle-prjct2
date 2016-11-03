@@ -158,7 +158,7 @@ $(() =>{
   function landingPage(){
     $landing.html(`
       <div class="container" id="mainLanding">
-        <h1>(  Drink  ||  Shop  ||  Do  )</h1>
+        <h1>(  <span class="blue">Drink</span>  ||  <span class="pink">Shop</span>  ||  <span class="yellow">Do</span>  )</h1>
         <h2>What ever you're up to,<br> meet your friends in the middle.</h2>
         <button id="landingGetStarted" class="btn btn-primary">Get started</button>
       </div>`);
@@ -191,7 +191,7 @@ $(() =>{
   function landingLoginForm(){
     $landing.html(`
       <div class="container">
-        <h2>Login</h2>
+        <h1>Login</h1>
         <form method="post" action="/api/login" data-target="landingResourceForm">
           <div class="form-group">
             <input class="form-control" name="email" placeholder="Email">

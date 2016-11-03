@@ -130,7 +130,7 @@ $(function () {
   navBarInit();
 
   function landingPage() {
-    $landing.html('\n      <div class="container" id="mainLanding">\n        <h1>(  Drink  ||  Shop  ||  Do  )</h1>\n        <h2>What ever you\'re up to,<br> meet your friends in the middle.</h2>\n        <button id="landingGetStarted" class="btn btn-primary">Get started</button>\n      </div>');
+    $landing.html('\n      <div class="container" id="mainLanding">\n        <h1>(  <span class="blue">Drink</span>  ||  <span class="pink">Shop</span>  ||  <span class="yellow">Do</span>  )</h1>\n        <h2>What ever you\'re up to,<br> meet your friends in the middle.</h2>\n        <button id="landingGetStarted" class="btn btn-primary">Get started</button>\n      </div>');
   }
 
   function landingRegForm() {
@@ -138,7 +138,7 @@ $(function () {
   }
 
   function landingLoginForm() {
-    $landing.html('\n      <div class="container">\n        <h2>Login</h2>\n        <form method="post" action="/api/login" data-target="landingResourceForm">\n          <div class="form-group">\n            <input class="form-control" name="email" placeholder="Email">\n          </div>\n          <div class="form-group">\n            <input class="form-control" type="password" name="password" placeholder="Password">\n          </div>\n          <button class="btn btn-primary">Login</button>\n        </form>\n      </div>\n    ');
+    $landing.html('\n      <div class="container">\n        <h1>Login</h1>\n        <form method="post" action="/api/login" data-target="landingResourceForm">\n          <div class="form-group">\n            <input class="form-control" name="email" placeholder="Email">\n          </div>\n          <div class="form-group">\n            <input class="form-control" type="password" name="password" placeholder="Password">\n          </div>\n          <button class="btn btn-primary">Login</button>\n        </form>\n      </div>\n    ');
   }
 
   function landingResourceForm() {

@@ -129,14 +129,33 @@ h4 {
   width: 100%;
   z-index: 10;
 
-  // line-height: calc(100vh - 54px);
+  h1 {
+    margin-bottom: 20px;
+  }
 
+  .form-group {
+      width: 300px;
+      text-align: center;
+      position: relative;
+      left: 50%;
+      transform: translate(-50%, 0%);
+  }
   #mainLanding {
 
     h1 {
       font-size: 50px;
       letter-spacing: 3px;
       font-weight: bold;
+
+      .blue {
+        color: $brand-vivid-blue;
+      }
+      .pink {
+        color: $brand-pink;
+      }
+      .yellow {
+        color: $brand-yellow;
+      }
     }
     h2 {
       font-size: 30px;
