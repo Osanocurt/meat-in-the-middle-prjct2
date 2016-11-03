@@ -8,7 +8,7 @@ body, html {
 }
 
 #map {
-  width: 64%;
+  width: 63%;
   height: 87vh;
   display: inline-block;
   margin: 5px 0px 5px 5px;
@@ -53,26 +53,55 @@ body, html {
     h2 {
       margin: 20px 0;
     }
+
+    h3 {
+      margin: 20px 0;
+    }
     .btn {
       width: 90%;
       margin: 20px;
     }
 
-    .btn-secondary {
+    .btn-info {
       background-color: $brand-grey;
       color: $brand-pink;
+      border-color: $brand-pink;
     }
-    .btn-danger {
+
+    .btn-secondary {
       background-color: $brand-grey;
       color: $brand-vivid-blue;
-      border: 1px solid $brand-vivid-blue;
+      border-color: $brand-vivid-blue;
     }
+
+    .btn-success {
+      background-color: $brand-grey;
+      color: $brand-green;
+      border-color: $brand-green;
+    }
+
     .controls {
       width: 90%;
       border-radius: 3px;
       height: 35px;
       align-items: center;
       margin-left: 5px;
+    }
+
+    .card-block {
+      padding: 0;
+      margin: 0 20px;
+      text-align: left;
+
+      .btn {
+        float: right;
+        width: 50px;
+        margin: 0 auto;
+        padding: 8px 10px;
+      }
+    }
+    .card {
+      border: none;
     }
   }
 }
@@ -87,7 +116,7 @@ body, html {
    width: 33.9%;
    position:absolute;
    top: 102px;
-   left: 73%;
+   left: 77.4%;
    border: 5px solid blue;
    border: 2px solid lightgrey;
    box-shadow: -5px 0px 5px #888888;
@@ -180,6 +209,10 @@ a, #placesItem a, #friendCarouselDiv h4 {
     margin-bottom: 20px;
   }
 
+  h2 {
+    margin-bottom: 30px;
+  }
+
   .form-group {
     width: 300px;
     text-align: center;
@@ -187,6 +220,17 @@ a, #placesItem a, #friendCarouselDiv h4 {
     left: 50%;
     transform: translate(-50%, 0%);
   }
+
+  .btn-secondary {
+    cursor: pointer;
+    border-color: $brand-grey;
+    color: $brand-dark-blue;
+      &:hover{
+        background-color: $brand-pink;
+        color: $brand-grey;
+    }
+  }
+
 
   #mainLanding {
 
@@ -236,8 +280,8 @@ a, #placesItem a, #friendCarouselDiv h4 {
       text-transform: capitalize;
     }
     .card {
-      height: 300px;
-      margin: 0 0 15px 0;
+      // height: 200px;
+      margin: 0 0 20px 0;
       border: none;
 
       .card-title {
@@ -253,7 +297,7 @@ a, #placesItem a, #friendCarouselDiv h4 {
         padding: 10px;
       }
       .card-block {
-        padding: 0;
+        padding: 0 0 20px;
       }
     }
 

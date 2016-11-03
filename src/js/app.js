@@ -20,7 +20,7 @@ $(() =>{
   let latLngList = [];
   var directionsDisplay = new google.maps.DirectionsRenderer({ suppressBicyclingLayer: true });
   var directionsService = new google.maps.DirectionsService();
-  const pinImage = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2%7CDDFC74");
+  const pinImage = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2%7C5CB85C");
   const pinDefault = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2%7CE01A4F");
 
   $navDiv.on('click', '.register', landingRegForm);
@@ -71,6 +71,11 @@ $(() =>{
     $sidePanel.css("height", "87vh").css("top", "0px");
     $("#travelModeDiv").css("visibility", "hidden");
     $friendCarouselDiv.css("visibility", "hidden");
+    people = [];
+    allResults = [];
+    markerId = [];
+    latLngList = [];
+    uniqueId = 0;
   }
 
   function navBarInit(){
@@ -107,9 +112,6 @@ $(() =>{
         break;
       case 'monkey around':
         displayText = 'zoo';
-        break;
-      case 'park':
-        displayText = 'play';
         break;
       case 'spa':
         displayText = 'relax';
@@ -271,7 +273,6 @@ $(() =>{
                 <div class="card-block">
                   <h4 class="card-title">Day Out</h4>
                   <button id="resource" class="btn btn-secondary" data-id='zoo'>Zoo</button>
-                  <button id="resource" class="btn btn-secondary" data-id='park'>Park</button>
                   <button id="resource" class="btn btn-secondary" data-id='spa'>Spa</button>
                   <button id="resource" class="btn btn-secondary" data-id='gym'>Gym</button>
                 </div>
@@ -410,7 +411,9 @@ $(() =>{
   }
 
   function getFriends() {
-    restoreSidePanel();
+    $sidePanel.css("height", "87vh").css("top", "0px");
+    $("#travelModeDiv").css("visibility", "hidden");
+    $friendCarouselDiv.css("visibility", "hidden");
 
     let nextView = "";
 
@@ -503,18 +506,20 @@ $(() =>{
       }
     })
     .done((user) => {
-      let $row = $(`<div class="row"><h4>Saved Friends</h4></div>`);
+      let $row = $(`<div class="row form-panel"><h3>Add Saved Friends</h3></div>`);
       friends.forEach((friend) => {
         $row.append(`
-          <div class="col-md-12">
-            <div class="card">
+            <div class="card friends-list">
               <div class="card-block">
-                <h4 class="card-title">${friend.name}</h4>
-                <p class="card-title">${friend.address}</p>
+                <div class="col-sm-6">
+                  <h4 class="card-title">${friend.name}</h4>
+                  <p class="card-title">${friend.address}</p>
+                </div>
+                <div class="col-sm-6">
+                  <button class="btn btn-success addFriend" data-target="addToMap" data-id="${friend._id}">Add</button>
+                </div>
               </div>
-            <button class="btn btn-primary addFriend" data-target="addToMap" data-id="${friend._id}">Add</button>
             </div>
-          </div>
         `);
       });
       $sidePanel.html($row);
@@ -713,9 +718,6 @@ let mapStyle = [
           <a class="nav-link" id="resource" data-id='zoo'>Zoo</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" id="resource" data-id='park'>Park</a>
-        </li>
-        <li class="nav-item">
           <a class="nav-link" id="resource" data-id='spa'>Spa</a>
         </li>
         <li class="nav-item">
@@ -739,7 +741,6 @@ let mapStyle = [
           <a class="dropdown-item" id="resource" data-id='clothing_store'>Clothes</a>
           <a class="dropdown-item" id="resource" data-id='florist'>Florist</a>
           <a class="dropdown-item" id="resource" data-id='casino'>Zoo</a>
-          <a class="dropdown-item" id="resource" data-id='park'>Park</a>
           <a class="dropdown-item" id="resource" data-id='spa'>Spa</a>
           <a class="dropdown-item" id="resource" data-id='gym'>Gym</a>
         </div>
@@ -766,22 +767,19 @@ let mapStyle = [
     $sidePanel.html(
       `<div class="form-panel">
         <h2>Where are you starting from?</h2>
-        <hr>
         <input id="pac-input" class="controls" type="text" placeholder="Where are you?">
         <form id="userLocation"  data-target="current" method="put" action="/api/users/${userId}">
           <input type='hidden' id="input-location" name="user[address]">
           <input type='hidden' id="input-lat" name="user[lat]">
           <input type='hidden' id="input-lng" name="user[lng]">
-          <button class="btn btn-danger" id="userSaveLocation">Save</button>
+          <button class="btn btn-info" id="userSaveLocation">Save</button>
         </form>
         <p>or</p>
         <button class="btn btn-secondary" id="useSavedAdd">Use saved address</button>
         <button id="locationButton" data-target="friendLocation" class="btn btn-secondary">Use current location</button>
         <br>
         <hr>
-        <hr>
         <button id="addAFriend" data-target="friendLocation" class="btn btn-primary">Add friend</button>
-        <hr>
       </div>
     `);
     createSearchBar();
@@ -817,17 +815,20 @@ let mapStyle = [
     let userId = localStorage.getItem('id');
     if(event) event.preventDefault();
     $sidePanel.prepend(
-      `<h4>Add New Friend</h4>
-      <input id="pac-input" class="controls" type="text" placeholder="Address">
-      <form id="friendLocation" data-target="current" method="post" action="/api/users/${userId}/friends">
-        <input id="input-name" name="name" placeholder="Name">
-        <input type='hidden' id="input-location" name="address">
-        <input type='hidden' id="input-lat" name="lat">
-        <input type='hidden' id="input-lng" name="lng">
-        <button class="btn btn-secondary" id="friendSaveLocation">Save</button>
-      </form>
-      <button id="go" class="btn btn-primary">Go!</button>
-      <button id="addAFriend" data-target='friendLocation' class="btn btn-primary">Add another friend</button>
+      `
+      <div class="form-panel">
+        <button id="go" class="btn btn-primary">Go!</button>
+        <h3>Add New Friend</h3>
+        <input id="pac-input" class="controls" type="text" placeholder="Where's your friend?">
+        <form id="friendLocation" data-target="current" method="post" action="/api/users/${userId}/friends">
+          <input id="input-name" name="name" class='controls' placeholder="What's thier name?">
+          <input type='hidden' id="input-location" name="address">
+          <input type='hidden' id="input-lat" name="lat">
+          <input type='hidden' id="input-lng" name="lng">
+          <button class="btn btn-info" id="friendSaveLocation">Save</button>
+        </form>
+        <button id="addAFriend" data-target='friendLocation' class="btn btn-secondary">Add another friend</button>
+      </div>
     `);
     createSearchBar();
   }
