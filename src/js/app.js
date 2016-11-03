@@ -68,12 +68,13 @@ $(() =>{
 
 
   function restoreSidePanel() {
-    $sidePanel.css("height", "87vh").css("top", "0px");
+    $sidePanel.css("height", "87vh").css("margin-top", "-116px");
     $("#travelModeDiv").css("visibility", "hidden");
     $friendCarouselDiv.css("visibility", "hidden");
     people = [];
-    allResults = [];
+    allResults =[];
     markerId = [];
+    venueMarkers = [];
     latLngList = [];
     uniqueId = 0;
   }
@@ -337,20 +338,22 @@ $(() =>{
     let userId = localStorage.getItem('id');
 
     $sidePanel.html(`
-      <h2>Edit Friend</h2>
-      <form id="friendUpdate" method="put" action="/api/users/${userId}/friends/${friend._id}"  data-target="viewProfile">
-        <div class="form-group">
-          <label for="name">
-          <input class="form-control" name="name" value="${friend.name}">
-          <input type="hidden" id="input-lat" name="lat" value="${friend.lat}">
-          <input type="hidden" id="input-lng" name="lng" value="${friend.lng}">
-          <label for="address">
-          <input id="friendAddr" class="controls" type="text" placeholder='Address' value="${friend.address}">
-          <input type="hidden" id="newFriendAdd" name='address' type="text" value='${friend.address}'>
-          <button id="friendUpdateBtn" class="btn btn-primary" type='submit'>Update</button>
-          <button id="backToProfile" class="btn btn-secondary">Back</button>
-        </div>
-      </form>`);
+      <div class="form-panel" id="editFriend">
+        <h2>Edit Friend</h2>
+        <form id="friendUpdate" method="put" action="/api/users/${userId}/friends/${friend._id}"  data-target="viewProfile">
+          <div class="form-group">
+            <label for="name">
+            <input class="controls" name="name" value="${friend.name}">
+            <input type="hidden" id="input-lat" name="lat" value="${friend.lat}">
+            <input type="hidden" id="input-lng" name="lng" value="${friend.lng}">
+            <label for="address">
+            <input id="friendAddr" class="controls" type="text" placeholder='Address' value="${friend.address}">
+            <input type="hidden" id="newFriendAdd" name='address' type="text" value='${friend.address}'>
+            <button id="friendUpdateBtn" class="btn btn-primary" type='submit'>Update</button>
+            <button id="backToProfile" class="btn btn-secondary">Back</button>
+          </div>
+        </form>
+      </div>`);
 
     var input = document.getElementById('friendAddr');
     var searchBox = new google.maps.places.SearchBox(input);
@@ -411,9 +414,10 @@ $(() =>{
   }
 
   function getFriends() {
-    $sidePanel.css("height", "87vh").css("top", "0px");
     $("#travelModeDiv").css("visibility", "hidden");
     $friendCarouselDiv.css("visibility", "hidden");
+
+
 
     let nextView = "";
 
@@ -475,19 +479,28 @@ $(() =>{
   }
 
   function showFriendsInProfile(user, friends){
-    let $row = $(`<div class="row"><h2>${user.username}</h2><p>${user.address}</div>`);
+    let $row = $(`
+      <div class="form-panel">
+        <div class="row">
+          <h2>${user.username}</h2>
+          <p>${user.address}</p>
+        </div>
+      </div>`);
+
     friends.forEach((friend) => {
       $row.append(`
-        <div class="col-md-12">
-          <div class="card">
-            <div class="card-block">
-              <h4 class="card-title">${friend.name}</h4>
-              <h4 class="card-title">${friend.address}</h4>
-            </div>
+        <div id="profile" class="row">
+          <div class="col-sm-6">
+            <h3>${friend.name}</h3>
+            <p>${friend.address}</p>
           </div>
-          <button class="btn btn-danger delete" data-id="${friend._id}">Delete</button>
-          <button class="btn btn-primary edit" data-target='updateFriend' data-id="${friend._id}">Edit</button>
+          <div class="col-sm-6">
+            <button class="btn btn-danger delete" data-id="${friend._id}">Delete</button>
+
+            <button class="btn btn-primary edit" data-target='updateFriend' data-id="${friend._id}">Edit</button>
+          </div>
         </div>
+        <hr>
       `);
     });
 
@@ -745,10 +758,6 @@ let mapStyle = [
           <a class="dropdown-item" id="resource" data-id='gym'>Gym</a>
         </div>
       </div>
-
-
-
-
       `);
   }
 
@@ -817,8 +826,7 @@ let mapStyle = [
     let userId = localStorage.getItem('id');
     if(event) event.preventDefault();
     $sidePanel.prepend(
-      `
-      <div class="form-panel">
+      `<div class="form-panel">
         <button id="go" class="btn btn-primary">Go!</button>
         <h3>Add New Friend</h3>
         <input id="pac-input" class="controls" type="text" placeholder="Where's your friend?">
@@ -985,8 +993,7 @@ let mapStyle = [
               <option value='2'>££</option>
               <option value='3'>£££</option>
               <option value='4'>££££</option>
-            </select>
-            <br>
+            </select>&nbsp;
             <label for='rating'>Rating</label>
             <select name="rating">
               <option value='null'>--</option>
@@ -1094,7 +1101,7 @@ let mapStyle = [
 
   function showDirections() {
     $sidePanel.empty();
-    $sidePanel.css("height", "73.5vh").css("top", "108px");
+    $sidePanel.css("height", "73.5vh").css("margin-top", "0px");
     $("#travelModeDiv").css("visibility", "visible");
     directionsDisplay.setMap(map);
     directionsDisplay.setPanel(document.getElementById('sidePanel'));

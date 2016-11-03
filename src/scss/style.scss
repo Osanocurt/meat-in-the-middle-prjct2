@@ -8,45 +8,44 @@ body, html {
 }
 
 #map {
-  width: 63%;
+
   height: 87vh;
   display: inline-block;
-  margin: 5px 0px 5px 5px;
   border: 2px solid lightgrey;
   border-radius: 5px;
-  box-shadow: -5px 0px 5px #888888;
+
 }
 
 #travelModeDiv {
   visibility: hidden;
-  position: relative;
-  top: -89vh;
   float: right;
-  width: 34%;
   height: 38px;
   background-color: #fff;
   padding: 5px;
-  margin: 5px;
   text-align: center;
   padding-left: 10px;
   border: 2px solid lightgrey;
-  box-shadow: -5px 0px 5px #888888;
+  // box-shadow: -5px 0px 5px #888888;
   border-radius: 5px;
+  margin-right: -5px;
 }
 
 #sidePanel {
-  position: relative;
-  top: 0px;
   padding-left: 10px;
-  margin: 5px;
-  width: 34%;
+  margin-top: -42px;
   height: 87vh;
   float: right;
   overflow: auto;
   border: 2px solid lightgrey;
-  box-shadow: -5px 0px 5px #888888;
+  // box-shadow: -5px 0px 5px #888888;
   border-radius: 5px;
+  margin-right: -5px;
 
+  .carousel-custom {
+    button {
+      float: right;
+    }
+  }
   .form-panel {
     text-align: center;
 
@@ -104,23 +103,33 @@ body, html {
       border: none;
     }
   }
+
+  #profile {
+
+    button {
+      margin: 10px 0;
+      width: 100px;
+    }
+    .btn-danger {
+      background-color: $brand-grey;
+      color: $brand-pink;
+    }
+    .controls {
+      width: 200px;
+
+    }
+  }
 }
 
 #friendCarouselDiv {
    visibility: hidden;
    float: right;
-   overflow: auto;
-   height: 70px;
    text-align: center;
-  //  color: black;
-   width: 34%;
-   position:absolute;
-   top: 102px;
-   left: 77.4%;
+   color: black;
    border: 5px solid blue;
    border: 2px solid lightgrey;
-   box-shadow: -5px 0px 5px #888888;
    border-radius: 5px;
+   margin-right: -5px;
 }
 
 #pac-input {
@@ -143,7 +152,7 @@ body, html {
 }
 
 #placesItem {
-  min-height: 162px;
+  min-height: 165px;
   overflow: hidden;
 
   .textContainer {
@@ -194,6 +203,7 @@ a, #placesItem a, #friendCarouselDiv h4 {
     float: right;
   }
 }
+
 #landing {
   background-image: url('../images/base-map-blue.png');
   background-size: cover;
@@ -230,7 +240,6 @@ a, #placesItem a, #friendCarouselDiv h4 {
         color: $brand-grey;
     }
   }
-
 
   #mainLanding {
 
@@ -303,6 +312,7 @@ a, #placesItem a, #friendCarouselDiv h4 {
 
   }
 }
+
 
 .nav-tabs {
   .nav-link {

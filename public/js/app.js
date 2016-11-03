@@ -68,12 +68,13 @@ $(function () {
   }
 
   function restoreSidePanel() {
-    $sidePanel.css("height", "87vh").css("top", "0px");
+    $sidePanel.css("height", "87vh").css("margin-top", "-116px");
     $("#travelModeDiv").css("visibility", "hidden");
     $friendCarouselDiv.css("visibility", "hidden");
     people = [];
     allResults = [];
     markerId = [];
+    venueMarkers = [];
     latLngList = [];
     uniqueId = 0;
   }
@@ -188,7 +189,7 @@ $(function () {
     if (event) event.preventDefault();
     var userId = localStorage.getItem('id');
 
-    $sidePanel.html('\n      <h2>Edit Friend</h2>\n      <form id="friendUpdate" method="put" action="/api/users/' + userId + '/friends/' + friend._id + '"  data-target="viewProfile">\n        <div class="form-group">\n          <label for="name">\n          <input class="form-control" name="name" value="' + friend.name + '">\n          <input type="hidden" id="input-lat" name="lat" value="' + friend.lat + '">\n          <input type="hidden" id="input-lng" name="lng" value="' + friend.lng + '">\n          <label for="address">\n          <input id="friendAddr" class="controls" type="text" placeholder=\'Address\' value="' + friend.address + '">\n          <input type="hidden" id="newFriendAdd" name=\'address\' type="text" value=\'' + friend.address + '\'>\n          <button id="friendUpdateBtn" class="btn btn-primary" type=\'submit\'>Update</button>\n          <button id="backToProfile" class="btn btn-secondary">Back</button>\n        </div>\n      </form>');
+    $sidePanel.html('\n      <div class="form-panel" id="editFriend">\n        <h2>Edit Friend</h2>\n        <form id="friendUpdate" method="put" action="/api/users/' + userId + '/friends/' + friend._id + '"  data-target="viewProfile">\n          <div class="form-group">\n            <label for="name">\n            <input class="controls" name="name" value="' + friend.name + '">\n            <input type="hidden" id="input-lat" name="lat" value="' + friend.lat + '">\n            <input type="hidden" id="input-lng" name="lng" value="' + friend.lng + '">\n            <label for="address">\n            <input id="friendAddr" class="controls" type="text" placeholder=\'Address\' value="' + friend.address + '">\n            <input type="hidden" id="newFriendAdd" name=\'address\' type="text" value=\'' + friend.address + '\'>\n            <button id="friendUpdateBtn" class="btn btn-primary" type=\'submit\'>Update</button>\n            <button id="backToProfile" class="btn btn-secondary">Back</button>\n          </div>\n        </form>\n      </div>');
 
     var input = document.getElementById('friendAddr');
     var searchBox = new google.maps.places.SearchBox(input);
@@ -249,7 +250,6 @@ $(function () {
   }
 
   function getFriends() {
-    $sidePanel.css("height", "87vh").css("top", "0px");
     $("#travelModeDiv").css("visibility", "hidden");
     $friendCarouselDiv.css("visibility", "hidden");
 
@@ -310,9 +310,10 @@ $(function () {
   }
 
   function showFriendsInProfile(user, friends) {
-    var $row = $('<div class="row"><h2>' + user.username + '</h2><p>' + user.address + '</div>');
+    var $row = $('\n      <div class="form-panel">\n        <div class="row">\n          <h2>' + user.username + '</h2>\n          <p>' + user.address + '</p>\n        </div>\n      </div>');
+
     friends.forEach(function (friend) {
-      $row.append('\n        <div class="col-md-12">\n          <div class="card">\n            <div class="card-block">\n              <h4 class="card-title">' + friend.name + '</h4>\n              <h4 class="card-title">' + friend.address + '</h4>\n            </div>\n          </div>\n          <button class="btn btn-danger delete" data-id="' + friend._id + '">Delete</button>\n          <button class="btn btn-primary edit" data-target=\'updateFriend\' data-id="' + friend._id + '">Edit</button>\n        </div>\n      ');
+      $row.append('\n        <div id="profile" class="row">\n          <div class="col-sm-6">\n            <h3>' + friend.name + '</h3>\n            <p>' + friend.address + '</p>\n          </div>\n          <div class="col-sm-6">\n            <button class="btn btn-danger delete" data-id="' + friend._id + '">Delete</button>\n\n            <button class="btn btn-primary edit" data-target=\'updateFriend\' data-id="' + friend._id + '">Edit</button>\n          </div>\n        </div>\n        <hr>\n      ');
     });
 
     $sidePanel.html($row);
@@ -465,7 +466,7 @@ $(function () {
   }
 
   function showResourceForm() {
-    $main.prepend('\n\n      <ul class="nav nav-tabs">\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'restaurant\'>Restaurant</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'bar\'>Bar</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'cafe\'>Cafe</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'casino\'>Casino</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'night_club\'>Night Club</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'movie_theater\'>Theater</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'shopping_mall\'>Shopping</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'clothing_store\'>Clothes</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'florist\'>Florist</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'zoo\'>Zoo</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'spa\'>Spa</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'gym\'>Gym</a>\n        </li>\n      </ul>\n\n\n      <div class="dropdown open nav-tabs-mobile">\n        <a class="btn btn-secondary dropdown-toggle" href="#" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">\n          Select category\n        </a>\n        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">\n          <a class="dropdown-item" id="resource" data-id=\'restaurant\'>Restaurant</a>\n          <a class="dropdown-item" id="resource" data-id=\'bar\'>Bar</a>\n          <a class="dropdown-item" id="resource" data-id=\'cafe\'>Cafe</a>\n          <a class="dropdown-item" id="resource" data-id=\'casino\'>Casino</a>\n          <a class="dropdown-item" id="resource" data-id=\'night_club\'>Night Club</a>\n          <a class="dropdown-item" id="resource" data-id=\'movie_theater\'>Theater</a>\n          <a class="dropdown-item" id="resource" data-id=\'shopping_mall\'>Shopping</a>\n          <a class="dropdown-item" id="resource" data-id=\'clothing_store\'>Clothes</a>\n          <a class="dropdown-item" id="resource" data-id=\'florist\'>Florist</a>\n          <a class="dropdown-item" id="resource" data-id=\'casino\'>Zoo</a>\n          <a class="dropdown-item" id="resource" data-id=\'spa\'>Spa</a>\n          <a class="dropdown-item" id="resource" data-id=\'gym\'>Gym</a>\n        </div>\n      </div>\n\n\n\n\n      ');
+    $main.prepend('\n\n      <ul class="nav nav-tabs">\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'restaurant\'>Restaurant</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'bar\'>Bar</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'cafe\'>Cafe</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'casino\'>Casino</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'night_club\'>Night Club</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'movie_theater\'>Theater</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'shopping_mall\'>Shopping</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'clothing_store\'>Clothes</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'florist\'>Florist</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'zoo\'>Zoo</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'spa\'>Spa</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'gym\'>Gym</a>\n        </li>\n      </ul>\n\n\n      <div class="dropdown open nav-tabs-mobile">\n        <a class="btn btn-secondary dropdown-toggle" href="#" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">\n          Select category\n        </a>\n        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">\n          <a class="dropdown-item" id="resource" data-id=\'restaurant\'>Restaurant</a>\n          <a class="dropdown-item" id="resource" data-id=\'bar\'>Bar</a>\n          <a class="dropdown-item" id="resource" data-id=\'cafe\'>Cafe</a>\n          <a class="dropdown-item" id="resource" data-id=\'casino\'>Casino</a>\n          <a class="dropdown-item" id="resource" data-id=\'night_club\'>Night Club</a>\n          <a class="dropdown-item" id="resource" data-id=\'movie_theater\'>Theater</a>\n          <a class="dropdown-item" id="resource" data-id=\'shopping_mall\'>Shopping</a>\n          <a class="dropdown-item" id="resource" data-id=\'clothing_store\'>Clothes</a>\n          <a class="dropdown-item" id="resource" data-id=\'florist\'>Florist</a>\n          <a class="dropdown-item" id="resource" data-id=\'casino\'>Zoo</a>\n          <a class="dropdown-item" id="resource" data-id=\'spa\'>Spa</a>\n          <a class="dropdown-item" id="resource" data-id=\'gym\'>Gym</a>\n        </div>\n      </div>\n      ');
   }
 
   function updateResourceChoice() {
@@ -514,7 +515,7 @@ $(function () {
   function showFriendForm() {
     var userId = localStorage.getItem('id');
     if (event) event.preventDefault();
-    $sidePanel.prepend('\n      <div class="form-panel">\n        <button id="go" class="btn btn-primary">Go!</button>\n        <h3>Add New Friend</h3>\n        <input id="pac-input" class="controls" type="text" placeholder="Where\'s your friend?">\n        <form id="friendLocation" data-target="current" method="post" action="/api/users/' + userId + '/friends">\n          <input id="input-name" name="name" class=\'controls\' placeholder="What\'s their name?">\n          <input type=\'hidden\' id="input-location" name="address">\n          <input type=\'hidden\' id="input-lat" name="lat">\n          <input type=\'hidden\' id="input-lng" name="lng">\n          <button class="btn btn-info" id="friendSaveLocation">Save</button>\n        </form>\n        <button id="addAFriend" data-target=\'friendLocation\' class="btn btn-secondary">Add another friend</button>\n      </div>\n    ');
+    $sidePanel.prepend('<div class="form-panel">\n        <button id="go" class="btn btn-primary">Go!</button>\n        <h3>Add New Friend</h3>\n        <input id="pac-input" class="controls" type="text" placeholder="Where\'s your friend?">\n        <form id="friendLocation" data-target="current" method="post" action="/api/users/' + userId + '/friends">\n          <input id="input-name" name="name" class=\'controls\' placeholder="What\'s their name?">\n          <input type=\'hidden\' id="input-location" name="address">\n          <input type=\'hidden\' id="input-lat" name="lat">\n          <input type=\'hidden\' id="input-lng" name="lng">\n          <button class="btn btn-info" id="friendSaveLocation">Save</button>\n        </form>\n        <button id="addAFriend" data-target=\'friendLocation\' class="btn btn-secondary">Add another friend</button>\n      </div>\n    ');
     createSearchBar();
   }
 
@@ -656,7 +657,7 @@ $(function () {
   function populateCarousel(resultsToShow) {
     $sidePanel.empty();
 
-    var $carousel = $('<div id=\'carousel-custom\' class=\'carousel slide\' data-ride=\'carousel\'>\n        <div id=\'filter\'>\n          <h4>Filter Results</h4>\n          <form id="filterResults">\n            <label for=\'price\'>Max price</label>\n            <select name="price">\n              <option value=\'null\'>--</option>\n              <option value=\'1\'>\xA3</option>\n              <option value=\'2\'>\xA3\xA3</option>\n              <option value=\'3\'>\xA3\xA3\xA3</option>\n              <option value=\'4\'>\xA3\xA3\xA3\xA3</option>\n            </select>\n            <br>\n            <label for=\'rating\'>Rating</label>\n            <select name="rating">\n              <option value=\'null\'>--</option>\n              <option value=\'1\'>*</option>\n              <option value=\'2\'>**</option>\n              <option value=\'3\'>***</option>\n              <option value=\'4\'>****</option>\n              <option value=\'5\'>*****</option>\n            </select>\n            <br>\n            <button id="filterResultsBtn" class="btn btn-danger" type="submit">Update</button>\n            <button id="clearFilterResults" class="btn btn-secondary" type="submit">Clear filter</button>\n          <form>\n          <hr>\n        </div>\n      </div>');
+    var $carousel = $('<div id=\'carousel-custom\' class=\'carousel slide\' data-ride=\'carousel\'>\n        <div id=\'filter\'>\n          <h4>Filter Results</h4>\n          <form id="filterResults">\n            <label for=\'price\'>Max price</label>\n            <select name="price">\n              <option value=\'null\'>--</option>\n              <option value=\'1\'>\xA3</option>\n              <option value=\'2\'>\xA3\xA3</option>\n              <option value=\'3\'>\xA3\xA3\xA3</option>\n              <option value=\'4\'>\xA3\xA3\xA3\xA3</option>\n            </select>&nbsp;\n            <label for=\'rating\'>Rating</label>\n            <select name="rating">\n              <option value=\'null\'>--</option>\n              <option value=\'1\'>*</option>\n              <option value=\'2\'>**</option>\n              <option value=\'3\'>***</option>\n              <option value=\'4\'>****</option>\n              <option value=\'5\'>*****</option>\n            </select>\n            <br>\n            <button id="filterResultsBtn" class="btn btn-danger" type="submit">Update</button>\n            <button id="clearFilterResults" class="btn btn-secondary" type="submit">Clear filter</button>\n          <form>\n          <hr>\n        </div>\n      </div>');
 
     resultsToShow.forEach(function (venue) {
       var imgSrc = '';
@@ -736,7 +737,7 @@ $(function () {
 
   function showDirections() {
     $sidePanel.empty();
-    $sidePanel.css("height", "73.5vh").css("top", "108px");
+    $sidePanel.css("height", "73.5vh").css("margin-top", "0px");
     $("#travelModeDiv").css("visibility", "visible");
     directionsDisplay.setMap(map);
     directionsDisplay.setPanel(document.getElementById('sidePanel'));
