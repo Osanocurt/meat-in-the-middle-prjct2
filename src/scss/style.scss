@@ -7,37 +7,69 @@ body, html {
   font-family: 'Lato', sans-serif;
 }
 
+
+
 #map {
-  width: 72vw;
-  height: 89.5vh;
+  width: 64vw;
+  height: 87vh;
   display: inline-block;
-  // border: 5px solid blue;
+  margin: 5px 0px 5px 5px;
+  border: 2px solid lightgrey;
+  border-radius: 5px;
+  box-shadow: -5px 0px 5px #888888;
+
+
 }
 
 #travelModeDiv {
   visibility: hidden;
-  position: absolute;
-  top: 84px;
-  left: 73%;
-  z-index: 5;
-  width: 27vw;
+  position: relative;
+  top: -643px;
+  float: right;
+  width: 34.95vw;
+  height: 38px;
   background-color: #fff;
   padding: 5px;
+  margin: 5px;
   text-align: center;
   padding-left: 10px;
-  border: 5px solid blue;
+  border: 2px solid lightgrey;
+  box-shadow: -5px 0px 5px #888888;
+  border-radius: 5px;
 }
 
 #sidePanel {
   position: relative;
-  top: 76px;
-  line-height: 30px;
+  top: 0px;
   padding-left: 10px;
-  width: 27vw;
-  height: 100%;
+  margin: 5px;
+  width: 34.95vw;
+  height: 87vh;
   float: right;
   overflow: auto;
+  border: 2px solid lightgrey;
+  box-shadow: -5px 0px 5px #888888;
+  border-radius: 5px;
 }
+
+#friendCarouselDiv {
+   visibility: hidden;
+   margin-left: -120px;
+   float: right;
+   height: 70px;
+   text-align: center;
+  //  color: black;
+   width: 34.95vw;
+   position:absolute;
+   top: 102px;
+   left: 73%;
+   border: 5px solid blue;
+   border: 2px solid lightgrey;
+   box-shadow: -5px 0px 5px #888888;
+   border-radius: 5px;
+}
+
+
 
 #pac-input {
   width: 300px;
@@ -49,60 +81,46 @@ body, html {
 
 #carousel-custom {
    margin: 10px auto;
-   width: 300px;
-}
-#carousel-custom .carousel-indicators {
-   margin: 10px 0 0;
-   overflow: auto;
-   position: static;
-   text-align: left;
-   white-space: nowrap;
    width: 100%;
 }
-#carousel-custom .carousel-indicators li {
-   background-color: transparent;
-   -webkit-border-radius: 0;
-   border-radius: 0;
-   display: inline-block;
-   height: auto;
-   margin: 0 !important;
-   width: auto;
-}
-#carousel-custom .carousel-indicators li img {
-   display: block;
-   opacity: 0.5;
-}
-#carousel-custom .carousel-indicators li.active img {
-   opacity: 1;
-}
-#carousel-custom .carousel-indicators li:hover img {
-   opacity: 0.75;
-}
-#carousel-custom .carousel-outer {
-   position: relative;
-}
 
-img.priceLevel{
+
+.priceLevel{
   width: 15px;
+  height: 15px;
+}
+
+#placesItem {
+  min-height: 162px;
+  overflow: hidden;
+  .textContainer {
+    width: calc(100% - 175px);
+    float: left;
+    vertical-align: top;
+    padding-right: 10px;
+    word-break: break-all;
+  h6 {
+    font-size: 20px;
+  }
+  }
+}
+
+#imageContainer {
+height: 150px;
+width: 150px;
+margin-top: 5px;
+margin-right: 15px;
+background-size: cover;
+display: block;
+float: right;
+border-radius: 5px;
+vertical-align: top;
 }
 
 
-#friendCarouselDiv {
-  visibility: hidden;
-   height: 60px;
-   text-align: center;
-   line-height: 30px;
-   color: black;
-   width: 27vw;
-   position:absolute;
-   top: 10px;
-   left: 73%;
-   z-index: 5;
-   border: 5px solid blue;
-}
-
-h4 {
+a, #placesItem a, #friendCarouselDiv h4 {
    cursor: pointer; cursor: hand;
+   display: block;
 }
 
 .btn-primary {

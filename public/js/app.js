@@ -67,6 +67,12 @@ $(function () {
     // console.log("logged out");
   }
 
+  function restoreSidePanel() {
+    $sidePanel.css("height", "87vh").css("top", "0px");
+    $("#travelModeDiv").css("visibility", "hidden");
+    $friendCarouselDiv.css("visibility", "hidden");
+  }
+
   function navBarInit() {
 
     var navHtml = void 0;
@@ -130,7 +136,6 @@ $(function () {
   navBarInit();
 
   function landingPage() {
-    if (event) event.preventDefault();
     $landing.html('\n      <div class="content" id="mainLanding">\n        <h1>(  <span class="pink">Eat</span>  ||  <span class="blue">Drink</span>  ||  <span class="yellow">Spa</span>  )</h1>\n        <h2>What ever you\'re up to,<br> meet your friends in the middle.</h2>\n        <button id="landingGetStarted" class="btn btn-primary">Get started</button>\n      </div>');
   }
 
@@ -167,15 +172,13 @@ $(function () {
 
   function showRegisterForm() {
     if (event) event.preventDefault();
-    $friendCarouselDiv.css("visibility", "hidden");
-    $("#travelModeDiv").css("visibility", "hidden");
+    restoreSidePanel();
     $sidePanel.html('\n      <h2>Register</h2>\n      <form method="post" action="/api/register" data-target="showUserForm">\n        <div class="form-group">\n          <input class="form-control" name="user[username]" placeholder="Username">\n        </div>\n        <div class="form-group">\n          <input class="form-control" name="user[email]" placeholder="Email">\n        </div>\n        <div class="form-group">\n          <input class="form-control" type="password" name="user[password]" placeholder="Password">\n        </div>\n        <div class="form-group">\n          <input class="form-control" type="password" name="user[passwordConfirmation]" placeholder="Password Confirmation">\n        </div>\n        <button class="btn btn-primary">Register</button>\n      </form>\n    ');
   }
 
   function showLoginForm() {
     if (event) event.preventDefault();
-    $friendCarouselDiv.css("visibility", "hidden");
-    $("#travelModeDiv").css("visibility", "hidden");
+    restoreSidePanel();
     $sidePanel.html('\n      <h2>Login</h2>\n      <form method="post" action="/api/login" data-target="showUserForm">\n        <div class="form-group">\n          <input class="form-control" name="email" placeholder="Email">\n        </div>\n        <div class="form-group">\n          <input class="form-control" type="password" name="password" placeholder="Password">\n        </div>\n        <button class="btn btn-primary">Login</button>\n      </form>\n    ');
   }
 
@@ -244,8 +247,7 @@ $(function () {
   }
 
   function getFriends() {
-    $friendCarouselDiv.css("visibility", "hidden");
-    $("#travelModeDiv").css("visibility", "hidden");
+    restoreSidePanel();
 
     var nextView = "";
 
@@ -379,9 +381,6 @@ $(function () {
   }
 
   function logout() {
-    if (event) event.preventDefault();
-    $friendCarouselDiv.css("visibility", "hidden");
-    $("#travelModeDiv").css("visibility", "hidden");
     localStorage.removeItem('token');
     localStorage.removeItem('id');
     $main.empty();
@@ -466,7 +465,7 @@ $(function () {
   }
 
   function updateResourceChoice() {
-    console.log(this);
+    restoreSidePanel();
     resource = $(this).data('id');
     mapInit();
     showUserForm();
@@ -478,7 +477,8 @@ $(function () {
   function showUserForm() {
     if (event) event.preventDefault();
     var userId = localStorage.getItem('id');
-    $sidePanel.html('<h2>Where Are You?</h2>\n      <button class="btn btn-secondary" id="useSavedAdd">Use saved address</button>\n      <h4>or</h4>\n      <input id="pac-input" class="controls" type="text" placeholder="Enter location">\n      <form id="userLocation" data-target="current" method="put" action="/api/users/' + userId + '">\n        <input type=\'hidden\' id="input-location" name="user[address]">\n        <input type=\'hidden\' id="input-lat" name="user[lat]">\n        <input type=\'hidden\' id="input-lng" name="user[lng]">\n        <button class="btn btn-secondary" id="userSaveLocation">Save</button>\n      </form>\n\n      <h4>or</h4>\n      <button id="locationButton" data-target="friendLocation" class="btn btn-secondary">Use current location</button>\n      <br>\n      <button id="addAFriend" data-target="friendLocation" class="btn btn-primary">Add friend</button>\n    ');
+    $sidePanel.empty();
+    $sidePanel.html('<h2>Where Are You?</h2>\n      <button class="btn btn-secondary" id="useSavedAdd">Use saved address</button>\n      <h4>or</h4>\n      <input id="pac-input" class="controls" type="text" placeholder="Enter location">\n      <form id="userLocation"  data-target="current" method="put" action="/api/users/' + userId + '">\n        <input type=\'hidden\' id="input-location" name="user[address]">\n        <input type=\'hidden\' id="input-lat" name="user[lat]">\n        <input type=\'hidden\' id="input-lng" name="user[lng]">\n        <button class="btn btn-secondary" id="userSaveLocation">Save</button>\n      </form>\n\n      <h4>or</h4>\n      <button id="locationButton" data-target="friendLocation" class="btn btn-secondary">Use current location</button>\n      <br>\n      <button id="addAFriend" data-target="friendLocation" class="btn btn-primary">Add friend</button>\n    ');
     createSearchBar();
   }
 
@@ -689,7 +689,7 @@ $(function () {
         }
       }
 
-      $carousel.append('\n        <div class="item" id="carouselItem">\n          <a id="carouselChoice" data-id="' + uniqueId + '"><h4>' + venue.name + '</h4>\n          <p>' + venue.vicinity + '</p>\n          ' + ratingHtml + priceHtml + '\n          ' + imgHtml + '</a>\n          <button class="directionButton btn btn-primary" data-lat=' + lat + ' data-lng=' + lng + '>Directions</button>\n        </div>\n        <hr>');
+      $carousel.append('\n        <div id="placesItem">\n          <a id="carouselChoice" data-id="' + uniqueId + '">\n          <div class="textContainer">\n          <h6>' + venue.name + '</h6>\n          <p>' + venue.vicinity + '</p>\n          <p>' + ratingHtml + priceHtml + '</p>\n          </div>\n          <div id="imageContainer" style="background-image: url(\'' + imgSrc + '\')"></div></a>\n          <button class="directionButton btn btn-primary" data-lat=' + lat + ' data-lng=' + lng + '>Directions</button>\n        </div>\n        <hr>');
       uniqueId++;
     });
     $sidePanel.html($carousel);
@@ -732,6 +732,7 @@ $(function () {
 
   function showDirections() {
     $sidePanel.empty();
+    $sidePanel.css("height", "73.5vh").css("top", "108px");
     $("#travelModeDiv").css("visibility", "visible");
     directionsDisplay.setMap(map);
     directionsDisplay.setPanel(document.getElementById('sidePanel'));

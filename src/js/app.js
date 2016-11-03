@@ -49,6 +49,7 @@ $(() =>{
   $landing.on('click', 'button#resource', clearLandingPage);
   $("#travelSelect").on('change', showDirections);
 
+
   function saved() {
     $(this).html("Saved");
   }
@@ -63,6 +64,13 @@ $(() =>{
   } else {
     landingPage();
     // console.log("logged out");
+  }
+
+
+  function restoreSidePanel() {
+    $sidePanel.css("height", "87vh").css("top", "0px");
+    $("#travelModeDiv").css("visibility", "hidden");
+    $friendCarouselDiv.css("visibility", "hidden");
   }
 
   function navBarInit(){
@@ -156,7 +164,6 @@ $(() =>{
 
 
   function landingPage(){
-    if(event) event.preventDefault();
     $landing.html(`
       <div class="content" id="mainLanding">
         <h1>(  <span class="pink">Eat</span>  ||  <span class="blue">Drink</span>  ||  <span class="yellow">Spa</span>  )</h1>
@@ -278,8 +285,7 @@ $(() =>{
 
   function showRegisterForm() {
     if(event) event.preventDefault();
-    $friendCarouselDiv.css("visibility", "hidden");
-    $("#travelModeDiv").css("visibility", "hidden");
+    restoreSidePanel();
     $sidePanel.html(`
       <h2>Register</h2>
       <form method="post" action="/api/register" data-target="showUserForm">
@@ -302,8 +308,7 @@ $(() =>{
 
   function showLoginForm() {
     if(event) event.preventDefault();
-    $friendCarouselDiv.css("visibility", "hidden");
-    $("#travelModeDiv").css("visibility", "hidden");
+    restoreSidePanel();
     $sidePanel.html(`
       <h2>Login</h2>
       <form method="post" action="/api/login" data-target="showUserForm">
@@ -397,8 +402,7 @@ $(() =>{
   }
 
   function getFriends() {
-    $friendCarouselDiv.css("visibility", "hidden");
-    $("#travelModeDiv").css("visibility", "hidden");
+    restoreSidePanel();
 
     let nextView = "";
 
@@ -557,9 +561,6 @@ $(() =>{
   }
 
   function logout() {
-    if(event) event.preventDefault();
-    $friendCarouselDiv.css("visibility", "hidden");
-    $("#travelModeDiv").css("visibility", "hidden");
     localStorage.removeItem('token');
     localStorage.removeItem('id');
     $main.empty();
@@ -743,7 +744,7 @@ let mapStyle = [
   }
 
   function updateResourceChoice(){
-    console.log(this);
+    restoreSidePanel();
     resource = $(this).data('id');
     mapInit();
     showUserForm();
@@ -755,12 +756,13 @@ let mapStyle = [
   function showUserForm() {
     if(event) event.preventDefault();
     let userId = localStorage.getItem('id');
+    $sidePanel.empty();
     $sidePanel.html(
       `<h2>Where Are You?</h2>
       <button class="btn btn-secondary" id="useSavedAdd">Use saved address</button>
       <h4>or</h4>
       <input id="pac-input" class="controls" type="text" placeholder="Enter location">
-      <form id="userLocation" data-target="current" method="put" action="/api/users/${userId}">
+      <form id="userLocation"  data-target="current" method="put" action="/api/users/${userId}">
         <input type='hidden' id="input-location" name="user[address]">
         <input type='hidden' id="input-lat" name="user[lat]">
         <input type='hidden' id="input-lng" name="user[lng]">
@@ -1006,6 +1008,7 @@ let mapStyle = [
         imgHtml = `<br><img src="${imgSrc}">`;
       }
 
+
       if (!!venue.price_level) {
         let priceImg =  `<img class="priceLevel" src="../images/pound.png">`;
         switch (venue.price_level) {
@@ -1025,11 +1028,14 @@ let mapStyle = [
       }
 
       $carousel.append(`
-        <div class="item" id="carouselItem">
-          <a id="carouselChoice" data-id="${uniqueId}"><h4>${venue.name}</h4>
+        <div id="placesItem">
+          <a id="carouselChoice" data-id="${uniqueId}">
+          <div class="textContainer">
+          <h6>${venue.name}</h6>
           <p>${venue.vicinity}</p>
-          ${ratingHtml}${priceHtml}
-          ${imgHtml}</a>
+          <p>${ratingHtml}${priceHtml}</p>
+          </div>
+          <div id="imageContainer" style="background-image: url('${imgSrc}')"></div></a>
           <button class="directionButton btn btn-primary" data-lat=${lat} data-lng=${lng}>Directions</button>
         </div>
         <hr>`);
@@ -1075,6 +1081,7 @@ let mapStyle = [
 
   function showDirections() {
     $sidePanel.empty();
+    $sidePanel.css("height", "73.5vh").css("top", "108px");
     $("#travelModeDiv").css("visibility", "visible");
     directionsDisplay.setMap(map);
     directionsDisplay.setPanel(document.getElementById('sidePanel'));
