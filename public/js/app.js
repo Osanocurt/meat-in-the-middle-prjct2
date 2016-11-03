@@ -7,10 +7,12 @@ $(function () {
   var $landing = $('#landing');
   var $sidePanel = $("#sidePanel");
   var $friendCarouselDiv = $("#friendCarouselDiv");
+  var $navDiv = $('nav');
   var midPoint = { lat: 0, lng: 0 };
   var uniqueId = 0;
   var startingPos = null;
   var venueChosen = null;
+  var displayText = 'meet';
   var resource = void 0;
   var map = void 0;
   var people = [];
@@ -23,10 +25,10 @@ $(function () {
   var pinImage = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2%7CDDFC74");
   var pinDefault = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2%7CE01A4F");
 
-  $('.register').on('click', showRegisterForm);
-  $('.login').on('click', showLoginForm);
-  $('.profile').on('click', getFriends);
-  $('.logout').on('click', logout);
+  $navDiv.on('click', '.register', landingRegForm);
+  $navDiv.on('click', '.login', landingLoginForm);
+  $navDiv.on('click', '.profile', getFriends);
+  $navDiv.on('click', '.logout', logout);
   $main.on('submit', 'form', handleForm);
   $main.on('click', "#go", calculateMidPoint);
   $main.on('click', '#friendSaveLocation', saved);
@@ -71,28 +73,93 @@ $(function () {
     $friendCarouselDiv.css("visibility", "hidden");
   }
 
+  function navBarInit() {
+
+    var navHtml = void 0;
+
+    switch (resource) {
+      case 'restaurant':
+        displayText = 'eat';
+        break;
+      case 'bar':
+        displayText = 'drink';
+        break;
+      case 'cafe':
+        displayText = 'caffinate';
+        break;
+      case 'casino':
+        displayText = 'gamble';
+        break;
+      case 'night_club':
+        displayText = 'dance';
+        break;
+      case 'movie_theater':
+        displayText = 'watch';
+        break;
+      case 'shopping_mall':
+        displayText = 'shop';
+        break;
+      case 'clothing_store':
+        displayText = 'dress';
+        break;
+      case 'florist':
+        displayText = 'decorate';
+        break;
+      case 'monkey around':
+        displayText = 'zoo';
+        break;
+      case 'park':
+        displayText = 'play';
+        break;
+      case 'spa':
+        displayText = 'relax';
+        break;
+      case 'gym':
+        displayText = 'get pumped';
+        break;
+      default:
+        displayText = 'meet';
+        break;
+    }
+
+    var loggedInHtml = '\n      <li class="nav-item">\n        <a class="nav-link profile" href="/" id="viewProfile" data-target=\'viewProfile\' >Profile</a>\n      </li>\n      <li class="nav-item">\n        <a class="nav-link logout" href="/">Logout</a>\n      </li>';
+    var loggedOutHtml = '\n      <li class="nav-item">\n        <a class="nav-link register" href="/">Register</a>\n      </li>\n      <li class="nav-item">\n        <a class="nav-link login" href="/">Login</a>\n      </li>';
+
+    if (isLoggedIn()) {
+      navHtml = loggedInHtml;
+    } else {
+      navHtml = loggedOutHtml;
+    }
+
+    $navDiv.html('\n      <nav class="navbar navbar-dark bg-inverse">\n        <div class="container">\n          <a class="navbar-brand" href="/">[ ' + displayText + ' ] in the Middle</a>\n          <button class="navbar-toggler hidden-sm-up" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar2" aria-controls="exCollapsingNavbar2" aria-expanded="false" aria-label="Toggle navigation">\n            &#9776;\n          </button>\n          <div class="collapse navbar-toggleable-xs" id="exCollapsingNavbar2">\n            <ul class="nav navbar-nav">\n            ' + navHtml + '\n            </ul>\n          </div>\n        </div>\n      </nav>');
+  }
+  navBarInit();
+
   function landingPage() {
-    $landing.html('\n      <div class="container">\n        <h1>Welcome</h1>\n        <p>We\'ve made finding somewhere to hang out with your mates super easy. Whether you\'re looking for a bite to eat, or your planning a trip to the zoo, we\'ve got you covered.</p>\n        <button id="landingGetStarted" class="btn btn-secondary">Get started</button>\n      </div>');
+    if (event) event.preventDefault();
+    $landing.html('\n      <div class="content" id="mainLanding">\n        <h1>(  <span class="pink">Eat</span>  ||  <span class="blue">Drink</span>  ||  <span class="yellow">Spa</span>  )</h1>\n        <h2>What ever you\'re up to,<br> meet your friends in the middle.</h2>\n        <button id="landingGetStarted" class="btn btn-primary">Get started</button>\n      </div>');
   }
 
   function landingRegForm() {
-    $landing.html('\n      <div class="container">\n        <h1>Register</h1>\n        <p>Already registered? <button class="btn btn-secondary" id="landingLogin">Sign in</button></p>\n        <form method="post" action="/api/register" data-target="landingResourceForm">\n          <div class="form-group">\n            <input class="form-control" name="user[username]" placeholder="Username">\n          </div>\n          <div class="form-group">\n            <input class="form-control" name="user[email]" placeholder="Email">\n          </div>\n          <div class="form-group">\n            <input class="form-control" type="password" name="user[password]" placeholder="Password">\n          </div>\n          <div class="form-group">\n            <input class="form-control" type="password" name="user[passwordConfirmation]" placeholder="Password Confirmation">\n          </div>\n          <button class="btn btn-primary">Register</button>\n        </form>\n      </div>');
+    if (event) event.preventDefault();
+    $landing.html('\n      <div class="content">\n        <h1>Register</h1>\n        <p>Already registered? <button class="btn btn-secondary" id="landingLogin">Sign in</button></p>\n        <form method="post" action="/api/register" data-target="landingResourceForm">\n          <div class="form-group">\n            <input class="form-control" name="user[username]" placeholder="Username">\n          </div>\n          <div class="form-group">\n            <input class="form-control" name="user[email]" placeholder="Email">\n          </div>\n          <div class="form-group">\n            <input class="form-control" type="password" name="user[password]" placeholder="Password">\n          </div>\n          <div class="form-group">\n            <input class="form-control" type="password" name="user[passwordConfirmation]" placeholder="Password Confirmation">\n          </div>\n          <button class="btn btn-primary">Register</button>\n        </form>\n      </div>');
   }
 
   function landingLoginForm() {
-    $landing.html('\n      <div class="container">\n        <h2>Login</h2>\n        <form method="post" action="/api/login" data-target="landingResourceForm">\n          <div class="form-group">\n            <input class="form-control" name="email" placeholder="Email">\n          </div>\n          <div class="form-group">\n            <input class="form-control" type="password" name="password" placeholder="Password">\n          </div>\n          <button class="btn btn-primary">Login</button>\n        </form>\n      </div>\n    ');
+    if (event) event.preventDefault();
+    $landing.html('\n      <div class="content">\n        <h1>Login</h1>\n        <form method="post" action="/api/login" data-target="landingResourceForm">\n          <div class="form-group">\n            <input class="form-control" name="email" placeholder="Email">\n          </div>\n          <div class="form-group">\n            <input class="form-control" type="password" name="password" placeholder="Password">\n          </div>\n          <button class="btn btn-primary">Login</button>\n        </form>\n      </div>\n    ');
   }
 
   function landingResourceForm() {
-
+    navBarInit();
     var username = localStorage.getItem('username');
-    var welcomeMessage = 'Hi ' + username + ',';
+    var welcomeMessage = 'Hey ' + username + ',';
 
     if (!username) {
       welcomeMessage = 'Welcome back';
     }
 
-    $landing.html('\n      <div class="container">\n      <h1>' + welcomeMessage + '</h1>\n        <h2>What are you in the mood for?</h2>\n        <div class="row">\n          <div class="card">\n            <div class="card-block">\n              <h4 class="card-title">Eating & Drinking</h4>\n              <button id="resource" class="btn btn-secondary" data-id=\'restaurant\'>Restaurant</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'bar\'>Bar</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'cafe\'>Cafe</button>\n            </div>\n          </div>\n          <div class="card">\n            <div class="card-block">\n              <h4 class="card-title">Night Out</h4>\n              <button id="resource" class="btn btn-secondary" data-id=\'casino\'>Casino</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'night_club\'>Night Club</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'movie_theater\'>Theater</button>\n            </div>\n          </div>\n          <div class="card">\n            <div class="card-block">\n              <h4 class="card-title">Shopping</h4>\n              <button id="resource" class="btn btn-secondary" data-id=\'shopping_mall\'>Shopping</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'clothing_store\'>Clothes</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'florist\'>Florist</button>\n            </div>\n          </div>\n          <div class="card">\n            <div class="card-block">\n              <h4 class="card-title">Day Out</h4>\n              <button id="resource" class="btn btn-secondary" data-id=\'zoo\'>Zoo</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'park\'>Park</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'spa\'>Spa</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'gym\'>Gym</button>\n            </div>\n          </div>\n        </div>\n      </div>');
+    $landing.html('\n      <div class="content">\n        <h1 class="camelCase">' + welcomeMessage + '</h1>\n        <h2>What are you in the mood for?</h2>\n        <div class="row">\n          <div class="col-md-3 col-sm-6">\n            <div class="card">\n              <div class="card-block">\n                <h4 class="card-title">Eating & Drinking</h4>\n                <button id="resource" class="btn btn-secondary" data-id=\'restaurant\'>Restaurant</button>\n                <button id="resource" class="btn btn-secondary" data-id=\'bar\'>Bar</button>\n                <button id="resource" class="btn btn-secondary" data-id=\'cafe\'>Cafe</button>\n              </div>\n            </div>\n          </div>\n          <div class="col-md-3 col-sm-6">\n            <div class="card">\n              <div class="card-block">\n                <h4 class="card-title">Night Out</h4>\n                <button id="resource" class="btn btn-secondary" data-id=\'casino\'>Casino</button>\n                <button id="resource" class="btn btn-secondary" data-id=\'night_club\'>Night Club</button>\n                <button id="resource" class="btn btn-secondary" data-id=\'movie_theater\'>Theater</button>\n              </div>\n            </div>\n          </div>\n          <div class="col-md-3 col-sm-6">\n            <div class="card">\n              <div class="card-block">\n                <h4 class="card-title">Shopping</h4>\n                <button id="resource" class="btn btn-secondary" data-id=\'shopping_mall\'>Shopping</button>\n                <button id="resource" class="btn btn-secondary" data-id=\'clothing_store\'>Clothes</button>\n                <button id="resource" class="btn btn-secondary" data-id=\'florist\'>Florist</button>\n              </div>\n            </div>\n          </div>\n          <div class="col-md-3 col-sm-6">\n            <div class="card">\n              <div class="card-block">\n                <h4 class="card-title">Day Out</h4>\n                <button id="resource" class="btn btn-secondary" data-id=\'zoo\'>Zoo</button>\n                <button id="resource" class="btn btn-secondary" data-id=\'park\'>Park</button>\n                <button id="resource" class="btn btn-secondary" data-id=\'spa\'>Spa</button>\n                <button id="resource" class="btn btn-secondary" data-id=\'gym\'>Gym</button>\n              </div>\n            </div>\n          </div>\n        </div>\n      </div>');
   }
 
   function clearLandingPage() {
@@ -101,6 +168,7 @@ $(function () {
     showResourceForm();
     mapInit();
     showUserForm();
+    navBarInit(resource);
   }
 
   function showRegisterForm() {
@@ -319,6 +387,7 @@ $(function () {
     localStorage.removeItem('id');
     restoreSidePanel();
     $main.empty();
+    navBarInit();
     landingPage();
   }
 
@@ -388,12 +457,14 @@ $(function () {
     map = new google.maps.Map($mapDiv[0], {
       center: { lat: 51.5074, lng: -0.1278 },
       zoom: 9,
-      styles: mapStyle
+      styles: mapStyle,
+      scrollwheel: false
+
     });
   }
 
   function showResourceForm() {
-    $main.prepend('\n      <ul class="nav nav-tabs">\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'restaurant\'>Restaurant</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'bar\'>Bar</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'cafe\'>Cafe</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'casino\'>Casino</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'night_club\'>Night Club</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'movie_theater\'>Theater</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'shopping_mall\'>Shopping</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'clothing_store\'>Clothes</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'florist\'>Florist</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'casino\'>Zoo</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'park\'>Park</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'spa\'>Spa</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'gym\'>Gym</a>\n        </li>\n      </ul>');
+    $main.prepend('\n\n      <ul class="nav nav-tabs">\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'restaurant\'>Restaurant</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'bar\'>Bar</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'cafe\'>Cafe</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'casino\'>Casino</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'night_club\'>Night Club</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'movie_theater\'>Theater</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'shopping_mall\'>Shopping</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'clothing_store\'>Clothes</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'florist\'>Florist</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'zoo\'>Zoo</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'park\'>Park</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'spa\'>Spa</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'gym\'>Gym</a>\n        </li>\n      </ul>\n\n\n      <div class="dropdown open nav-tabs-mobile">\n        <a class="btn btn-secondary dropdown-toggle" href="#" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">\n          Select category\n        </a>\n        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">\n          <a class="dropdown-item" id="resource" data-id=\'restaurant\'>Restaurant</a>\n          <a class="dropdown-item" id="resource" data-id=\'bar\'>Bar</a>\n          <a class="dropdown-item" id="resource" data-id=\'cafe\'>Cafe</a>\n          <a class="dropdown-item" id="resource" data-id=\'casino\'>Casino</a>\n          <a class="dropdown-item" id="resource" data-id=\'night_club\'>Night Club</a>\n          <a class="dropdown-item" id="resource" data-id=\'movie_theater\'>Theater</a>\n          <a class="dropdown-item" id="resource" data-id=\'shopping_mall\'>Shopping</a>\n          <a class="dropdown-item" id="resource" data-id=\'clothing_store\'>Clothes</a>\n          <a class="dropdown-item" id="resource" data-id=\'florist\'>Florist</a>\n          <a class="dropdown-item" id="resource" data-id=\'casino\'>Zoo</a>\n          <a class="dropdown-item" id="resource" data-id=\'park\'>Park</a>\n          <a class="dropdown-item" id="resource" data-id=\'spa\'>Spa</a>\n          <a class="dropdown-item" id="resource" data-id=\'gym\'>Gym</a>\n        </div>\n      </div>\n\n\n\n\n      ');
   }
 
   function updateResourceChoice() {
@@ -401,6 +472,7 @@ $(function () {
     resource = $(this).data('id');
     mapInit();
     showUserForm();
+    navBarInit(resource);
   }
 
   function showUserForm() {

@@ -4,12 +4,13 @@ const morgan = require('morgan');
 const port = process.env.PORT || 8000;
 const bodyParser = require('body-parser');
 const expressJWT = require("express-jwt");
+const config = require("./config/config");
 
 const apiRouter = require ('./config/apiRoutes');
 
 const app = express();
 
-let mongoUri = process.env.MONGODB_URI || 'mongodb://localhost/global';
+let mongoUri = process.env.MONGODB_URI || config.db;
 
 app.use(morgan('dev'));
 app.use(bodyParser.json());

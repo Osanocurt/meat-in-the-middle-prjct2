@@ -4,6 +4,7 @@ body, html {
   height: 100%;
   margin: 0;
   padding: 0;
+  font-family: 'Lato', sans-serif;
 }
 
 
@@ -31,7 +32,6 @@ body, html {
   padding: 5px;
   margin: 5px;
   text-align: center;
-  font-family: 'Roboto','sans-serif';
   padding-left: 10px;
   border: 2px solid lightgrey;
   box-shadow: -5px 0px 5px #888888;
@@ -39,7 +39,6 @@ body, html {
 }
 
 #sidePanel {
-  font-family: 'Roboto','sans-serif';
   position: relative;
   top: 0px;
   padding-left: 10px;
@@ -132,8 +131,13 @@ a, #placesItem a, #friendCarouselDiv h4 {
   background-color: $brand-pink;
   border: $brand-pink;
 }
+
+.navbar {
+  border-radius: 0;
+  font-family: 'Inconsolata', monospace;
+}
 #landing {
-  background-image: url('../images/base-map.png');
+  background-image: url('../images/base-map-blue.png');
   background-size: cover;
   background-position: center;
   height: calc(100vh - 54px);
@@ -143,29 +147,110 @@ a, #placesItem a, #friendCarouselDiv h4 {
   width: 100%;
   z-index: 10;
 
-  .container {
-    background-color: rgba($brand-vivid-blue, .7);
-    border-radius: 10px;
-    padding: 30px;
-    width: 600px;
-    margin: auto;
-    color: #fff;
-    padding-top: 100px;
-    text-align: center;
+  h1 {
+    margin-bottom: 20px;
+  }
 
+  .form-group {
+      width: 300px;
+      text-align: center;
+      position: relative;
+      left: 50%;
+      transform: translate(-50%, 0%);
+  }
+  #mainLanding {
+
+    h1 {
+      font-size: 50px;
+      letter-spacing: 3px;
+      font-weight: bold;
+
+      .blue {
+        color: $brand-vivid-blue;
+      }
+      .pink {
+        color: $brand-pink;
+      }
+      .yellow {
+        color: $brand-yellow;
+      }
+    }
+    h2 {
+      font-size: 30px;
+      padding: 20px 0;
+    }
     button {
-      margin-bottom: 50px;
+      margin-top: 20px;
+      padding: 15px 30px;
+      font-size: 20px;
     }
-    .card-title {
-      color: #424651;
-    }
+  }
 
+  .content {
+    background-color: rgba($brand-dark-blue, .7);
+    padding: 80px 20px;
+    color: $brand-grey;
+    text-align: center;
+    width: 100%;
+    min-height: 100%;
+
+    .camelCase {
+      text-transform: capitalize;
+    }
     .card {
-      width: 400px;
-      margin: 20px auto;
+      height: 300px;
+      margin: 0 0 15px 0;
+      border: none;
+
+      .card-title {
+        color: $brand-vivid-blue;
+        margin: 0;
+        padding: 20px;
+      }
 
       .btn {
-        margin: 0;
+        margin: 10px auto;
+        display: block;
+        width: 150px;
+        padding: 10px;
+      }
+      .card-block {
+        padding: 0;
+      }
+    }
+
+  }
+}
+
+.nav-tabs {
+  a {
+    cursor: pointer;
+  }
+}
+.nav-tabs-mobile {
+  display: none;
+}
+
+@media (max-width: 880px) {
+  .nav-tabs {
+    display: none;
+
+  }
+  .nav-tabs-mobile {
+    display: block;
+    &.dropdown {
+      width: 100%;
+      .dropdown-toggle {
+        font-size: 16px;
+        width: 100%;
+      }
+      .dropdown-menu {
+        font-size: 16px;
+        text-align: center;
+        width: 100%;
+        a {
+          padding: 8px 20px;
+        }
       }
     }
   }
