@@ -14,7 +14,6 @@ body, html {
   margin: 5px 0px 5px 5px;
   border: 2px solid lightgrey;
   border-radius: 5px;
-  box-shadow: -5px 0px 5px #888888;
 }
 
 #travelModeDiv {
@@ -326,14 +325,15 @@ a, #placesItem a, #friendCarouselDiv h4 {
 }
 
 
-.nav-tabs {
+.nav-pills {
   .nav-link {
     cursor: pointer;
     &.active{
       background-color: $brand-pink;
+      color: $brand-grey;
       &:hover{
         background-color: $brand-pink;
-
+        color: $brand-grey;
       }
     }
   }
