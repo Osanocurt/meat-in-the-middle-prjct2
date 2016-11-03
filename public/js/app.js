@@ -60,14 +60,13 @@ $(function () {
 
   if (isLoggedIn()) {
     landingResourceForm();
-    console.log("logged in");
+    // console.log("logged in");
   } else {
     landingPage();
-    console.log("logged out");
+    // console.log("logged out");
   }
 
   function landingPage() {
-    $main.empty();
     $landing.html('\n      <div class="landing">\n        <h1>Welcome</h1>\n        <p>We\'ve made finding somewhere to hang out with your mates super easy. Whether you\'re looking for a bite to eat, or your planning a trip to the zoo, we\'ve got you covered.</p>\n        <button id="landingGetStarted" class="btn btn-primary">Get started</button>\n      </div>');
   }
 
@@ -80,12 +79,19 @@ $(function () {
   }
 
   function landingResourceForm() {
-    $landing.html('\n      <div class="landing">\n        <h1>What are you in the mood for?</h1>\n        <div class="row">\n          <div class="card">\n            <div class="card-block">\n              <h4 class="card-title">Eating & Drinking</h4>\n              <button id="resource" class="btn btn-secondary" data-id=\'restaurant\'>Restaurant</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'bar\'>Bar</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'cafe\'>Cafe</button>\n            </div>\n          </div>\n          <div class="card">\n            <div class="card-block">\n              <h4 class="card-title">Night Out</h4>\n              <button id="resource" class="btn btn-secondary" data-id=\'casino\'>Casino</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'night_club\'>Night Club</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'movie_theater\'>Theater</button>\n            </div>\n          </div>\n          <div class="card">\n            <div class="card-block">\n              <h4 class="card-title">Shopping</h4>\n              <button id="resource" class="btn btn-secondary" data-id=\'shopping_mall\'>Shopping</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'clothing_store\'>Clothes</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'florist\'>Florist</button>\n            </div>\n          </div>\n          <div class="card">\n            <div class="card-block">\n              <h4 class="card-title">Day Out</h4>\n              <button id="resource" class="btn btn-secondary" data-id=\'zoo\'>Zoo</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'park\'>Park</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'spa\'>Spa</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'gym\'>Gym</button>\n            </div>\n          </div>\n        </div>\n      </div>');
+
+    var username = localStorage.getItem('username');
+    var welcomeMessage = 'Hi ' + username + ',';
+
+    if (!username) {
+      welcomeMessage = 'Welcome back';
+    }
+
+    $landing.html('\n      <div class="landing">\n      <h1>' + welcomeMessage + '</h1>\n        <h2>What are you in the mood for?</h2>\n        <div class="row">\n          <div class="card">\n            <div class="card-block">\n              <h4 class="card-title">Eating & Drinking</h4>\n              <button id="resource" class="btn btn-secondary" data-id=\'restaurant\'>Restaurant</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'bar\'>Bar</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'cafe\'>Cafe</button>\n            </div>\n          </div>\n          <div class="card">\n            <div class="card-block">\n              <h4 class="card-title">Night Out</h4>\n              <button id="resource" class="btn btn-secondary" data-id=\'casino\'>Casino</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'night_club\'>Night Club</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'movie_theater\'>Theater</button>\n            </div>\n          </div>\n          <div class="card">\n            <div class="card-block">\n              <h4 class="card-title">Shopping</h4>\n              <button id="resource" class="btn btn-secondary" data-id=\'shopping_mall\'>Shopping</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'clothing_store\'>Clothes</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'florist\'>Florist</button>\n            </div>\n          </div>\n          <div class="card">\n            <div class="card-block">\n              <h4 class="card-title">Day Out</h4>\n              <button id="resource" class="btn btn-secondary" data-id=\'zoo\'>Zoo</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'park\'>Park</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'spa\'>Spa</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'gym\'>Gym</button>\n            </div>\n          </div>\n        </div>\n      </div>');
   }
 
   function clearLandingPage() {
     resource = $(this).data('id');
-    console.log(resource);
     $landing.remove();
     showResourceForm();
     mapInit();
@@ -154,10 +160,11 @@ $(function () {
           if (!!data.user) {
             var userId = data.user._id;
             if (userId) localStorage.setItem('id', userId);
+            if (data.user.username) localStorage.setItem('username', data.user.username);
             if (data.token) localStorage.setItem('token', data.token);
           }
           if (nextView === 'landingResourceForm') {
-            location.reload();
+            landingResourceForm();
           } else if (nextView === 'showUserForm') {
             showUserForm();
           } else if (nextView === 'viewProfile') {

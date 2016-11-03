@@ -109,7 +109,12 @@ h4 {
 
 #landing {
   background-color: #fff;
-  height: 100vh;
+  height: calc(100vh - 54px);
+  position: absolute;
+  top: 54px;
+  left: 0;
+  width: 100%;
+  z-index: 10;
 
   .landing {
     width: 400px;

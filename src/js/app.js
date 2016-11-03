@@ -58,14 +58,13 @@ $(() =>{
 
   if(isLoggedIn()) {
     landingResourceForm();
-    console.log("logged in");
+    // console.log("logged in");
   } else {
     landingPage();
-    console.log("logged out");
+    // console.log("logged out");
   }
 
   function landingPage(){
-    $main.empty();
     $landing.html(`
       <div class="landing">
         <h1>Welcome</h1>
@@ -116,9 +115,19 @@ $(() =>{
   }
 
   function landingResourceForm(){
+
+
+  let username = localStorage.getItem('username');
+  let welcomeMessage = `Hi ${username},`;
+
+  if (!username) {
+     welcomeMessage = (`Welcome back`);
+  }
+
     $landing.html(`
       <div class="landing">
-        <h1>What are you in the mood for?</h1>
+      <h1>${welcomeMessage}</h1>
+        <h2>What are you in the mood for?</h2>
         <div class="row">
           <div class="card">
             <div class="card-block">
@@ -159,7 +168,6 @@ $(() =>{
 
   function clearLandingPage(){
     resource = $(this).data('id');
-    console.log(resource);
     $landing.remove();
     showResourceForm();
     mapInit();
@@ -271,10 +279,11 @@ $(() =>{
         if (!!data.user) {
           let userId = data.user._id;
           if(userId) localStorage.setItem('id', userId);
+          if(data.user.username) localStorage.setItem('username', data.user.username);
           if(data.token) localStorage.setItem('token', data.token);
         }
         if (nextView === 'landingResourceForm') {
-          location.reload();
+          landingResourceForm();
         } else if (nextView === 'showUserForm') {
           showUserForm();
         } else if (nextView === 'viewProfile') {
