@@ -14,7 +14,6 @@ $(() =>{
   let people = [];
   let allResults =[];
   let venueMarkers = [];
-  let ids = [];
   let markerId = [];
   let latLngList = [];
   var directionsDisplay = new google.maps.DirectionsRenderer();

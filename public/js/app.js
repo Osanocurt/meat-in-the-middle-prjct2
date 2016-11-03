@@ -16,7 +16,6 @@ $(function () {
   var people = [];
   var allResults = [];
   var venueMarkers = [];
-  var ids = [];
   var markerId = [];
   var latLngList = [];
   var directionsDisplay = new google.maps.DirectionsRenderer();

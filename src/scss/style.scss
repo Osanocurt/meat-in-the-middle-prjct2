@@ -5,10 +5,11 @@ body, html {
 }
 
 #map {
-  width: 72vw;
-  height: 89.5vh;
+  width: 65vw;
+  height: 87vh;
   display: inline-block;
   border: 5px solid blue;
+  margin: 5px 0px 5px 5px;
 
 }
 
@@ -31,11 +32,12 @@ body, html {
 #sidePanel {
   font-family: 'Roboto','sans-serif';
   position: relative;
-  top: 76px;
+  top: 0px;
   line-height: 30px;
   padding-left: 10px;
-  width: 27vw;
-  height: 100%;
+  margin: 5px;
+  width: 33.95vw;
+  height: 87vh;
   float: right;
   overflow: auto;
   border: 5px solid blue;
