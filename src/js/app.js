@@ -156,9 +156,10 @@ $(() =>{
 
 
   function landingPage(){
+    if(event) event.preventDefault();
     $landing.html(`
-      <div class="container" id="mainLanding">
-        <h1>(  <span class="blue">Drink</span>  ||  <span class="pink">Shop</span>  ||  <span class="yellow">Do</span>  )</h1>
+      <div class="content" id="mainLanding">
+        <h1>(  <span class="pink">Eat</span>  ||  <span class="blue">Drink</span>  ||  <span class="yellow">Spa</span>  )</h1>
         <h2>What ever you're up to,<br> meet your friends in the middle.</h2>
         <button id="landingGetStarted" class="btn btn-primary">Get started</button>
       </div>`);
@@ -166,8 +167,9 @@ $(() =>{
   }
 
   function landingRegForm(){
+    if(event) event.preventDefault();
     $landing.html(`
-      <div class="container">
+      <div class="content">
         <h1>Register</h1>
         <p>Already registered? <button class="btn btn-secondary" id="landingLogin">Sign in</button></p>
         <form method="post" action="/api/register" data-target="landingResourceForm">
@@ -189,8 +191,9 @@ $(() =>{
   }
 
   function landingLoginForm(){
+    if(event) event.preventDefault();
     $landing.html(`
-      <div class="container">
+      <div class="content">
         <h1>Login</h1>
         <form method="post" action="/api/login" data-target="landingResourceForm">
           <div class="form-group">
@@ -208,48 +211,56 @@ $(() =>{
   function landingResourceForm(){
     navBarInit();
     let username = localStorage.getItem('username');
-    let welcomeMessage = `Hi ${username},`;
+    let welcomeMessage = `Hey ${username},`;
 
     if (!username) {
        welcomeMessage = (`Welcome back`);
     }
 
     $landing.html(`
-      <div class="container">
-      <h1 class="camelCase">${welcomeMessage}</h1>
+      <div class="content">
+        <h1 class="camelCase">${welcomeMessage}</h1>
         <h2>What are you in the mood for?</h2>
         <div class="row">
-          <div class="card">
-            <div class="card-block">
-              <h4 class="card-title">Eating & Drinking</h4>
-              <button id="resource" class="btn btn-secondary" data-id='restaurant'>Restaurant</button>
-              <button id="resource" class="btn btn-secondary" data-id='bar'>Bar</button>
-              <button id="resource" class="btn btn-secondary" data-id='cafe'>Cafe</button>
+          <div class="col-md-3 col-sm-6">
+            <div class="card">
+              <div class="card-block">
+                <h4 class="card-title">Eating & Drinking</h4>
+                <button id="resource" class="btn btn-secondary" data-id='restaurant'>Restaurant</button>
+                <button id="resource" class="btn btn-secondary" data-id='bar'>Bar</button>
+                <button id="resource" class="btn btn-secondary" data-id='cafe'>Cafe</button>
+              </div>
             </div>
           </div>
-          <div class="card">
-            <div class="card-block">
-              <h4 class="card-title">Night Out</h4>
-              <button id="resource" class="btn btn-secondary" data-id='casino'>Casino</button>
-              <button id="resource" class="btn btn-secondary" data-id='night_club'>Night Club</button>
-              <button id="resource" class="btn btn-secondary" data-id='movie_theater'>Theater</button>
+          <div class="col-md-3 col-sm-6">
+            <div class="card">
+              <div class="card-block">
+                <h4 class="card-title">Night Out</h4>
+                <button id="resource" class="btn btn-secondary" data-id='casino'>Casino</button>
+                <button id="resource" class="btn btn-secondary" data-id='night_club'>Night Club</button>
+                <button id="resource" class="btn btn-secondary" data-id='movie_theater'>Theater</button>
+              </div>
             </div>
           </div>
-          <div class="card">
-            <div class="card-block">
-              <h4 class="card-title">Shopping</h4>
-              <button id="resource" class="btn btn-secondary" data-id='shopping_mall'>Shopping</button>
-              <button id="resource" class="btn btn-secondary" data-id='clothing_store'>Clothes</button>
-              <button id="resource" class="btn btn-secondary" data-id='florist'>Florist</button>
+          <div class="col-md-3 col-sm-6">
+            <div class="card">
+              <div class="card-block">
+                <h4 class="card-title">Shopping</h4>
+                <button id="resource" class="btn btn-secondary" data-id='shopping_mall'>Shopping</button>
+                <button id="resource" class="btn btn-secondary" data-id='clothing_store'>Clothes</button>
+                <button id="resource" class="btn btn-secondary" data-id='florist'>Florist</button>
+              </div>
             </div>
           </div>
-          <div class="card">
-            <div class="card-block">
-              <h4 class="card-title">Day Out</h4>
-              <button id="resource" class="btn btn-secondary" data-id='zoo'>Zoo</button>
-              <button id="resource" class="btn btn-secondary" data-id='park'>Park</button>
-              <button id="resource" class="btn btn-secondary" data-id='spa'>Spa</button>
-              <button id="resource" class="btn btn-secondary" data-id='gym'>Gym</button>
+          <div class="col-md-3 col-sm-6">
+            <div class="card">
+              <div class="card-block">
+                <h4 class="card-title">Day Out</h4>
+                <button id="resource" class="btn btn-secondary" data-id='zoo'>Zoo</button>
+                <button id="resource" class="btn btn-secondary" data-id='park'>Park</button>
+                <button id="resource" class="btn btn-secondary" data-id='spa'>Spa</button>
+                <button id="resource" class="btn btn-secondary" data-id='gym'>Gym</button>
+              </div>
             </div>
           </div>
         </div>
