@@ -7,6 +7,7 @@ $(function () {
   var $landing = $('#landing');
   var $sidePanel = $("#sidePanel");
   var $friendCarouselDiv = $("#friendCarouselDiv");
+  var $navDiv = $('nav');
   var midPoint = { lat: 0, lng: 0 };
   var uniqueId = 0;
   var startingPos = null;
@@ -65,6 +66,18 @@ $(function () {
     // console.log("logged out");
   }
 
+  function navBarInit(resource) {
+    var displayText = '';
+    if (!resource) {
+      displayText = '';
+    } else {
+      displayText = resource;
+    }
+
+    $navDiv.html('  <nav class="navbar navbar-dark bg-inverse">\n        <div class="container">\n          <a class="navbar-brand" href="/">[ ' + displayText + ' ] in the Middle</a>\n          <button class="navbar-toggler hidden-sm-up" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar2" aria-controls="exCollapsingNavbar2" aria-expanded="false" aria-label="Toggle navigation">\n            &#9776;\n          </button>\n          <div class="collapse navbar-toggleable-xs" id="exCollapsingNavbar2">\n            <ul class="nav navbar-nav">\n              <li class="nav-item">\n                <a class="nav-link profile" href="#" id="viewProfile" data-target=\'viewProfile\' >Profile</a>\n              </li>\n              <!-- <li class="nav-item">\n                <a class="nav-link register" href="#">Register</a>\n              </li>\n              <li class="nav-item">\n                <a class="nav-link login" href="#">Login</a>\n              </li> -->\n              <li class="nav-item">\n                <a class="nav-link logout" href="#">Logout</a>\n              </li>\n            </ul>\n          </div>\n        </div>\n      </nav>');
+  }
+  navBarInit();
+
   function landingPage() {
     $landing.html('\n      <div class="container">\n        <h1>Welcome</h1>\n        <p>We\'ve made finding somewhere to hang out with your mates super easy. Whether you\'re looking for a bite to eat, or your planning a trip to the zoo, we\'ve got you covered.</p>\n        <button id="landingGetStarted" class="btn btn-secondary">Get started</button>\n      </div>');
   }
@@ -78,7 +91,6 @@ $(function () {
   }
 
   function landingResourceForm() {
-
     var username = localStorage.getItem('username');
     var welcomeMessage = 'Hi ' + username + ',';
 
@@ -95,6 +107,7 @@ $(function () {
     showResourceForm();
     mapInit();
     showUserForm();
+    navBarInit(resource);
   }
 
   function showRegisterForm() {
@@ -398,6 +411,7 @@ $(function () {
     resource = $(this).data('id');
     mapInit();
     showUserForm();
+    navBarInit(resource);
   }
 
   function showUserForm() {

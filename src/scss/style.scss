@@ -115,6 +115,10 @@ h4 {
   background-color: $brand-pink;
   border: $brand-pink;
 }
+
+.navbar {
+  border-radius: 0;
+}
 #landing {
   background-image: url('../images/base-map.png');
   background-size: cover;
@@ -127,12 +131,12 @@ h4 {
   z-index: 10;
 
   .container {
-    background-color: rgba($brand-vivid-blue, .7);
+    background-color: rgba($brand-grey, .8);
     border-radius: 10px;
     padding: 30px;
     width: 600px;
     margin: auto;
-    color: #fff;
+    color: $brand-dark-blue;
     padding-top: 100px;
     text-align: center;
 

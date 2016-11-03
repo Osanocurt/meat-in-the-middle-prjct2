@@ -5,6 +5,7 @@ $(() =>{
   const $landing = $('#landing');
   const $sidePanel = $("#sidePanel");
   const $friendCarouselDiv = $("#friendCarouselDiv");
+  const $navDiv = $('nav');
   let midPoint = { lat: 0, lng: 0};
   let uniqueId = 0;
   let startingPos = null;
@@ -63,6 +64,42 @@ $(() =>{
     // console.log("logged out");
   }
 
+  function navBarInit(resource){
+    let displayText = '';
+    if (!resource) {
+      displayText = '';
+    } else {
+      displayText = resource;
+    }
+
+    $navDiv.html(`  <nav class="navbar navbar-dark bg-inverse">
+        <div class="container">
+          <a class="navbar-brand" href="/">[ ${displayText} ] in the Middle</a>
+          <button class="navbar-toggler hidden-sm-up" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar2" aria-controls="exCollapsingNavbar2" aria-expanded="false" aria-label="Toggle navigation">
+            &#9776;
+          </button>
+          <div class="collapse navbar-toggleable-xs" id="exCollapsingNavbar2">
+            <ul class="nav navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link profile" href="#" id="viewProfile" data-target='viewProfile' >Profile</a>
+              </li>
+              <!-- <li class="nav-item">
+                <a class="nav-link register" href="#">Register</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link login" href="#">Login</a>
+              </li> -->
+              <li class="nav-item">
+                <a class="nav-link logout" href="#">Logout</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>`);
+  }
+  navBarInit();
+
+
   function landingPage(){
     $landing.html(`
       <div class="container">
@@ -114,14 +151,12 @@ $(() =>{
   }
 
   function landingResourceForm(){
+    let username = localStorage.getItem('username');
+    let welcomeMessage = `Hi ${username},`;
 
-
-  let username = localStorage.getItem('username');
-  let welcomeMessage = `Hi ${username},`;
-
-  if (!username) {
-     welcomeMessage = (`Welcome back`);
-  }
+    if (!username) {
+       welcomeMessage = (`Welcome back`);
+    }
 
     $landing.html(`
       <div class="container">
@@ -171,6 +206,7 @@ $(() =>{
     showResourceForm();
     mapInit();
     showUserForm();
+    navBarInit(resource);
   }
 
   function showRegisterForm() {
@@ -612,6 +648,7 @@ let mapStyle = [
     resource = $(this).data('id');
     mapInit();
     showUserForm();
+    navBarInit(resource);
   }
 
   function showUserForm() {
