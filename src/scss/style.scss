@@ -47,6 +47,11 @@ body, html {
   box-shadow: -5px 0px 5px #888888;
   border-radius: 5px;
 
+  .carousel-custom {
+    button {
+      float: right;
+    }
+  }
   .form-panel {
     text-align: center;
 
@@ -102,6 +107,22 @@ body, html {
     }
     .card {
       border: none;
+    }
+  }
+
+  #profile {
+
+    button {
+      margin: 10px 0;
+      width: 100px;
+    }
+    .btn-danger {
+      background-color: $brand-grey;
+      color: $brand-pink;
+    }
+    .controls {
+      width: 200px;
+
     }
   }
 }
@@ -194,6 +215,7 @@ a, #placesItem a, #friendCarouselDiv h4 {
     float: right;
   }
 }
+
 #landing {
   background-image: url('../images/base-map-blue.png');
   background-size: cover;
@@ -230,7 +252,6 @@ a, #placesItem a, #friendCarouselDiv h4 {
         color: $brand-grey;
     }
   }
-
 
   #mainLanding {
 
@@ -303,6 +324,7 @@ a, #placesItem a, #friendCarouselDiv h4 {
 
   }
 }
+
 
 .nav-tabs {
   a {
