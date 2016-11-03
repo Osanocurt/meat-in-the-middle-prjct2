@@ -68,9 +68,15 @@ $(function () {
   }
 
   function restoreSidePanel() {
-    $sidePanel.css("height", "87vh").css("top", "0px");
+    $sidePanel.css("height", "87vh").css("margin-top", "-116px");
     $("#travelModeDiv").css("visibility", "hidden");
     $friendCarouselDiv.css("visibility", "hidden");
+    people = [];
+    allResults = [];
+    markerId = [];
+    venueMarkers = [];
+    latLngList = [];
+    uniqueId = 0;
   }
 
   function navBarInit() {
@@ -103,7 +109,7 @@ $(function () {
         displayText = 'dress';
         break;
       case 'florist':
-        displayText = 'decorate';
+        displayText = 'blooms';
         break;
       case 'monkey around':
         displayText = 'zoo';
@@ -248,7 +254,8 @@ $(function () {
   }
 
   function getFriends() {
-    restoreSidePanel();
+    $("#travelModeDiv").css("visibility", "hidden");
+    $friendCarouselDiv.css("visibility", "hidden");
 
     var nextView = "";
 
@@ -733,7 +740,7 @@ $(function () {
 
   function showDirections() {
     $sidePanel.empty();
-    $sidePanel.css("height", "73.5vh").css("top", "108px");
+    $sidePanel.css("height", "73.5vh").css("margin-top", "0px");
     $("#travelModeDiv").css("visibility", "visible");
     directionsDisplay.setMap(map);
     directionsDisplay.setPanel(document.getElementById('sidePanel'));
