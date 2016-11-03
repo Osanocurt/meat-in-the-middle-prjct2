@@ -46,6 +46,35 @@ body, html {
   border: 2px solid lightgrey;
   box-shadow: -5px 0px 5px #888888;
   border-radius: 5px;
+
+  .form-panel {
+    text-align: center;
+
+    h2 {
+      margin: 20px 0;
+    }
+    .btn {
+      width: 90%;
+      margin: 20px;
+    }
+
+    .btn-secondary {
+      background-color: $brand-grey;
+      color: $brand-pink;
+    }
+    .btn-danger {
+      background-color: $brand-grey;
+      color: $brand-vivid-blue;
+      border: 1px solid $brand-vivid-blue;
+    }
+    .controls {
+      width: 90%;
+      border-radius: 3px;
+      height: 35px;
+      align-items: center;
+      margin-left: 5px;
+    }
+  }
 }
 
 #friendCarouselDiv {

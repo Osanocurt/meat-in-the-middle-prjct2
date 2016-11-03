@@ -764,21 +764,25 @@ let mapStyle = [
     let userId = localStorage.getItem('id');
     $sidePanel.empty();
     $sidePanel.html(
-      `<h2>Where Are You?</h2>
-      <button class="btn btn-secondary" id="useSavedAdd">Use saved address</button>
-      <h4>or</h4>
-      <input id="pac-input" class="controls" type="text" placeholder="Enter location">
-      <form id="userLocation"  data-target="current" method="put" action="/api/users/${userId}">
-        <input type='hidden' id="input-location" name="user[address]">
-        <input type='hidden' id="input-lat" name="user[lat]">
-        <input type='hidden' id="input-lng" name="user[lng]">
-        <button class="btn btn-secondary" id="userSaveLocation">Save</button>
-      </form>
-
-      <h4>or</h4>
-      <button id="locationButton" data-target="friendLocation" class="btn btn-secondary">Use current location</button>
-      <br>
-      <button id="addAFriend" data-target="friendLocation" class="btn btn-primary">Add friend</button>
+      `<div class="form-panel">
+        <h2>Where are you starting from?</h2>
+        <hr>
+        <input id="pac-input" class="controls" type="text" placeholder="Where are you?">
+        <form id="userLocation"  data-target="current" method="put" action="/api/users/${userId}">
+          <input type='hidden' id="input-location" name="user[address]">
+          <input type='hidden' id="input-lat" name="user[lat]">
+          <input type='hidden' id="input-lng" name="user[lng]">
+          <button class="btn btn-danger" id="userSaveLocation">Save</button>
+        </form>
+        <p>or</p>
+        <button class="btn btn-secondary" id="useSavedAdd">Use saved address</button>
+        <button id="locationButton" data-target="friendLocation" class="btn btn-secondary">Use current location</button>
+        <br>
+        <hr>
+        <hr>
+        <button id="addAFriend" data-target="friendLocation" class="btn btn-primary">Add friend</button>
+        <hr>
+      </div>
     `);
     createSearchBar();
   }
