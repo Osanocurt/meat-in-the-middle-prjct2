@@ -1,26 +1,33 @@
 $(() =>{
 
-  let $main = $('main');
-  let $mapDiv = $('#map');
+  const $main = $('main');
+  const $mapDiv = $('#map');
+  const $landing = $('#landing');
+  const $sidePanel = $("#sidePanel");
+  const $friendCarouselDiv = $("#friendCarouselDiv");
   let midPoint = { lat: 0, lng: 0};
-  let resource;
-  let allResults =[];
-  let $landing = $('#landing');
   let uniqueId = 0;
+  let startingPos = null;
+  let venueChosen = null;
+  let resource;
+  let map;
+  let people = [];
+  let allResults =[];
   let venueMarkers = [];
   let ids = [];
   let markerId = [];
+  let latLngList = [];
+  var directionsDisplay = new google.maps.DirectionsRenderer();
+  var directionsService = new google.maps.DirectionsService();
   const pinImage = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2%7C00FFFF");
   const pinDefault = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2%7CEE99EE");
-  const $sidePanel = $("#sidePanel");
-  const $friendCarouselDiv = $("#friendCarouselDiv");
 
   $('.register').on('click', showRegisterForm);
   $('.login').on('click', showLoginForm);
   $('.profile').on('click', getFriends);
   $('.logout').on('click', logout);
-  $main.on('click', "#go", calculateMidPoint);
   $main.on('submit', 'form', handleForm);
+  $main.on('click', "#go", calculateMidPoint);
   $main.on('click', '#friendSaveLocation', saved);
   $main.on('click', '#userSaveLocation', saved);
   $main.on('click', 'button#addAFriend', getFriends);
@@ -29,14 +36,17 @@ $(() =>{
   $main.on('click', 'button.edit', getFriend);
   $main.on("click", ".directionButton", selectVenue);
   $main.on("click", "a#resource", updateResourceChoice);
-  $sidePanel.on('click', 'button#locationButton', getUserCurrentPos);
-  // var iwindow = new google.maps.InfoWindow();
   $sidePanel.on('submit', 'form#filterResults', filterResults);
+  $sidePanel.on('click', 'button#locationButton', getUserCurrentPos);
   $sidePanel.on('click', 'button#clearFilterResults', clearFilterResults);
+  $sidePanel.on('click', 'button#useSavedAdd', useHome);
+  $sidePanel.on('click', 'button.addFriend', getFriend);
+  $sidePanel.on("click", "#carouselChoice", setIcon);
   $landing.on('submit', 'form', handleForm);
   $landing.on('click', 'button#landingGetStarted', landingRegForm);
   $landing.on('click', 'button#landingLogin', landingLoginForm);
   $landing.on('click', 'button#resource', clearLandingPage);
+  $("#travelSelect").on('change', showDirections);
 
   function saved() {
     $(this).html("Saved");
@@ -48,14 +58,13 @@ $(() =>{
 
   if(isLoggedIn()) {
     landingResourceForm();
-    console.log("logged in");
+    // console.log("logged in");
   } else {
     landingPage();
-    console.log("logged out");
+    // console.log("logged out");
   }
 
   function landingPage(){
-    $main.empty();
     $landing.html(`
       <div class="landing">
         <h1>Welcome</h1>
@@ -106,9 +115,19 @@ $(() =>{
   }
 
   function landingResourceForm(){
+
+
+  let username = localStorage.getItem('username');
+  let welcomeMessage = `Hi ${username},`;
+
+  if (!username) {
+     welcomeMessage = (`Welcome back`);
+  }
+
     $landing.html(`
       <div class="landing">
-        <h1>What are you in the mood for?</h1>
+      <h1>${welcomeMessage}</h1>
+        <h2>What are you in the mood for?</h2>
         <div class="row">
           <div class="card">
             <div class="card-block">
@@ -149,8 +168,8 @@ $(() =>{
 
   function clearLandingPage(){
     resource = $(this).data('id');
-    console.log(resource);
     $landing.remove();
+    showResourceForm();
     mapInit();
     showUserForm();
   }
@@ -260,10 +279,11 @@ $(() =>{
         if (!!data.user) {
           let userId = data.user._id;
           if(userId) localStorage.setItem('id', userId);
+          if(data.user.username) localStorage.setItem('username', data.user.username);
           if(data.token) localStorage.setItem('token', data.token);
         }
         if (nextView === 'landingResourceForm') {
-          location.reload();
+          landingResourceForm();
         } else if (nextView === 'showUserForm') {
           showUserForm();
         } else if (nextView === 'viewProfile') {
@@ -273,8 +293,6 @@ $(() =>{
       // .fail(showLoginForm);
     }
   }
-
-  //-------------------------------------------------------------//
 
   function getFriends() {
     $friendCarouselDiv.css("visibility", "hidden");
@@ -390,8 +408,6 @@ $(() =>{
     });
   }
 
-  $sidePanel.on('click', 'button.addFriend', getFriend);
-
   function deleteFriend() {
     let userId = localStorage.getItem('id');
     let friendId = $(this).data('id');
@@ -448,22 +464,12 @@ $(() =>{
     landingPage();
   }
 
-//------------------------------------------------------------------------------------------------------------------------------------
-
-
-
-  let map;
-  let people = [];
-
-
-
   function mapInit(){
     map = new google.maps.Map($mapDiv[0], {
     center: { lat: 51.5074, lng: -0.1278 },
       zoom: 7
     });
   }
-  // mapInit();
 
   function showResourceForm(){
     $main.prepend(`
@@ -509,14 +515,12 @@ $(() =>{
         </li>
       </ul>`);
   }
-  // showResourceForm();
 
   function updateResourceChoice(){
     resource = $(this).data('id');
     mapInit();
     showUserForm();
   }
-
 
   function showUserForm() {
     if(event) event.preventDefault();
@@ -539,13 +543,7 @@ $(() =>{
       <button id="addAFriend" data-target="friendLocation" class="btn btn-primary">Add friend</button>
     `);
     createSearchBar();
-    showResourceForm();
   }
-
-  // showUserForm();
-
-  let latLngList = [];
-  $sidePanel.on('click', 'button#useSavedAdd', useHome);
 
   function useHome(){
     let friends = [];
@@ -564,11 +562,9 @@ $(() =>{
       };
 
       document.getElementById("input-location").value = addresses[0].formatted_address;
-      // console.log(addresses[0].formatted_address);
       document.getElementById("input-lat").value = `${personsPosition.lat}`;
       document.getElementById("input-lng").value = `${personsPosition.lng}`;
       people.push(personsPosition);
-      // console.log(people[0]);
       addMarker(personsPosition);
       setMapBounds(people);
       }
@@ -629,7 +625,6 @@ $(() =>{
   }
 
   function nearbySearch(maxPrice){
-
     let request = {
       location: midPoint,
       types: [resource],
@@ -661,55 +656,38 @@ $(() =>{
     }
 
     for (var i = 1; i < maxResults; i++) {
-      console.log("result");
       var resource = results[i];
       resultsToShow.push(resource);
       LatLngList.push(resource.geometry.location);
       createMarker(resource);
     }
-    console.log(allResults.length);
+
     setMapBounds(LatLngList);
     populateCarousel(resultsToShow);
   }
 
   function clearFilterResults(e) {
     e.preventDefault();
-    let status = 'OK';
     populateMap(allResults);
   }
 
   function filterResults(e){
     e.preventDefault();
-    let status= 'OK';
+    let maxPrice = parseInt($(this).find('[name=price]').val());
+    let minRating = parseInt($(this).find('[name=rating]').val());
 
-    let price = $(this).find('[name=price]').val();
-    let rating = $(this).find('[name=rating]').val();
-
-    if (price === '--' && rating==='--'){
+    if (maxPrice === '--' && minRating==='--'){
       return;
     }
 
     let venuesToKeep = [];
-    let maxPrice;
-    let minRating;
-
-    if (price === '£') maxPrice = 1;
-    if (price === '££') maxPrice = 2;
-    if (price === '£££') maxPrice = 3;
-    if (price === '££££') maxPrice = 4;
-
-    if (rating === '*') minRating = 1;
-    if (rating === '**') minRating = 2;
-    if (rating === '***') minRating = 3;
-    if (rating === '****') minRating = 4;
-    if (rating === '*****') minRating = 5;
 
     allResults.forEach((venue) => {
       let hasPrice = !!venue.price_level;
       let hasRating = !!venue.rating;
       if (hasPrice && hasRating) {
         if (!!minRating && !!maxPrice){
-          if (venue.rating > minRating && venue.price_level === maxPrice) {
+          if (venue.rating >= minRating && venue.price_level === maxPrice) {
             venuesToKeep.push(venue);
           }
         } else if (!minRating) {
@@ -717,13 +695,13 @@ $(() =>{
             venuesToKeep.push(venue);
           }
         } else if (!maxPrice) {
-          if (venue.rating <= minRating) {
+          if (venue.rating >= minRating) {
             venuesToKeep.push(venue);
           }
         }
       } else if (hasPrice || hasRating) {
         if (!minRating && !maxPrice) {
-          if (venue.rating > minRating || venue.price_level <= maxPrice){
+          if (venue.rating >= minRating || venue.price_level <= maxPrice){
             venuesToKeep.push(venue);
           }
         } else if (!minRating) {
@@ -731,7 +709,7 @@ $(() =>{
             venuesToKeep.push(venue);
           }
         } else if (!maxPrice) {
-          if (venue.rating > minRating){
+          if (venue.rating >= minRating){
             venuesToKeep.push(venue);
           }
         }
@@ -741,10 +719,10 @@ $(() =>{
     if (venuesToKeep.length === 0){
       mapInit();
       populateCarousel(venuesToKeep);
-      return;
+    } else {
+      populateMap(venuesToKeep);
+      populateCarousel(venuesToKeep);
     }
-    populateMap(venuesToKeep);
-    populateCarousel(venuesToKeep);
   }
 
   function populateCarousel(resultsToShow){
@@ -755,23 +733,23 @@ $(() =>{
         <div id='filter'>
           <h4>Filter Results</h4>
           <form id="filterResults">
-            <label for='price_level'>Max price</label>
+            <label for='price'>Max price</label>
             <select name="price">
-              <option>--</option>
-              <option id='price_level_1'>£</option>
-              <option id='price_level_2'>££</option>
-              <option id='price_level_3'>£££</option>
-              <option id='price_level_4'>££££</option>
+              <option value='null'>--</option>
+              <option value='1'>£</option>
+              <option value='2'>££</option>
+              <option value='3'>£££</option>
+              <option value='4'>££££</option>
             </select>
             <br>
             <label for='rating'>Rating</label>
             <select name="rating">
-              <option>--</option>
-              <option id='rating_1'>*</option>
-              <option id='rating_2'>**</option>
-              <option id='rating_3'>***</option>
-              <option id='rating_4'>****</option>
-              <option id='rating_5'>*****</option>
+              <option value='null'>--</option>
+              <option value='1'>*</option>
+              <option value='2'>**</option>
+              <option value='3'>***</option>
+              <option value='4'>****</option>
+              <option value='5'>*****</option>
             </select>
             <br>
             <button id="filterResultsBtn" class="btn btn-danger" type="submit">Update</button>
@@ -826,16 +804,8 @@ $(() =>{
         </div>
         <hr>`);
         uniqueId ++;
-
-        // $main.on("click", "#carouselChoice", function() {
-        //   iwindow.setPosition({ lat: $(this).data("lat"), lng: $(this).data("lng")});
-        //   iwindow.setContent(`<h4>${this.name}</h4>`);
-        //   iwindow.open(map);
-        // });
      });
-
     $sidePanel.html($carousel);
-
   }
 
   function setMapBounds(latLngList){
@@ -867,15 +837,6 @@ $(() =>{
     });
   }
 
-
-
-  //user and venue variables for directions function
-  let startingPos = null;
-  let venueChosen = null;
-  var directionsDisplay = new google.maps.DirectionsRenderer();
-  var directionsService = new google.maps.DirectionsService();
-
-
   function selectVenue() {
     startingPos = people[0];
     venueChosen = { lat: $(this).data("lat"), lng: $(this).data("lng") };
@@ -902,8 +863,6 @@ $(() =>{
     });
   }
 
-  $("#travelSelect").on('change', showDirections);
-
   function getUserCurrentPos(){
     navigator.geolocation.getCurrentPosition((position) => {
       let personsPosition = {
@@ -911,7 +870,6 @@ $(() =>{
         lng: position.coords.longitude
       };
       people.push(personsPosition);
-      // console.log(people);
       addMarker(personsPosition);
       setMapBounds(people);
     });
@@ -949,20 +907,18 @@ $(() =>{
           </div>`
         );
         $main.on('click', '.chooseStart', chooseStart);
-       }
-     });
+      }
+    });
   }
 
   function chooseStart() {
     let startingLat = $(this).data("lat");
     let startingLng =  $(this).data("lng");
     startingPos = { lat: startingLat, lng: startingLng};
-    console.log(startingPos);
     showDirections();
   }
 
-  $main.on("click", "#carouselChoice", function() {
-    console.log("click");
+  function setIcon() {
     for (var i=0; i< venueMarkers.length; i++) {
       if (venueMarkers[i].id == $(this).data("id")) {
         venueMarkers[i].setIcon(pinImage);
@@ -970,5 +926,5 @@ $(() =>{
         venueMarkers[i].setIcon(pinDefault);
       }
     }
-  });
+  }
 });

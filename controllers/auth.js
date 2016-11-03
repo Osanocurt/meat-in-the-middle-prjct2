@@ -32,7 +32,7 @@ function login(req, res){
       let token = jwt.sign(payload, secret, { expiresIn: 60*60*24 });
 
       return res.status(200).json({
-        message: "Welcome back.",
+        message: `Hi ${user.username}!`,
         user,
         token
       });

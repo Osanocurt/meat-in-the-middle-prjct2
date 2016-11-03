@@ -4,25 +4,32 @@ $(function () {
 
   var $main = $('main');
   var $mapDiv = $('#map');
-  var midPoint = { lat: 0, lng: 0 };
-  var resource = void 0;
-  var allResults = [];
   var $landing = $('#landing');
+  var $sidePanel = $("#sidePanel");
+  var $friendCarouselDiv = $("#friendCarouselDiv");
+  var midPoint = { lat: 0, lng: 0 };
   var uniqueId = 0;
+  var startingPos = null;
+  var venueChosen = null;
+  var resource = void 0;
+  var map = void 0;
+  var people = [];
+  var allResults = [];
   var venueMarkers = [];
   var ids = [];
   var markerId = [];
+  var latLngList = [];
+  var directionsDisplay = new google.maps.DirectionsRenderer();
+  var directionsService = new google.maps.DirectionsService();
   var pinImage = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2%7C00FFFF");
   var pinDefault = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2%7CEE99EE");
-  var $sidePanel = $("#sidePanel");
-  var $friendCarouselDiv = $("#friendCarouselDiv");
 
   $('.register').on('click', showRegisterForm);
   $('.login').on('click', showLoginForm);
   $('.profile').on('click', getFriends);
   $('.logout').on('click', logout);
-  $main.on('click', "#go", calculateMidPoint);
   $main.on('submit', 'form', handleForm);
+  $main.on('click', "#go", calculateMidPoint);
   $main.on('click', '#friendSaveLocation', saved);
   $main.on('click', '#userSaveLocation', saved);
   $main.on('click', 'button#addAFriend', getFriends);
@@ -31,14 +38,17 @@ $(function () {
   $main.on('click', 'button.edit', getFriend);
   $main.on("click", ".directionButton", selectVenue);
   $main.on("click", "a#resource", updateResourceChoice);
-  $sidePanel.on('click', 'button#locationButton', getUserCurrentPos);
-  // var iwindow = new google.maps.InfoWindow();
   $sidePanel.on('submit', 'form#filterResults', filterResults);
+  $sidePanel.on('click', 'button#locationButton', getUserCurrentPos);
   $sidePanel.on('click', 'button#clearFilterResults', clearFilterResults);
+  $sidePanel.on('click', 'button#useSavedAdd', useHome);
+  $sidePanel.on('click', 'button.addFriend', getFriend);
+  $sidePanel.on("click", "#carouselChoice", setIcon);
   $landing.on('submit', 'form', handleForm);
   $landing.on('click', 'button#landingGetStarted', landingRegForm);
   $landing.on('click', 'button#landingLogin', landingLoginForm);
   $landing.on('click', 'button#resource', clearLandingPage);
+  $("#travelSelect").on('change', showDirections);
 
   function saved() {
     $(this).html("Saved");
@@ -50,14 +60,13 @@ $(function () {
 
   if (isLoggedIn()) {
     landingResourceForm();
-    console.log("logged in");
+    // console.log("logged in");
   } else {
     landingPage();
-    console.log("logged out");
+    // console.log("logged out");
   }
 
   function landingPage() {
-    $main.empty();
     $landing.html('\n      <div class="landing">\n        <h1>Welcome</h1>\n        <p>We\'ve made finding somewhere to hang out with your mates super easy. Whether you\'re looking for a bite to eat, or your planning a trip to the zoo, we\'ve got you covered.</p>\n        <button id="landingGetStarted" class="btn btn-primary">Get started</button>\n      </div>');
   }
 
@@ -70,13 +79,21 @@ $(function () {
   }
 
   function landingResourceForm() {
-    $landing.html('\n      <div class="landing">\n        <h1>What are you in the mood for?</h1>\n        <div class="row">\n          <div class="card">\n            <div class="card-block">\n              <h4 class="card-title">Eating & Drinking</h4>\n              <button id="resource" class="btn btn-secondary" data-id=\'restaurant\'>Restaurant</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'bar\'>Bar</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'cafe\'>Cafe</button>\n            </div>\n          </div>\n          <div class="card">\n            <div class="card-block">\n              <h4 class="card-title">Night Out</h4>\n              <button id="resource" class="btn btn-secondary" data-id=\'casino\'>Casino</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'night_club\'>Night Club</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'movie_theater\'>Theater</button>\n            </div>\n          </div>\n          <div class="card">\n            <div class="card-block">\n              <h4 class="card-title">Shopping</h4>\n              <button id="resource" class="btn btn-secondary" data-id=\'shopping_mall\'>Shopping</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'clothing_store\'>Clothes</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'florist\'>Florist</button>\n            </div>\n          </div>\n          <div class="card">\n            <div class="card-block">\n              <h4 class="card-title">Day Out</h4>\n              <button id="resource" class="btn btn-secondary" data-id=\'zoo\'>Zoo</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'park\'>Park</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'spa\'>Spa</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'gym\'>Gym</button>\n            </div>\n          </div>\n        </div>\n      </div>');
+
+    var username = localStorage.getItem('username');
+    var welcomeMessage = 'Hi ' + username + ',';
+
+    if (!username) {
+      welcomeMessage = 'Welcome back';
+    }
+
+    $landing.html('\n      <div class="landing">\n      <h1>' + welcomeMessage + '</h1>\n        <h2>What are you in the mood for?</h2>\n        <div class="row">\n          <div class="card">\n            <div class="card-block">\n              <h4 class="card-title">Eating & Drinking</h4>\n              <button id="resource" class="btn btn-secondary" data-id=\'restaurant\'>Restaurant</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'bar\'>Bar</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'cafe\'>Cafe</button>\n            </div>\n          </div>\n          <div class="card">\n            <div class="card-block">\n              <h4 class="card-title">Night Out</h4>\n              <button id="resource" class="btn btn-secondary" data-id=\'casino\'>Casino</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'night_club\'>Night Club</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'movie_theater\'>Theater</button>\n            </div>\n          </div>\n          <div class="card">\n            <div class="card-block">\n              <h4 class="card-title">Shopping</h4>\n              <button id="resource" class="btn btn-secondary" data-id=\'shopping_mall\'>Shopping</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'clothing_store\'>Clothes</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'florist\'>Florist</button>\n            </div>\n          </div>\n          <div class="card">\n            <div class="card-block">\n              <h4 class="card-title">Day Out</h4>\n              <button id="resource" class="btn btn-secondary" data-id=\'zoo\'>Zoo</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'park\'>Park</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'spa\'>Spa</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'gym\'>Gym</button>\n            </div>\n          </div>\n        </div>\n      </div>');
   }
 
   function clearLandingPage() {
     resource = $(this).data('id');
-    console.log(resource);
     $landing.remove();
+    showResourceForm();
     mapInit();
     showUserForm();
   }
@@ -143,10 +160,11 @@ $(function () {
           if (!!data.user) {
             var userId = data.user._id;
             if (userId) localStorage.setItem('id', userId);
+            if (data.user.username) localStorage.setItem('username', data.user.username);
             if (data.token) localStorage.setItem('token', data.token);
           }
           if (nextView === 'landingResourceForm') {
-            location.reload();
+            landingResourceForm();
           } else if (nextView === 'showUserForm') {
             showUserForm();
           } else if (nextView === 'viewProfile') {
@@ -157,8 +175,6 @@ $(function () {
       })();
     }
   }
-
-  //-------------------------------------------------------------//
 
   function getFriends() {
     $friendCarouselDiv.css("visibility", "hidden");
@@ -249,8 +265,6 @@ $(function () {
     });
   }
 
-  $sidePanel.on('click', 'button.addFriend', getFriend);
-
   function deleteFriend() {
     var userId = localStorage.getItem('id');
     var friendId = $(this).data('id');
@@ -307,24 +321,16 @@ $(function () {
     landingPage();
   }
 
-  //------------------------------------------------------------------------------------------------------------------------------------
-
-
-  var map = void 0;
-  var people = [];
-
   function mapInit() {
     map = new google.maps.Map($mapDiv[0], {
       center: { lat: 51.5074, lng: -0.1278 },
       zoom: 7
     });
   }
-  // mapInit();
 
   function showResourceForm() {
     $main.prepend('\n      <ul class="nav nav-tabs">\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'restaurant\'>Restaurant</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'bar\'>Bar</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'cafe\'>Cafe</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'casino\'>Casino</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'night_club\'>Night Club</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'movie_theater\'>Theater</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'shopping_mall\'>Shopping</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'clothing_store\'>Clothes</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'florist\'>Florist</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'casino\'>Zoo</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'park\'>Park</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'spa\'>Spa</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'gym\'>Gym</a>\n        </li>\n      </ul>');
   }
-  // showResourceForm();
 
   function updateResourceChoice() {
     resource = $(this).data('id');
@@ -337,13 +343,7 @@ $(function () {
     var userId = localStorage.getItem('id');
     $sidePanel.html('<h2>Where Are You?</h2>\n      <button class="btn btn-secondary" id="useSavedAdd">Use saved address</button>\n      <h4>or</h4>\n      <input id="pac-input" class="controls" type="text" placeholder="Enter location">\n      <form id="userLocation" data-target="current" method="put" action="/api/users/' + userId + '">\n        <input type=\'hidden\' id="input-location" name="user[address]">\n        <input type=\'hidden\' id="input-lat" name="user[lat]">\n        <input type=\'hidden\' id="input-lng" name="user[lng]">\n        <button class="btn btn-secondary" id="userSaveLocation">Save</button>\n      </form>\n\n      <h4>or</h4>\n      <button id="locationButton" data-target="friendLocation" class="btn btn-secondary">Use current location</button>\n      <br>\n      <button id="addAFriend" data-target="friendLocation" class="btn btn-primary">Add friend</button>\n    ');
     createSearchBar();
-    showResourceForm();
   }
-
-  // showUserForm();
-
-  var latLngList = [];
-  $sidePanel.on('click', 'button#useSavedAdd', useHome);
 
   function useHome() {
     var friends = [];
@@ -362,11 +362,9 @@ $(function () {
       };
 
       document.getElementById("input-location").value = addresses[0].formatted_address;
-      // console.log(addresses[0].formatted_address);
       document.getElementById("input-lat").value = '' + personsPosition.lat;
       document.getElementById("input-lng").value = '' + personsPosition.lng;
       people.push(personsPosition);
-      // console.log(people[0]);
       addMarker(personsPosition);
       setMapBounds(people);
     });
@@ -414,7 +412,6 @@ $(function () {
   }
 
   function nearbySearch(maxPrice) {
-
     var request = {
       location: midPoint,
       types: [resource],
@@ -446,55 +443,38 @@ $(function () {
     }
 
     for (var i = 1; i < maxResults; i++) {
-      console.log("result");
       var resource = results[i];
       resultsToShow.push(resource);
       LatLngList.push(resource.geometry.location);
       createMarker(resource);
     }
-    console.log(allResults.length);
+
     setMapBounds(LatLngList);
     populateCarousel(resultsToShow);
   }
 
   function clearFilterResults(e) {
     e.preventDefault();
-    var status = 'OK';
     populateMap(allResults);
   }
 
   function filterResults(e) {
     e.preventDefault();
-    var status = 'OK';
+    var maxPrice = parseInt($(this).find('[name=price]').val());
+    var minRating = parseInt($(this).find('[name=rating]').val());
 
-    var price = $(this).find('[name=price]').val();
-    var rating = $(this).find('[name=rating]').val();
-
-    if (price === '--' && rating === '--') {
+    if (maxPrice === '--' && minRating === '--') {
       return;
     }
 
     var venuesToKeep = [];
-    var maxPrice = void 0;
-    var minRating = void 0;
-
-    if (price === '£') maxPrice = 1;
-    if (price === '££') maxPrice = 2;
-    if (price === '£££') maxPrice = 3;
-    if (price === '££££') maxPrice = 4;
-
-    if (rating === '*') minRating = 1;
-    if (rating === '**') minRating = 2;
-    if (rating === '***') minRating = 3;
-    if (rating === '****') minRating = 4;
-    if (rating === '*****') minRating = 5;
 
     allResults.forEach(function (venue) {
       var hasPrice = !!venue.price_level;
       var hasRating = !!venue.rating;
       if (hasPrice && hasRating) {
         if (!!minRating && !!maxPrice) {
-          if (venue.rating > minRating && venue.price_level === maxPrice) {
+          if (venue.rating >= minRating && venue.price_level === maxPrice) {
             venuesToKeep.push(venue);
           }
         } else if (!minRating) {
@@ -502,13 +482,13 @@ $(function () {
             venuesToKeep.push(venue);
           }
         } else if (!maxPrice) {
-          if (venue.rating <= minRating) {
+          if (venue.rating >= minRating) {
             venuesToKeep.push(venue);
           }
         }
       } else if (hasPrice || hasRating) {
         if (!minRating && !maxPrice) {
-          if (venue.rating > minRating || venue.price_level <= maxPrice) {
+          if (venue.rating >= minRating || venue.price_level <= maxPrice) {
             venuesToKeep.push(venue);
           }
         } else if (!minRating) {
@@ -516,7 +496,7 @@ $(function () {
             venuesToKeep.push(venue);
           }
         } else if (!maxPrice) {
-          if (venue.rating > minRating) {
+          if (venue.rating >= minRating) {
             venuesToKeep.push(venue);
           }
         }
@@ -526,16 +506,16 @@ $(function () {
     if (venuesToKeep.length === 0) {
       mapInit();
       populateCarousel(venuesToKeep);
-      return;
+    } else {
+      populateMap(venuesToKeep);
+      populateCarousel(venuesToKeep);
     }
-    populateMap(venuesToKeep);
-    populateCarousel(venuesToKeep);
   }
 
   function populateCarousel(resultsToShow) {
     $sidePanel.empty();
 
-    var $carousel = $('<div id=\'carousel-custom\' class=\'carousel slide\' data-ride=\'carousel\'>\n        <div id=\'filter\'>\n          <h4>Filter Results</h4>\n          <form id="filterResults">\n            <label for=\'price_level\'>Max price</label>\n            <select name="price">\n              <option>--</option>\n              <option id=\'price_level_1\'>\xA3</option>\n              <option id=\'price_level_2\'>\xA3\xA3</option>\n              <option id=\'price_level_3\'>\xA3\xA3\xA3</option>\n              <option id=\'price_level_4\'>\xA3\xA3\xA3\xA3</option>\n            </select>\n            <br>\n            <label for=\'rating\'>Rating</label>\n            <select name="rating">\n              <option>--</option>\n              <option id=\'rating_1\'>*</option>\n              <option id=\'rating_2\'>**</option>\n              <option id=\'rating_3\'>***</option>\n              <option id=\'rating_4\'>****</option>\n              <option id=\'rating_5\'>*****</option>\n            </select>\n            <br>\n            <button id="filterResultsBtn" class="btn btn-danger" type="submit">Update</button>\n            <button id="clearFilterResults" class="btn btn-secondary" type="submit">Clear filter</button>\n          <form>\n          <hr>\n        </div>\n      </div>');
+    var $carousel = $('<div id=\'carousel-custom\' class=\'carousel slide\' data-ride=\'carousel\'>\n        <div id=\'filter\'>\n          <h4>Filter Results</h4>\n          <form id="filterResults">\n            <label for=\'price\'>Max price</label>\n            <select name="price">\n              <option value=\'null\'>--</option>\n              <option value=\'1\'>\xA3</option>\n              <option value=\'2\'>\xA3\xA3</option>\n              <option value=\'3\'>\xA3\xA3\xA3</option>\n              <option value=\'4\'>\xA3\xA3\xA3\xA3</option>\n            </select>\n            <br>\n            <label for=\'rating\'>Rating</label>\n            <select name="rating">\n              <option value=\'null\'>--</option>\n              <option value=\'1\'>*</option>\n              <option value=\'2\'>**</option>\n              <option value=\'3\'>***</option>\n              <option value=\'4\'>****</option>\n              <option value=\'5\'>*****</option>\n            </select>\n            <br>\n            <button id="filterResultsBtn" class="btn btn-danger" type="submit">Update</button>\n            <button id="clearFilterResults" class="btn btn-secondary" type="submit">Clear filter</button>\n          <form>\n          <hr>\n        </div>\n      </div>');
 
     resultsToShow.forEach(function (venue) {
       var imgSrc = '';
@@ -574,14 +554,7 @@ $(function () {
 
       $carousel.append('\n        <div class="item" id="carouselItem">\n          <a id="carouselChoice" data-id="' + uniqueId + '"><h4>' + venue.name + '</h4>\n          <p>' + venue.vicinity + '</p>\n          ' + ratingHtml + priceHtml + '\n          ' + imgHtml + '</a>\n          <button class="directionButton btn btn-primary" data-lat=' + lat + ' data-lng=' + lng + '>Directions</button>\n        </div>\n        <hr>');
       uniqueId++;
-
-      // $main.on("click", "#carouselChoice", function() {
-      //   iwindow.setPosition({ lat: $(this).data("lat"), lng: $(this).data("lng")});
-      //   iwindow.setContent(`<h4>${this.name}</h4>`);
-      //   iwindow.open(map);
-      // });
     });
-
     $sidePanel.html($carousel);
   }
 
@@ -614,12 +587,6 @@ $(function () {
     });
   }
 
-  //user and venue variables for directions function
-  var startingPos = null;
-  var venueChosen = null;
-  var directionsDisplay = new google.maps.DirectionsRenderer();
-  var directionsService = new google.maps.DirectionsService();
-
   function selectVenue() {
     startingPos = people[0];
     venueChosen = { lat: $(this).data("lat"), lng: $(this).data("lng") };
@@ -646,8 +613,6 @@ $(function () {
     });
   }
 
-  $("#travelSelect").on('change', showDirections);
-
   function getUserCurrentPos() {
     navigator.geolocation.getCurrentPosition(function (position) {
       var personsPosition = {
@@ -655,7 +620,6 @@ $(function () {
         lng: position.coords.longitude
       };
       people.push(personsPosition);
-      // console.log(people);
       addMarker(personsPosition);
       setMapBounds(people);
     });
@@ -679,12 +643,10 @@ $(function () {
     var startingLat = $(this).data("lat");
     var startingLng = $(this).data("lng");
     startingPos = { lat: startingLat, lng: startingLng };
-    console.log(startingPos);
     showDirections();
   }
 
-  $main.on("click", "#carouselChoice", function () {
-    console.log("click");
+  function setIcon() {
     for (var i = 0; i < venueMarkers.length; i++) {
       if (venueMarkers[i].id == $(this).data("id")) {
         venueMarkers[i].setIcon(pinImage);
@@ -692,5 +654,5 @@ $(function () {
         venueMarkers[i].setIcon(pinDefault);
       }
     }
-  });
+  }
 });
