@@ -20,8 +20,8 @@ $(function () {
   var latLngList = [];
   var directionsDisplay = new google.maps.DirectionsRenderer({ suppressBicyclingLayer: true });
   var directionsService = new google.maps.DirectionsService();
-  var pinImage = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2%7C00FFFF");
-  var pinDefault = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2%7CEE99EE");
+  var pinImage = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2%7CDDFC74");
+  var pinDefault = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2%7CE01A4F");
 
   $('.register').on('click', showRegisterForm);
   $('.login').on('click', showLoginForm);
@@ -66,15 +66,15 @@ $(function () {
   }
 
   function landingPage() {
-    $landing.html('\n      <div class="landing">\n        <h1>Welcome</h1>\n        <p>We\'ve made finding somewhere to hang out with your mates super easy. Whether you\'re looking for a bite to eat, or your planning a trip to the zoo, we\'ve got you covered.</p>\n        <button id="landingGetStarted" class="btn btn-primary">Get started</button>\n      </div>');
+    $landing.html('\n      <div class="container">\n        <h1>Welcome</h1>\n        <p>We\'ve made finding somewhere to hang out with your mates super easy. Whether you\'re looking for a bite to eat, or your planning a trip to the zoo, we\'ve got you covered.</p>\n        <button id="landingGetStarted" class="btn btn-secondary">Get started</button>\n      </div>');
   }
 
   function landingRegForm() {
-    $landing.html('\n      <div class="landing">\n        <h1>Register</h1>\n        <p>Already registered? <button class="btn btn-secondary" id="landingLogin">Sign in</button></p>\n        <form method="post" action="/api/register" data-target="landingResourceForm">\n          <div class="form-group">\n            <input class="form-control" name="user[username]" placeholder="Username">\n          </div>\n          <div class="form-group">\n            <input class="form-control" name="user[email]" placeholder="Email">\n          </div>\n          <div class="form-group">\n            <input class="form-control" type="password" name="user[password]" placeholder="Password">\n          </div>\n          <div class="form-group">\n            <input class="form-control" type="password" name="user[passwordConfirmation]" placeholder="Password Confirmation">\n          </div>\n          <button class="btn btn-primary">Register</button>\n        </form>\n      </div>');
+    $landing.html('\n      <div class="container">\n        <h1>Register</h1>\n        <p>Already registered? <button class="btn btn-secondary" id="landingLogin">Sign in</button></p>\n        <form method="post" action="/api/register" data-target="landingResourceForm">\n          <div class="form-group">\n            <input class="form-control" name="user[username]" placeholder="Username">\n          </div>\n          <div class="form-group">\n            <input class="form-control" name="user[email]" placeholder="Email">\n          </div>\n          <div class="form-group">\n            <input class="form-control" type="password" name="user[password]" placeholder="Password">\n          </div>\n          <div class="form-group">\n            <input class="form-control" type="password" name="user[passwordConfirmation]" placeholder="Password Confirmation">\n          </div>\n          <button class="btn btn-primary">Register</button>\n        </form>\n      </div>');
   }
 
   function landingLoginForm() {
-    $landing.html('\n      <div class="landing">\n        <h2>Login</h2>\n        <form method="post" action="/api/login" data-target="landingResourceForm">\n          <div class="form-group">\n            <input class="form-control" name="email" placeholder="Email">\n          </div>\n          <div class="form-group">\n            <input class="form-control" type="password" name="password" placeholder="Password">\n          </div>\n          <button class="btn btn-primary">Login</button>\n        </form>\n      </div>\n    ');
+    $landing.html('\n      <div class="container">\n        <h2>Login</h2>\n        <form method="post" action="/api/login" data-target="landingResourceForm">\n          <div class="form-group">\n            <input class="form-control" name="email" placeholder="Email">\n          </div>\n          <div class="form-group">\n            <input class="form-control" type="password" name="password" placeholder="Password">\n          </div>\n          <button class="btn btn-primary">Login</button>\n        </form>\n      </div>\n    ');
   }
 
   function landingResourceForm() {
@@ -86,7 +86,7 @@ $(function () {
       welcomeMessage = 'Welcome back';
     }
 
-    $landing.html('\n      <div class="landing">\n      <h1>' + welcomeMessage + '</h1>\n        <h2>What are you in the mood for?</h2>\n        <div class="row">\n          <div class="card">\n            <div class="card-block">\n              <h4 class="card-title">Eating & Drinking</h4>\n              <button id="resource" class="btn btn-secondary" data-id=\'restaurant\'>Restaurant</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'bar\'>Bar</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'cafe\'>Cafe</button>\n            </div>\n          </div>\n          <div class="card">\n            <div class="card-block">\n              <h4 class="card-title">Night Out</h4>\n              <button id="resource" class="btn btn-secondary" data-id=\'casino\'>Casino</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'night_club\'>Night Club</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'movie_theater\'>Theater</button>\n            </div>\n          </div>\n          <div class="card">\n            <div class="card-block">\n              <h4 class="card-title">Shopping</h4>\n              <button id="resource" class="btn btn-secondary" data-id=\'shopping_mall\'>Shopping</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'clothing_store\'>Clothes</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'florist\'>Florist</button>\n            </div>\n          </div>\n          <div class="card">\n            <div class="card-block">\n              <h4 class="card-title">Day Out</h4>\n              <button id="resource" class="btn btn-secondary" data-id=\'zoo\'>Zoo</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'park\'>Park</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'spa\'>Spa</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'gym\'>Gym</button>\n            </div>\n          </div>\n        </div>\n      </div>');
+    $landing.html('\n      <div class="container">\n      <h1>' + welcomeMessage + '</h1>\n        <h2>What are you in the mood for?</h2>\n        <div class="row">\n          <div class="card">\n            <div class="card-block">\n              <h4 class="card-title">Eating & Drinking</h4>\n              <button id="resource" class="btn btn-secondary" data-id=\'restaurant\'>Restaurant</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'bar\'>Bar</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'cafe\'>Cafe</button>\n            </div>\n          </div>\n          <div class="card">\n            <div class="card-block">\n              <h4 class="card-title">Night Out</h4>\n              <button id="resource" class="btn btn-secondary" data-id=\'casino\'>Casino</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'night_club\'>Night Club</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'movie_theater\'>Theater</button>\n            </div>\n          </div>\n          <div class="card">\n            <div class="card-block">\n              <h4 class="card-title">Shopping</h4>\n              <button id="resource" class="btn btn-secondary" data-id=\'shopping_mall\'>Shopping</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'clothing_store\'>Clothes</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'florist\'>Florist</button>\n            </div>\n          </div>\n          <div class="card">\n            <div class="card-block">\n              <h4 class="card-title">Day Out</h4>\n              <button id="resource" class="btn btn-secondary" data-id=\'zoo\'>Zoo</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'park\'>Park</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'spa\'>Spa</button>\n              <button id="resource" class="btn btn-secondary" data-id=\'gym\'>Gym</button>\n            </div>\n          </div>\n        </div>\n      </div>');
   }
 
   function clearLandingPage() {
@@ -320,10 +320,73 @@ $(function () {
     landingPage();
   }
 
+  var mapStyle = [{
+    "featureType": "administrative",
+    "elementType": "labels.text.fill",
+    "stylers": [{
+      "color": "#444444"
+    }]
+  }, {
+    "featureType": "landscape",
+    "elementType": "all",
+    "stylers": [{
+      "color": "#f2f2f2"
+    }]
+  }, {
+    "featureType": "poi",
+    "elementType": "all",
+    "stylers": [{
+      "visibility": "off"
+    }]
+  }, {
+    "featureType": "road",
+    "elementType": "all",
+    "stylers": [{
+      "saturation": -100
+    }, {
+      "lightness": 45
+    }]
+  }, {
+    "featureType": "road.highway",
+    "elementType": "all",
+    "stylers": [{
+      "visibility": "simplified"
+    }]
+  }, {
+    "featureType": "road.highway",
+    "elementType": "labels",
+    "stylers": [{
+      "visibility": "off"
+    }]
+  }, {
+    "featureType": "road.arterial",
+    "elementType": "labels.icon",
+    "stylers": [{
+      "visibility": "off"
+    }]
+  }, {
+    "featureType": "transit",
+    "elementType": "all",
+    "stylers": [{
+      "visibility": "off"
+    }]
+  }, {
+    "featureType": "water",
+    "elementType": "all",
+    "stylers": [{
+      "color": "#00a6fb"
+    }, {
+      "visibility": "on"
+    }]
+  }];
+
+  // -------------------------------
+
   function mapInit() {
     map = new google.maps.Map($mapDiv[0], {
       center: { lat: 51.5074, lng: -0.1278 },
-      zoom: 7
+      zoom: 9,
+      styles: mapStyle
     });
   }
 

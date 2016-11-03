@@ -18,8 +18,8 @@ $(() =>{
   let latLngList = [];
   var directionsDisplay = new google.maps.DirectionsRenderer({ suppressBicyclingLayer: true });
   var directionsService = new google.maps.DirectionsService();
-  const pinImage = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2%7C00FFFF");
-  const pinDefault = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2%7CEE99EE");
+  const pinImage = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2%7CDDFC74");
+  const pinDefault = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2%7CE01A4F");
 
   $('.register').on('click', showRegisterForm);
   $('.login').on('click', showLoginForm);
@@ -65,17 +65,17 @@ $(() =>{
 
   function landingPage(){
     $landing.html(`
-      <div class="landing">
+      <div class="container">
         <h1>Welcome</h1>
         <p>We've made finding somewhere to hang out with your mates super easy. Whether you're looking for a bite to eat, or your planning a trip to the zoo, we've got you covered.</p>
-        <button id="landingGetStarted" class="btn btn-primary">Get started</button>
+        <button id="landingGetStarted" class="btn btn-secondary">Get started</button>
       </div>`);
 
   }
 
   function landingRegForm(){
     $landing.html(`
-      <div class="landing">
+      <div class="container">
         <h1>Register</h1>
         <p>Already registered? <button class="btn btn-secondary" id="landingLogin">Sign in</button></p>
         <form method="post" action="/api/register" data-target="landingResourceForm">
@@ -98,7 +98,7 @@ $(() =>{
 
   function landingLoginForm(){
     $landing.html(`
-      <div class="landing">
+      <div class="container">
         <h2>Login</h2>
         <form method="post" action="/api/login" data-target="landingResourceForm">
           <div class="form-group">
@@ -124,7 +124,7 @@ $(() =>{
   }
 
     $landing.html(`
-      <div class="landing">
+      <div class="container">
       <h1>${welcomeMessage}</h1>
         <h2>What are you in the mood for?</h2>
         <div class="row">
@@ -463,10 +463,103 @@ $(() =>{
     landingPage();
   }
 
+let mapStyle = [
+    {
+        "featureType": "administrative",
+        "elementType": "labels.text.fill",
+        "stylers": [
+            {
+                "color": "#444444"
+            }
+        ]
+    },
+    {
+        "featureType": "landscape",
+        "elementType": "all",
+        "stylers": [
+            {
+                "color": "#f2f2f2"
+            }
+        ]
+    },
+    {
+        "featureType": "poi",
+        "elementType": "all",
+        "stylers": [
+            {
+                "visibility": "off"
+            }
+        ]
+    },
+    {
+        "featureType": "road",
+        "elementType": "all",
+        "stylers": [
+            {
+                "saturation": -100
+            },
+            {
+                "lightness": 45
+            }
+        ]
+    },
+    {
+        "featureType": "road.highway",
+        "elementType": "all",
+        "stylers": [
+            {
+                "visibility": "simplified"
+            }
+        ]
+    },
+    {
+        "featureType": "road.highway",
+        "elementType": "labels",
+        "stylers": [
+            {
+                "visibility": "off"
+            }
+        ]
+    },
+    {
+        "featureType": "road.arterial",
+        "elementType": "labels.icon",
+        "stylers": [
+            {
+                "visibility": "off"
+            }
+        ]
+    },
+    {
+        "featureType": "transit",
+        "elementType": "all",
+        "stylers": [
+            {
+                "visibility": "off"
+            }
+        ]
+    },
+    {
+        "featureType": "water",
+        "elementType": "all",
+        "stylers": [
+            {
+                "color": "#00a6fb"
+            },
+            {
+                "visibility": "on"
+            }
+        ]
+    }
+];
+
+// -------------------------------
+
   function mapInit(){
     map = new google.maps.Map($mapDiv[0], {
     center: { lat: 51.5074, lng: -0.1278 },
-      zoom: 7
+      zoom: 9,
+      styles: mapStyle
     });
   }
 
