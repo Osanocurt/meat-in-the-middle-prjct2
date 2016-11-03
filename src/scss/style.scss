@@ -1,3 +1,5 @@
+@import "_variables";
+
 body, html {
   height: 100%;
   margin: 0;
@@ -10,6 +12,7 @@ body, html {
   display: inline-block;
   border: 5px solid blue;
   margin: 5px 0px 5px 5px;
+
 
 }
 
@@ -40,7 +43,6 @@ body, html {
   height: 87vh;
   float: right;
   overflow: auto;
-  border: 5px solid blue;
 }
 
 #pac-input {
@@ -109,8 +111,18 @@ h4 {
    cursor: pointer; cursor: hand;
 }
 
+.btn-primary {
+  background-color: $brand-vivid-blue;
+  border: $brand-vivid-blue;
+}
+.btn-danger{
+  background-color: $brand-pink;
+  border: $brand-pink;
+}
 #landing {
-  background-color: #fff;
+  background-image: url('../images/base-map.png');
+  background-size: cover;
+  background-position: center;
   height: calc(100vh - 54px);
   position: absolute;
   top: 54px;
@@ -118,10 +130,30 @@ h4 {
   width: 100%;
   z-index: 10;
 
-  .landing {
-    width: 400px;
-    margin: 0 auto;
+  .container {
+    background-color: rgba($brand-vivid-blue, .7);
+    border-radius: 10px;
+    padding: 30px;
+    width: 600px;
+    margin: auto;
+    color: #fff;
     padding-top: 100px;
     text-align: center;
+
+    button {
+      margin-bottom: 50px;
+    }
+    .card-title {
+      color: #424651;
+    }
+
+    .card {
+      width: 400px;
+      margin: 20px auto;
+
+      .btn {
+        margin: 0;
+      }
+    }
   }
 }
