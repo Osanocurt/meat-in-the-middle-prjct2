@@ -164,7 +164,6 @@ $(() =>{
 
 
   function landingPage(){
-    if(event) event.preventDefault();
     $landing.html(`
       <div class="content" id="mainLanding">
         <h1>(  <span class="pink">Eat</span>  ||  <span class="blue">Drink</span>  ||  <span class="yellow">Spa</span>  )</h1>
@@ -562,10 +561,8 @@ $(() =>{
   }
 
   function logout() {
-    if(event) event.preventDefault();
     localStorage.removeItem('token');
     localStorage.removeItem('id');
-    restoreSidePanel();
     $main.empty();
     navBarInit();
     landingPage();

@@ -136,7 +136,6 @@ $(function () {
   navBarInit();
 
   function landingPage() {
-    if (event) event.preventDefault();
     $landing.html('\n      <div class="content" id="mainLanding">\n        <h1>(  <span class="pink">Eat</span>  ||  <span class="blue">Drink</span>  ||  <span class="yellow">Spa</span>  )</h1>\n        <h2>What ever you\'re up to,<br> meet your friends in the middle.</h2>\n        <button id="landingGetStarted" class="btn btn-primary">Get started</button>\n      </div>');
   }
 
@@ -382,10 +381,8 @@ $(function () {
   }
 
   function logout() {
-    if (event) event.preventDefault();
     localStorage.removeItem('token');
     localStorage.removeItem('id');
-    restoreSidePanel();
     $main.empty();
     navBarInit();
     landingPage();
