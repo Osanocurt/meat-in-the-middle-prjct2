@@ -205,9 +205,17 @@ h4 {
 }
 
 .nav-tabs {
-  a {
+  .nav-link {
     cursor: pointer;
+    &.active{
+      background-color: $brand-pink;
+      &:hover{
+        background-color: $brand-pink;
+
+      }
+    }
   }
+
 }
 .nav-tabs-mobile {
   display: none;

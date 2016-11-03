@@ -466,10 +466,13 @@ $(function () {
   }
 
   function updateResourceChoice() {
+    console.log(this);
     resource = $(this).data('id');
     mapInit();
     showUserForm();
     navBarInit(resource);
+    $(".nav-link").removeClass("active");
+    $(this).toggleClass('active');
   }
 
   function showUserForm() {
