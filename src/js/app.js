@@ -559,13 +559,15 @@ let mapStyle = [
     map = new google.maps.Map($mapDiv[0], {
     center: { lat: 51.5074, lng: -0.1278 },
       zoom: 9,
-      styles: mapStyle
+      styles: mapStyle,
+      scrollwheel: false
 
     });
   }
 
   function showResourceForm(){
     $main.prepend(`
+
       <ul class="nav nav-tabs">
         <li class="nav-item">
           <a class="nav-link" id="resource" data-id='restaurant'>Restaurant</a>
@@ -606,7 +608,34 @@ let mapStyle = [
         <li class="nav-item">
           <a class="nav-link" id="resource" data-id='gym'>Gym</a>
         </li>
-      </ul>`);
+      </ul>
+
+
+      <div class="dropdown open nav-tabs-mobile">
+        <a class="btn btn-secondary dropdown-toggle" href="#" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Select category
+        </a>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+          <a class="dropdown-item" id="resource" data-id='restaurant'>Restaurant</a>
+          <a class="dropdown-item" id="resource" data-id='bar'>Bar</a>
+          <a class="dropdown-item" id="resource" data-id='cafe'>Cafe</a>
+          <a class="dropdown-item" id="resource" data-id='casino'>Casino</a>
+          <a class="dropdown-item" id="resource" data-id='night_club'>Night Club</a>
+          <a class="dropdown-item" id="resource" data-id='movie_theater'>Theater</a>
+          <a class="dropdown-item" id="resource" data-id='shopping_mall'>Shopping</a>
+          <a class="dropdown-item" id="resource" data-id='clothing_store'>Clothes</a>
+          <a class="dropdown-item" id="resource" data-id='florist'>Florist</a>
+          <a class="dropdown-item" id="resource" data-id='casino'>Zoo</a>
+          <a class="dropdown-item" id="resource" data-id='park'>Park</a>
+          <a class="dropdown-item" id="resource" data-id='spa'>Spa</a>
+          <a class="dropdown-item" id="resource" data-id='gym'>Gym</a>
+        </div>
+      </div>
+
+
+
+
+      `);
   }
 
   function updateResourceChoice(){

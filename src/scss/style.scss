@@ -4,6 +4,7 @@ body, html {
   height: 100%;
   margin: 0;
   padding: 0;
+
 }
 
 #map {
@@ -160,8 +161,6 @@ h4 {
  }
  .social {
      -webkit-transform: scale(0.8);
-     /* Browser Variations: */
-
      -moz-transform: scale(8);
      -o-transform: scale(8);
      -webkit-transition-duration: 0.5s;
@@ -169,19 +168,49 @@ h4 {
      -o-transition-duration: 0.5s;
  }
 
-/*
-    Multicoloured Hover Variations
-*/
-
  #social-fb:hover {
-     color: #00a6fb;
+     color: #00A6FB;
  }
  #social-tw:hover {
-     color: #00a6fb;
+     color: #00A6FB;
  }
  #social-gp:hover {
-     color: #00a6fb;
+     color: #00A6FB;
  }
  #social-em:hover {
-     color: #00a6fb;
+     color: #00A6FB;
  }
+
+.nav-tabs {
+  a {
+    cursor: pointer;
+  }
+}
+.nav-tabs-mobile {
+  display: none;
+}
+
+@media (max-width: 880px) {
+  .nav-tabs {
+    display: none;
+
+  }
+  .nav-tabs-mobile {
+    display: block;
+    &.dropdown {
+      width: 100%;
+      .dropdown-toggle {
+        font-size: 16px;
+        width: 100%;
+      }
+      .dropdown-menu {
+        font-size: 16px;
+        text-align: center;
+        width: 100%;
+        a {
+          padding: 8px 20px;
+        }
+      }
+    }
+  }
+}
