@@ -20,7 +20,7 @@ $(() =>{
   let latLngList = [];
   var directionsDisplay = new google.maps.DirectionsRenderer({ suppressBicyclingLayer: true });
   var directionsService = new google.maps.DirectionsService();
-  const pinImage = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2%7CDDFC74");
+  const pinImage = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2%7C5CB85C");
   const pinDefault = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2%7CE01A4F");
 
   $navDiv.on('click', '.register', landingRegForm);
@@ -109,13 +109,10 @@ $(() =>{
         displayText = 'dress';
         break;
       case 'florist':
-        displayText = 'blooms';
+        displayText = 'bloom';
         break;
-      case 'monkey around':
-        displayText = 'zoo';
-        break;
-      case 'park':
-        displayText = 'play';
+      case 'zoo':
+        displayText = 'monkey around';
         break;
       case 'spa':
         displayText = 'relax';
@@ -153,11 +150,11 @@ $(() =>{
     $navDiv.html(`
       <nav class="navbar navbar-dark bg-inverse">
         <div class="container">
-          <a class="navbar-brand" href="/">[ ${displayText} ] in the Middle</a>
+          <a class="navbar-brand" href="/">[ ${displayText} ] in the middle</a>
           <button class="navbar-toggler hidden-sm-up" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar2" aria-controls="exCollapsingNavbar2" aria-expanded="false" aria-label="Toggle navigation">
             &#9776;
           </button>
-          <div class="collapse navbar-toggleable-xs" id="exCollapsingNavbar2">
+          <div class="collapse right navbar-toggleable-xs" id="exCollapsingNavbar2">
             <ul class="nav navbar-nav">
             ${navHtml}
             </ul>
@@ -170,12 +167,13 @@ $(() =>{
 
 
   function landingPage(){
-    if(event) event.preventDefault();
     $landing.html(`
       <div class="content" id="mainLanding">
-        <h1>(  <span class="pink">Eat</span>  ||  <span class="blue">Drink</span>  ||  <span class="yellow">Spa</span>  )</h1>
-        <h2>What ever you're up to,<br> meet your friends in the middle.</h2>
-        <button id="landingGetStarted" class="btn btn-primary">Get started</button>
+        <div class="wrapper">
+          <h1>(  <span class="pink">Eat</span>  ||  <span class="blue">Drink</span>  ||  <span class="yellow">Gym</span>  )</h1>
+          <h2>What ever you're up to,<br> meet your friends in the middle.</h2>
+          <button id="landingGetStarted" class="btn btn-primary">Get started</button>
+        </div>
       </div>`);
 
   }
@@ -184,23 +182,25 @@ $(() =>{
     if(event) event.preventDefault();
     $landing.html(`
       <div class="content">
-        <h1>Register</h1>
-        <p>Already registered? <button class="btn btn-secondary" id="landingLogin">Sign in</button></p>
-        <form method="post" action="/api/register" data-target="landingResourceForm">
-          <div class="form-group">
-            <input class="form-control" name="user[username]" placeholder="Username">
-          </div>
-          <div class="form-group">
-            <input class="form-control" name="user[email]" placeholder="Email">
-          </div>
-          <div class="form-group">
-            <input class="form-control" type="password" name="user[password]" placeholder="Password">
-          </div>
-          <div class="form-group">
-            <input class="form-control" type="password" name="user[passwordConfirmation]" placeholder="Password Confirmation">
-          </div>
-          <button class="btn btn-primary">Register</button>
-        </form>
+        <div class="wrapper">
+          <h1>Register</h1>
+          <p>Already registered? <button class="btn btn-secondary" id="landingLogin">Sign in</button></p>
+          <form method="post" action="/api/register" data-target="landingResourceForm">
+            <div class="form-group">
+              <input class="form-control" name="user[username]" placeholder="Username">
+            </div>
+            <div class="form-group">
+              <input class="form-control" name="user[email]" placeholder="Email">
+            </div>
+            <div class="form-group">
+              <input class="form-control" type="password" name="user[password]" placeholder="Password">
+            </div>
+            <div class="form-group">
+              <input class="form-control" type="password" name="user[passwordConfirmation]" placeholder="Password Confirmation">
+            </div>
+            <button class="btn btn-primary">Register</button>
+          </form>
+        </div>
       </div>`);
   }
 
@@ -208,16 +208,18 @@ $(() =>{
     if(event) event.preventDefault();
     $landing.html(`
       <div class="content">
-        <h1>Login</h1>
-        <form method="post" action="/api/login" data-target="landingResourceForm">
-          <div class="form-group">
-            <input class="form-control" name="email" placeholder="Email">
-          </div>
-          <div class="form-group">
-            <input class="form-control" type="password" name="password" placeholder="Password">
-          </div>
-          <button class="btn btn-primary">Login</button>
-        </form>
+        <div class="wrapper">
+          <h1>Login</h1>
+          <form method="post" action="/api/login" data-target="landingResourceForm">
+            <div class="form-group">
+              <input class="form-control" name="email" placeholder="Email">
+            </div>
+            <div class="form-group">
+              <input class="form-control" type="password" name="password" placeholder="Password">
+            </div>
+            <button class="btn btn-primary">Login</button>
+          </form>
+        </div>
       </div>
     `);
   }
@@ -233,47 +235,48 @@ $(() =>{
 
     $landing.html(`
       <div class="content">
-        <h1 class="camelCase">${welcomeMessage}</h1>
-        <h2>What are you in the mood for?</h2>
-        <div class="row">
-          <div class="col-md-3 col-sm-6">
-            <div class="card">
-              <div class="card-block">
-                <h4 class="card-title">Eating & Drinking</h4>
-                <button id="resource" class="btn btn-secondary" data-id='restaurant'>Restaurant</button>
-                <button id="resource" class="btn btn-secondary" data-id='bar'>Bar</button>
-                <button id="resource" class="btn btn-secondary" data-id='cafe'>Cafe</button>
+        <div class="wrapper">
+          <h1 class="camelCase">${welcomeMessage}</h1>
+          <h2>What are you in the mood for?</h2>
+          <div class="row">
+            <div class="col-md-3 col-sm-6">
+              <div class="card">
+                <div class="card-block">
+                  <h4 class="card-title">Eating & Drinking</h4>
+                  <button id="resource" class="btn btn-secondary" data-id='restaurant'>Restaurant</button>
+                  <button id="resource" class="btn btn-secondary" data-id='bar'>Bar</button>
+                  <button id="resource" class="btn btn-secondary" data-id='cafe'>Cafe</button>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="col-md-3 col-sm-6">
-            <div class="card">
-              <div class="card-block">
-                <h4 class="card-title">Night Out</h4>
-                <button id="resource" class="btn btn-secondary" data-id='casino'>Casino</button>
-                <button id="resource" class="btn btn-secondary" data-id='night_club'>Night Club</button>
-                <button id="resource" class="btn btn-secondary" data-id='movie_theater'>Theater</button>
+            <div class="col-md-3 col-sm-6">
+              <div class="card">
+                <div class="card-block">
+                  <h4 class="card-title">Night Out</h4>
+                  <button id="resource" class="btn btn-secondary" data-id='casino'>Casino</button>
+                  <button id="resource" class="btn btn-secondary" data-id='night_club'>Night Club</button>
+                  <button id="resource" class="btn btn-secondary" data-id='movie_theater'>Theater</button>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="col-md-3 col-sm-6">
-            <div class="card">
-              <div class="card-block">
-                <h4 class="card-title">Shopping</h4>
-                <button id="resource" class="btn btn-secondary" data-id='shopping_mall'>Shopping</button>
-                <button id="resource" class="btn btn-secondary" data-id='clothing_store'>Clothes</button>
-                <button id="resource" class="btn btn-secondary" data-id='florist'>Florist</button>
+            <div class="col-md-3 col-sm-6">
+              <div class="card">
+                <div class="card-block">
+                  <h4 class="card-title">Shopping</h4>
+                  <button id="resource" class="btn btn-secondary" data-id='shopping_mall'>Shopping</button>
+                  <button id="resource" class="btn btn-secondary" data-id='clothing_store'>Clothes</button>
+                  <button id="resource" class="btn btn-secondary" data-id='florist'>Florist</button>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="col-md-3 col-sm-6">
-            <div class="card">
-              <div class="card-block">
-                <h4 class="card-title">Day Out</h4>
-                <button id="resource" class="btn btn-secondary" data-id='zoo'>Zoo</button>
-                <button id="resource" class="btn btn-secondary" data-id='park'>Park</button>
-                <button id="resource" class="btn btn-secondary" data-id='spa'>Spa</button>
-                <button id="resource" class="btn btn-secondary" data-id='gym'>Gym</button>
+            <div class="col-md-3 col-sm-6">
+              <div class="card">
+                <div class="card-block">
+                  <h4 class="card-title">Day Out</h4>
+                  <button id="resource" class="btn btn-secondary" data-id='zoo'>Zoo</button>
+                  <button id="resource" class="btn btn-secondary" data-id='spa'>Spa</button>
+                  <button id="resource" class="btn btn-secondary" data-id='gym'>Gym</button>
+                </div>
               </div>
             </div>
           </div>
@@ -287,7 +290,7 @@ $(() =>{
     showResourceForm();
     mapInit();
     showUserForm();
-    navBarInit(resource);
+    navBarInit();
   }
 
   function showRegisterForm() {
@@ -335,20 +338,22 @@ $(() =>{
     let userId = localStorage.getItem('id');
 
     $sidePanel.html(`
-      <h2>Edit Friend</h2>
-      <form id="friendUpdate" method="put" action="/api/users/${userId}/friends/${friend._id}"  data-target="viewProfile">
-        <div class="form-group">
-          <label for="name">
-          <input class="form-control" name="name" value="${friend.name}">
-          <input type="hidden" id="input-lat" name="lat" value="${friend.lat}">
-          <input type="hidden" id="input-lng" name="lng" value="${friend.lng}">
-          <label for="address">
-          <input id="friendAddr" class="controls" type="text" placeholder='Address' value="${friend.address}">
-          <input type="hidden" id="newFriendAdd" name='address' type="text" value='${friend.address}'>
-          <button id="friendUpdateBtn" class="btn btn-primary" type='submit'>Update</button>
-          <button id="backToProfile" class="btn btn-secondary">Back</button>
-        </div>
-      </form>`);
+      <div class="form-panel" id="editFriend">
+        <h2>Edit Friend</h2>
+        <form id="friendUpdate" method="put" action="/api/users/${userId}/friends/${friend._id}"  data-target="viewProfile">
+          <div class="form-group">
+            <label for="name">
+            <input class="controls" name="name" value="${friend.name}">
+            <input type="hidden" id="input-lat" name="lat" value="${friend.lat}">
+            <input type="hidden" id="input-lng" name="lng" value="${friend.lng}">
+            <label for="address">
+            <input id="friendAddr" class="controls" type="text" placeholder='Address' value="${friend.address}">
+            <input type="hidden" id="newFriendAdd" name='address' type="text" value='${friend.address}'>
+            <button id="friendUpdateBtn" class="btn btn-primary" type='submit'>Update</button>
+            <button id="backToProfile" class="btn btn-secondary">Back</button>
+          </div>
+        </form>
+      </div>`);
 
     var input = document.getElementById('friendAddr');
     var searchBox = new google.maps.places.SearchBox(input);
@@ -413,6 +418,7 @@ $(() =>{
     $friendCarouselDiv.css("visibility", "hidden");
 
 
+
     let nextView = "";
 
     if (!$(this).data('target')) {
@@ -473,19 +479,28 @@ $(() =>{
   }
 
   function showFriendsInProfile(user, friends){
-    let $row = $(`<div class="row"><h2>${user.username}</h2><p>${user.address}</div>`);
+    let $row = $(`
+      <div class="form-panel">
+        <div class="row">
+          <h2>${user.username}</h2>
+          <p>${user.address}</p>
+        </div>
+      </div>`);
+
     friends.forEach((friend) => {
       $row.append(`
-        <div class="col-md-12">
-          <div class="card">
-            <div class="card-block">
-              <h4 class="card-title">${friend.name}</h4>
-              <h4 class="card-title">${friend.address}</h4>
-            </div>
+        <div id="profile" class="row">
+          <div class="col-sm-6">
+            <h3>${friend.name}</h3>
+            <p>${friend.address}</p>
           </div>
-          <button class="btn btn-danger delete" data-id="${friend._id}">Delete</button>
-          <button class="btn btn-primary edit" data-target='updateFriend' data-id="${friend._id}">Edit</button>
+          <div class="col-sm-6">
+            <button class="btn btn-danger delete" data-id="${friend._id}">Delete</button>
+
+            <button class="btn btn-primary edit" data-target='updateFriend' data-id="${friend._id}">Edit</button>
+          </div>
         </div>
+        <hr>
       `);
     });
 
@@ -504,18 +519,20 @@ $(() =>{
       }
     })
     .done((user) => {
-      let $row = $(`<div class="row"><h4>Saved Friends</h4></div>`);
+      let $row = $(`<div class="row form-panel"><h3>Add Saved Friends</h3></div>`);
       friends.forEach((friend) => {
         $row.append(`
-          <div class="col-md-12">
-            <div class="card">
+            <div class="card friends-list">
               <div class="card-block">
-                <h4 class="card-title">${friend.name}</h4>
-                <p class="card-title">${friend.address}</p>
+                <div class="col-sm-6">
+                  <h4 class="card-title">${friend.name}</h4>
+                  <p class="card-title">${friend.address}</p>
+                </div>
+                <div class="col-sm-6">
+                  <button class="btn btn-success addFriend" data-target="addToMap" data-id="${friend._id}">Add</button>
+                </div>
               </div>
-            <button class="btn btn-primary addFriend" data-target="addToMap" data-id="${friend._id}">Add</button>
             </div>
-          </div>
         `);
       });
       $sidePanel.html($row);
@@ -570,10 +587,8 @@ $(() =>{
   }
 
   function logout() {
-    if(event) event.preventDefault();
     localStorage.removeItem('token');
     localStorage.removeItem('id');
-    restoreSidePanel();
     $main.empty();
     navBarInit();
     landingPage();
@@ -716,9 +731,6 @@ let mapStyle = [
           <a class="nav-link" id="resource" data-id='zoo'>Zoo</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" id="resource" data-id='park'>Park</a>
-        </li>
-        <li class="nav-item">
           <a class="nav-link" id="resource" data-id='spa'>Spa</a>
         </li>
         <li class="nav-item">
@@ -742,15 +754,10 @@ let mapStyle = [
           <a class="dropdown-item" id="resource" data-id='clothing_store'>Clothes</a>
           <a class="dropdown-item" id="resource" data-id='florist'>Florist</a>
           <a class="dropdown-item" id="resource" data-id='casino'>Zoo</a>
-          <a class="dropdown-item" id="resource" data-id='park'>Park</a>
           <a class="dropdown-item" id="resource" data-id='spa'>Spa</a>
           <a class="dropdown-item" id="resource" data-id='gym'>Gym</a>
         </div>
       </div>
-
-
-
-
       `);
   }
 
@@ -759,7 +766,9 @@ let mapStyle = [
     resource = $(this).data('id');
     mapInit();
     showUserForm();
-    navBarInit(resource);
+    navBarInit();
+    $(".nav-link").removeClass("active");
+    $(this).toggleClass('active');
   }
 
   function showUserForm() {
@@ -767,21 +776,22 @@ let mapStyle = [
     let userId = localStorage.getItem('id');
     $sidePanel.empty();
     $sidePanel.html(
-      `<h2>Where Are You?</h2>
-      <button class="btn btn-secondary" id="useSavedAdd">Use saved address</button>
-      <h4>or</h4>
-      <input id="pac-input" class="controls" type="text" placeholder="Enter location">
-      <form id="userLocation"  data-target="current" method="put" action="/api/users/${userId}">
-        <input type='hidden' id="input-location" name="user[address]">
-        <input type='hidden' id="input-lat" name="user[lat]">
-        <input type='hidden' id="input-lng" name="user[lng]">
-        <button class="btn btn-secondary" id="userSaveLocation">Save</button>
-      </form>
-
-      <h4>or</h4>
-      <button id="locationButton" data-target="friendLocation" class="btn btn-secondary">Use current location</button>
-      <br>
-      <button id="addAFriend" data-target="friendLocation" class="btn btn-primary">Add friend</button>
+      `<div class="form-panel">
+        <h2>Where are you starting from?</h2>
+        <input id="pac-input" class="controls" type="text" placeholder="Where are you?">
+        <form id="userLocation"  data-target="current" method="put" action="/api/users/${userId}">
+          <input type='hidden' id="input-location" name="user[address]">
+          <input type='hidden' id="input-lat" name="user[lat]">
+          <input type='hidden' id="input-lng" name="user[lng]">
+          <button class="btn btn-info" id="userSaveLocation">Save</button>
+        </form>
+        <p>or</p>
+        <button class="btn btn-secondary" id="useSavedAdd">Use saved address</button>
+        <button id="locationButton" data-target="friendLocation" class="btn btn-secondary">Use current location</button>
+        <br>
+        <hr>
+        <button id="addAFriend" data-target="friendLocation" class="btn btn-primary">Add friend</button>
+      </div>
     `);
     createSearchBar();
   }
@@ -816,17 +826,19 @@ let mapStyle = [
     let userId = localStorage.getItem('id');
     if(event) event.preventDefault();
     $sidePanel.prepend(
-      `<h4>Add New Friend</h4>
-      <input id="pac-input" class="controls" type="text" placeholder="Address">
-      <form id="friendLocation" data-target="current" method="post" action="/api/users/${userId}/friends">
-        <input id="input-name" name="name" placeholder="Name">
-        <input type='hidden' id="input-location" name="address">
-        <input type='hidden' id="input-lat" name="lat">
-        <input type='hidden' id="input-lng" name="lng">
-        <button class="btn btn-secondary" id="friendSaveLocation">Save</button>
-      </form>
-      <button id="go" class="btn btn-primary">Go!</button>
-      <button id="addAFriend" data-target='friendLocation' class="btn btn-primary">Add another friend</button>
+      `<div class="form-panel">
+        <button id="go" class="btn btn-primary">Go!</button>
+        <h3>Add New Friend</h3>
+        <input id="pac-input" class="controls" type="text" placeholder="Where's your friend?">
+        <form id="friendLocation" data-target="current" method="post" action="/api/users/${userId}/friends">
+          <input id="input-name" name="name" class='controls' placeholder="What's thier name?">
+          <input type='hidden' id="input-location" name="address">
+          <input type='hidden' id="input-lat" name="lat">
+          <input type='hidden' id="input-lng" name="lng">
+          <button class="btn btn-info" id="friendSaveLocation">Save</button>
+        </form>
+        <button id="addAFriend" data-target='friendLocation' class="btn btn-secondary">Add another friend</button>
+      </div>
     `);
     createSearchBar();
   }
@@ -981,8 +993,7 @@ let mapStyle = [
               <option value='2'>££</option>
               <option value='3'>£££</option>
               <option value='4'>££££</option>
-            </select>
-            <br>
+            </select>&nbsp;
             <label for='rating'>Rating</label>
             <select name="rating">
               <option value='null'>--</option>

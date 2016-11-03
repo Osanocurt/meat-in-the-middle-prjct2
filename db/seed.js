@@ -13,15 +13,15 @@ User.collection.drop();
 const users = [
   {
     name: "Caroline Wilson",
-    lat: "51.5254678",
-    lng: "-0.0818591",
+    // lat: "51.5254678",
+    // lng: "-0.0818591",
     address: "Shoreditch",
-    username: "caroline",
+    username: "Caroline",
     email: 'caroline@example.com',
     friends:[{
       name: "Elliot Brock",
-      lat: "51.5199128",
-      lng: "-0.0772997",
+      // lat: "51.5199128",
+      // lng: "-0.0772997",
       address: "Bleecker Street"
     }],
     password: 'password',
@@ -29,11 +29,33 @@ const users = [
   },
   {
     name: "Elliot Brock",
-    lat: "51.5199128",
-    lng: "-0.0772997",
+    // lat: "51.5199128",
+    // lng: "-0.0772997",
     address: "Bleecker Street",
-    username: "elliot",
+    username: "Elliot",
     email: 'elliot@example.com',
+    friends:[{
+      name: "Homer Simpson",
+      // lat: "51.5199128",
+      // lng: "-0.0772997",
+      address: "Springfield"
+  }],
+    password: 'password',
+    passwordConfirmation: 'password'
+  },
+  {
+    name: "Lex Luthor",
+    // lat: "51.5199128",
+    // lng: "-0.0772997",
+    address: "Langridge Mews",
+    username: "Elliot",
+    email: 'lex@example.com',
+    friends:[{
+      name: "Adolf Hitler",
+      // lat: "51.5199128",
+      // lng: "-0.0772997",
+      address: "Bellend Drive"
+  }],
     password: 'password',
     passwordConfirmation: 'password'
   },

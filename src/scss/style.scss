@@ -7,16 +7,12 @@ body, html {
   font-family: 'Lato', sans-serif;
 }
 
-
-
 #map {
 
   height: 87vh;
   display: inline-block;
   border: 2px solid lightgrey;
   border-radius: 5px;
-  // box-shadow: -5px 0px 5px #888888;
-
 
 }
 
@@ -44,21 +40,97 @@ body, html {
   // box-shadow: -5px 0px 5px #888888;
   border-radius: 5px;
   margin-right: -5px;
+
+  .carousel-custom {
+    button {
+      float: right;
+    }
+  }
+  .form-panel {
+    text-align: center;
+
+    h2 {
+      margin: 20px 0;
+    }
+
+    h3 {
+      margin: 20px 0;
+    }
+    .btn {
+      width: 90%;
+      margin: 20px;
+    }
+
+    .btn-info {
+      background-color: $brand-grey;
+      color: $brand-pink;
+      border-color: $brand-pink;
+    }
+
+    .btn-secondary {
+      background-color: $brand-grey;
+      color: $brand-vivid-blue;
+      border-color: $brand-vivid-blue;
+    }
+
+    .btn-success {
+      background-color: $brand-grey;
+      color: $brand-green;
+      border-color: $brand-green;
+    }
+
+    .controls {
+      width: 90%;
+      border-radius: 3px;
+      height: 35px;
+      align-items: center;
+      margin-left: 5px;
+    }
+
+    .card-block {
+      padding: 0;
+      margin: 0 20px;
+      text-align: left;
+
+      .btn {
+        float: right;
+        width: 50px;
+        margin: 0 auto;
+        padding: 8px 10px;
+      }
+    }
+    .card {
+      border: none;
+    }
+  }
+
+  #profile {
+
+    button {
+      margin: 10px 0;
+      width: 100px;
+    }
+    .btn-danger {
+      background-color: $brand-grey;
+      color: $brand-pink;
+    }
+    .controls {
+      width: 200px;
+
+    }
+  }
 }
 
 #friendCarouselDiv {
    visibility: hidden;
    float: right;
    text-align: center;
-  //  color: black;
+   color: black;
    border: 5px solid blue;
    border: 2px solid lightgrey;
-  //  box-shadow: -5px 0px 5px #888888;
    border-radius: 5px;
    margin-right: -5px;
 }
-
-
 
 #pac-input {
   width: 300px;
@@ -82,34 +154,36 @@ body, html {
 #placesItem {
   min-height: 165px;
   overflow: hidden;
+
   .textContainer {
     width: calc(100% - 175px);
     float: left;
     vertical-align: top;
     padding-right: 10px;
     word-break: break-all;
-  h6 {
-    font-size: 20px;
-  }
+
+    h6 {
+      font-size: 20px;
+    }
   }
 }
 
 #imageContainer {
-height: 150px;
-width: 150px;
-margin-top: 5px;
-margin-right: 15px;
-background-size: cover;
-display: block;
-float: right;
-border-radius: 5px;
-vertical-align: top;
+  height: 150px;
+  width: 150px;
+  margin-top: 5px;
+  margin-right: 15px;
+  background-size: cover;
+  display: block;
+  float: right;
+  border-radius: 5px;
+  vertical-align: top;
 }
 
 
 a, #placesItem a, #friendCarouselDiv h4 {
-   cursor: pointer; cursor: hand;
-   display: block;
+  cursor: pointer; cursor: hand;
+  display: block;
 }
 
 .btn-primary {
@@ -124,7 +198,12 @@ a, #placesItem a, #friendCarouselDiv h4 {
 .navbar {
   border-radius: 0;
   font-family: 'Inconsolata', monospace;
+
+  .right {
+    float: right;
+  }
 }
+
 #landing {
   background-image: url('../images/base-map-blue.png');
   background-size: cover;
@@ -140,13 +219,28 @@ a, #placesItem a, #friendCarouselDiv h4 {
     margin-bottom: 20px;
   }
 
-  .form-group {
-      width: 300px;
-      text-align: center;
-      position: relative;
-      left: 50%;
-      transform: translate(-50%, 0%);
+  h2 {
+    margin-bottom: 30px;
   }
+
+  .form-group {
+    width: 300px;
+    text-align: center;
+    position: relative;
+    left: 50%;
+    transform: translate(-50%, 0%);
+  }
+
+  .btn-secondary {
+    cursor: pointer;
+    border-color: $brand-grey;
+    color: $brand-dark-blue;
+      &:hover{
+        background-color: $brand-pink;
+        color: $brand-grey;
+    }
+  }
+
   #mainLanding {
 
     h1 {
@@ -183,12 +277,20 @@ a, #placesItem a, #friendCarouselDiv h4 {
     width: 100%;
     min-height: 100%;
 
+    .wrapper {
+      width: 90%;
+      position: absolute;
+      top:50%;
+      left:50%;
+      transform: translate(-50%, -50%);
+    }
+
     .camelCase {
       text-transform: capitalize;
     }
     .card {
-      height: 300px;
-      margin: 0 0 15px 0;
+      // height: 200px;
+      margin: 0 0 20px 0;
       border: none;
 
       .card-title {
@@ -204,17 +306,26 @@ a, #placesItem a, #friendCarouselDiv h4 {
         padding: 10px;
       }
       .card-block {
-        padding: 0;
+        padding: 0 0 20px;
       }
     }
 
   }
 }
 
+
 .nav-tabs {
-  a {
+  .nav-link {
     cursor: pointer;
+    &.active{
+      background-color: $brand-pink;
+      &:hover{
+        background-color: $brand-pink;
+
+      }
+    }
   }
+
 }
 .nav-tabs-mobile {
   display: none;
