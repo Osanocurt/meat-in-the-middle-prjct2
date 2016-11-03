@@ -131,6 +131,10 @@ a, #placesItem a, #friendCarouselDiv h4 {
 .navbar {
   border-radius: 0;
   font-family: 'Inconsolata', monospace;
+
+  .right {
+    float: right;
+  }
 }
 #landing {
   background-image: url('../images/base-map-blue.png');
@@ -190,6 +194,14 @@ a, #placesItem a, #friendCarouselDiv h4 {
     text-align: center;
     width: 100%;
     min-height: 100%;
+
+    .wrapper {
+      width: 90%;
+      position: absolute;
+      top:50%;
+      left:50%;
+      transform: translate(-50%, -50%);
+    }
 
     .camelCase {
       text-transform: capitalize;

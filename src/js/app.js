@@ -151,7 +151,7 @@ $(() =>{
           <button class="navbar-toggler hidden-sm-up" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar2" aria-controls="exCollapsingNavbar2" aria-expanded="false" aria-label="Toggle navigation">
             &#9776;
           </button>
-          <div class="collapse navbar-toggleable-xs" id="exCollapsingNavbar2">
+          <div class="collapse right navbar-toggleable-xs" id="exCollapsingNavbar2">
             <ul class="nav navbar-nav">
             ${navHtml}
             </ul>
@@ -166,9 +166,11 @@ $(() =>{
   function landingPage(){
     $landing.html(`
       <div class="content" id="mainLanding">
-        <h1>(  <span class="pink">Eat</span>  ||  <span class="blue">Drink</span>  ||  <span class="yellow">Spa</span>  )</h1>
-        <h2>What ever you're up to,<br> meet your friends in the middle.</h2>
-        <button id="landingGetStarted" class="btn btn-primary">Get started</button>
+        <div class="wrapper">
+          <h1>(  <span class="pink">Eat</span>  ||  <span class="blue">Drink</span>  ||  <span class="yellow">Spa</span>  )</h1>
+          <h2>What ever you're up to,<br> meet your friends in the middle.</h2>
+          <button id="landingGetStarted" class="btn btn-primary">Get started</button>
+        </div>
       </div>`);
 
   }
@@ -177,23 +179,25 @@ $(() =>{
     if(event) event.preventDefault();
     $landing.html(`
       <div class="content">
-        <h1>Register</h1>
-        <p>Already registered? <button class="btn btn-secondary" id="landingLogin">Sign in</button></p>
-        <form method="post" action="/api/register" data-target="landingResourceForm">
-          <div class="form-group">
-            <input class="form-control" name="user[username]" placeholder="Username">
-          </div>
-          <div class="form-group">
-            <input class="form-control" name="user[email]" placeholder="Email">
-          </div>
-          <div class="form-group">
-            <input class="form-control" type="password" name="user[password]" placeholder="Password">
-          </div>
-          <div class="form-group">
-            <input class="form-control" type="password" name="user[passwordConfirmation]" placeholder="Password Confirmation">
-          </div>
-          <button class="btn btn-primary">Register</button>
-        </form>
+        <div class="wrapper">
+          <h1>Register</h1>
+          <p>Already registered? <button class="btn btn-secondary" id="landingLogin">Sign in</button></p>
+          <form method="post" action="/api/register" data-target="landingResourceForm">
+            <div class="form-group">
+              <input class="form-control" name="user[username]" placeholder="Username">
+            </div>
+            <div class="form-group">
+              <input class="form-control" name="user[email]" placeholder="Email">
+            </div>
+            <div class="form-group">
+              <input class="form-control" type="password" name="user[password]" placeholder="Password">
+            </div>
+            <div class="form-group">
+              <input class="form-control" type="password" name="user[passwordConfirmation]" placeholder="Password Confirmation">
+            </div>
+            <button class="btn btn-primary">Register</button>
+          </form>
+        </div>
       </div>`);
   }
 
@@ -201,16 +205,18 @@ $(() =>{
     if(event) event.preventDefault();
     $landing.html(`
       <div class="content">
-        <h1>Login</h1>
-        <form method="post" action="/api/login" data-target="landingResourceForm">
-          <div class="form-group">
-            <input class="form-control" name="email" placeholder="Email">
-          </div>
-          <div class="form-group">
-            <input class="form-control" type="password" name="password" placeholder="Password">
-          </div>
-          <button class="btn btn-primary">Login</button>
-        </form>
+        <div class="wrapper">
+          <h1>Login</h1>
+          <form method="post" action="/api/login" data-target="landingResourceForm">
+            <div class="form-group">
+              <input class="form-control" name="email" placeholder="Email">
+            </div>
+            <div class="form-group">
+              <input class="form-control" type="password" name="password" placeholder="Password">
+            </div>
+            <button class="btn btn-primary">Login</button>
+          </form>
+        </div>
       </div>
     `);
   }
@@ -226,47 +232,49 @@ $(() =>{
 
     $landing.html(`
       <div class="content">
-        <h1 class="camelCase">${welcomeMessage}</h1>
-        <h2>What are you in the mood for?</h2>
-        <div class="row">
-          <div class="col-md-3 col-sm-6">
-            <div class="card">
-              <div class="card-block">
-                <h4 class="card-title">Eating & Drinking</h4>
-                <button id="resource" class="btn btn-secondary" data-id='restaurant'>Restaurant</button>
-                <button id="resource" class="btn btn-secondary" data-id='bar'>Bar</button>
-                <button id="resource" class="btn btn-secondary" data-id='cafe'>Cafe</button>
+        <div class="wrapper">
+          <h1 class="camelCase">${welcomeMessage}</h1>
+          <h2>What are you in the mood for?</h2>
+          <div class="row">
+            <div class="col-md-3 col-sm-6">
+              <div class="card">
+                <div class="card-block">
+                  <h4 class="card-title">Eating & Drinking</h4>
+                  <button id="resource" class="btn btn-secondary" data-id='restaurant'>Restaurant</button>
+                  <button id="resource" class="btn btn-secondary" data-id='bar'>Bar</button>
+                  <button id="resource" class="btn btn-secondary" data-id='cafe'>Cafe</button>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="col-md-3 col-sm-6">
-            <div class="card">
-              <div class="card-block">
-                <h4 class="card-title">Night Out</h4>
-                <button id="resource" class="btn btn-secondary" data-id='casino'>Casino</button>
-                <button id="resource" class="btn btn-secondary" data-id='night_club'>Night Club</button>
-                <button id="resource" class="btn btn-secondary" data-id='movie_theater'>Theater</button>
+            <div class="col-md-3 col-sm-6">
+              <div class="card">
+                <div class="card-block">
+                  <h4 class="card-title">Night Out</h4>
+                  <button id="resource" class="btn btn-secondary" data-id='casino'>Casino</button>
+                  <button id="resource" class="btn btn-secondary" data-id='night_club'>Night Club</button>
+                  <button id="resource" class="btn btn-secondary" data-id='movie_theater'>Theater</button>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="col-md-3 col-sm-6">
-            <div class="card">
-              <div class="card-block">
-                <h4 class="card-title">Shopping</h4>
-                <button id="resource" class="btn btn-secondary" data-id='shopping_mall'>Shopping</button>
-                <button id="resource" class="btn btn-secondary" data-id='clothing_store'>Clothes</button>
-                <button id="resource" class="btn btn-secondary" data-id='florist'>Florist</button>
+            <div class="col-md-3 col-sm-6">
+              <div class="card">
+                <div class="card-block">
+                  <h4 class="card-title">Shopping</h4>
+                  <button id="resource" class="btn btn-secondary" data-id='shopping_mall'>Shopping</button>
+                  <button id="resource" class="btn btn-secondary" data-id='clothing_store'>Clothes</button>
+                  <button id="resource" class="btn btn-secondary" data-id='florist'>Florist</button>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="col-md-3 col-sm-6">
-            <div class="card">
-              <div class="card-block">
-                <h4 class="card-title">Day Out</h4>
-                <button id="resource" class="btn btn-secondary" data-id='zoo'>Zoo</button>
-                <button id="resource" class="btn btn-secondary" data-id='park'>Park</button>
-                <button id="resource" class="btn btn-secondary" data-id='spa'>Spa</button>
-                <button id="resource" class="btn btn-secondary" data-id='gym'>Gym</button>
+            <div class="col-md-3 col-sm-6">
+              <div class="card">
+                <div class="card-block">
+                  <h4 class="card-title">Day Out</h4>
+                  <button id="resource" class="btn btn-secondary" data-id='zoo'>Zoo</button>
+                  <button id="resource" class="btn btn-secondary" data-id='park'>Park</button>
+                  <button id="resource" class="btn btn-secondary" data-id='spa'>Spa</button>
+                  <button id="resource" class="btn btn-secondary" data-id='gym'>Gym</button>
+                </div>
               </div>
             </div>
           </div>
@@ -280,7 +288,7 @@ $(() =>{
     showResourceForm();
     mapInit();
     showUserForm();
-    navBarInit(resource);
+    navBarInit();
   }
 
   function showRegisterForm() {
@@ -748,7 +756,7 @@ let mapStyle = [
     resource = $(this).data('id');
     mapInit();
     showUserForm();
-    navBarInit(resource);
+    navBarInit();
   }
 
   function showUserForm() {
