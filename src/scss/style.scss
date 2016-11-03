@@ -119,7 +119,7 @@ h4 {
   font-family: 'Inconsolata', monospace;
 }
 #landing {
-  background-image: url('../images/base-map.png');
+  background-image: url('../images/base-map-blue.png');
   background-size: cover;
   background-position: center;
   height: calc(100vh - 54px);
@@ -129,23 +129,42 @@ h4 {
   width: 100%;
   z-index: 10;
 
+  // line-height: calc(100vh - 54px);
+
+  #mainLanding {
+
+    h1 {
+      font-size: 50px;
+      letter-spacing: 3px;
+      font-weight: bold;
+    }
+    h2 {
+      font-size: 30px;
+      padding: 20px 0;
+    }
+    button {
+      margin-top: 20px;
+      padding: 15px 30px;
+      font-size: 20px;
+    }
+  }
+
   .container {
-    background-color: rgba($brand-grey, .8);
+    background-color: rgba($brand-dark-blue, .8);
     border-radius: 10px;
-    padding: 30px;
+    padding: 80px 20px;
     width: 600px;
-    margin: auto;
-    color: $brand-dark-blue;
-    padding-top: 100px;
+    color: $brand-grey;
     text-align: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 
     .camelCase {
       text-transform: capitalize;
     }
 
-    button {
-      margin-bottom: 50px;
-    }
     .card-title {
       color: #424651;
     }

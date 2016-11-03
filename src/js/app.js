@@ -10,6 +10,7 @@ $(() =>{
   let uniqueId = 0;
   let startingPos = null;
   let venueChosen = null;
+  let displayText = 'meet';
   let resource;
   let map;
   let people = [];
@@ -64,44 +65,79 @@ $(() =>{
     // console.log("logged out");
   }
 
-  function navBarInit(resource){
+  function navBarInit(){
 
     let navHtml;
-    let displayText = '';
 
-    if (!resource) {
-      displayText = '';
-    } else if (resource === 'night_club'){
-      displayText = 'night club';
-    } else if (resource === 'movie_theater') {
-      displayText = 'theatre';
-    } else {
-      displayText = resource;
+    switch(resource) {
+      case 'restaurant':
+        displayText = 'eat';
+        break;
+      case 'bar':
+        displayText = 'drink';
+        break;
+      case 'cafe':
+        displayText = 'caffinate';
+        break;
+      case 'casino':
+        displayText = 'gamble';
+        break;
+      case 'night_club':
+        displayText = 'dance';
+        break;
+      case 'movie_theater':
+        displayText = 'watch';
+        break;
+      case 'shopping_mall':
+        displayText = 'shop';
+        break;
+      case 'clothing_store':
+        displayText = 'dress';
+        break;
+      case 'florist':
+        displayText = 'decorate';
+        break;
+      case 'monkey around':
+        displayText = 'zoo';
+        break;
+      case 'park':
+        displayText = 'play';
+        break;
+      case 'spa':
+        displayText = 'relax';
+        break;
+      case 'gym':
+        displayText = 'get pumped';
+        break;
+      default:
+        displayText = 'meet';
+        break;
     }
 
     let loggedInHtml = (`
       <li class="nav-item">
-        <a class="nav-link profile" href="#" id="viewProfile" data-target='viewProfile' >Profile</a>
+        <a class="nav-link profile" href="/" id="viewProfile" data-target='viewProfile' >Profile</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link logout" href="#">Logout</a>
+        <a class="nav-link logout" href="/">Logout</a>
       </li>`);
     let loggedOutHtml = (`
       <li class="nav-item">
-        <a class="nav-link register" href="#">Register</a>
+        <a class="nav-link register" href="/">Register</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link login" href="#">Login</a>
+        <a class="nav-link login" href="/">Login</a>
       </li>`);
 
 
-      if (isLoggedIn()){
-        navHtml = loggedInHtml;
-      } else {
-        navHtml = loggedOutHtml;
-      }
+    if (isLoggedIn()){
+      navHtml = loggedInHtml;
+    } else {
+      navHtml = loggedOutHtml;
+    }
 
-    $navDiv.html(`  <nav class="navbar navbar-dark bg-inverse">
+    $navDiv.html(`
+      <nav class="navbar navbar-dark bg-inverse">
         <div class="container">
           <a class="navbar-brand" href="/">[ ${displayText} ] in the Middle</a>
           <button class="navbar-toggler hidden-sm-up" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar2" aria-controls="exCollapsingNavbar2" aria-expanded="false" aria-label="Toggle navigation">
@@ -121,10 +157,10 @@ $(() =>{
 
   function landingPage(){
     $landing.html(`
-      <div class="container">
-        <h1>Welcome</h1>
-        <p>We've made finding somewhere to hang out with your mates super easy. Whether you're looking for a bite to eat, or your planning a trip to the zoo, we've got you covered.</p>
-        <button id="landingGetStarted" class="btn btn-secondary">Get started</button>
+      <div class="container" id="mainLanding">
+        <h1>(  Drink  ||  Shop  ||  Do  )</h1>
+        <h2>What ever you're up to,<br> meet your friends in the middle.</h2>
+        <button id="landingGetStarted" class="btn btn-primary">Get started</button>
       </div>`);
 
   }
@@ -651,7 +687,7 @@ let mapStyle = [
           <a class="nav-link" id="resource" data-id='florist'>Florist</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" id="resource" data-id='casino'>Zoo</a>
+          <a class="nav-link" id="resource" data-id='zoo'>Zoo</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" id="resource" data-id='park'>Park</a>

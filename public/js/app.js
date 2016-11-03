@@ -12,6 +12,7 @@ $(function () {
   var uniqueId = 0;
   var startingPos = null;
   var venueChosen = null;
+  var displayText = 'meet';
   var resource = void 0;
   var map = void 0;
   var people = [];
@@ -66,23 +67,57 @@ $(function () {
     // console.log("logged out");
   }
 
-  function navBarInit(resource) {
+  function navBarInit() {
 
     var navHtml = void 0;
-    var displayText = '';
 
-    if (!resource) {
-      displayText = '';
-    } else if (resource === 'night_club') {
-      displayText = 'night club';
-    } else if (resource === 'movie_theater') {
-      displayText = 'theatre';
-    } else {
-      displayText = resource;
+    switch (resource) {
+      case 'restaurant':
+        displayText = 'eat';
+        break;
+      case 'bar':
+        displayText = 'drink';
+        break;
+      case 'cafe':
+        displayText = 'caffinate';
+        break;
+      case 'casino':
+        displayText = 'gamble';
+        break;
+      case 'night_club':
+        displayText = 'dance';
+        break;
+      case 'movie_theater':
+        displayText = 'watch';
+        break;
+      case 'shopping_mall':
+        displayText = 'shop';
+        break;
+      case 'clothing_store':
+        displayText = 'dress';
+        break;
+      case 'florist':
+        displayText = 'decorate';
+        break;
+      case 'monkey around':
+        displayText = 'zoo';
+        break;
+      case 'park':
+        displayText = 'play';
+        break;
+      case 'spa':
+        displayText = 'relax';
+        break;
+      case 'gym':
+        displayText = 'get pumped';
+        break;
+      default:
+        displayText = 'meet';
+        break;
     }
 
-    var loggedInHtml = '\n      <li class="nav-item">\n        <a class="nav-link profile" href="#" id="viewProfile" data-target=\'viewProfile\' >Profile</a>\n      </li>\n      <li class="nav-item">\n        <a class="nav-link logout" href="#">Logout</a>\n      </li>';
-    var loggedOutHtml = '\n      <li class="nav-item">\n        <a class="nav-link register" href="#">Register</a>\n      </li>\n      <li class="nav-item">\n        <a class="nav-link login" href="#">Login</a>\n      </li>';
+    var loggedInHtml = '\n      <li class="nav-item">\n        <a class="nav-link profile" href="/" id="viewProfile" data-target=\'viewProfile\' >Profile</a>\n      </li>\n      <li class="nav-item">\n        <a class="nav-link logout" href="/">Logout</a>\n      </li>';
+    var loggedOutHtml = '\n      <li class="nav-item">\n        <a class="nav-link register" href="/">Register</a>\n      </li>\n      <li class="nav-item">\n        <a class="nav-link login" href="/">Login</a>\n      </li>';
 
     if (isLoggedIn()) {
       navHtml = loggedInHtml;
@@ -90,12 +125,12 @@ $(function () {
       navHtml = loggedOutHtml;
     }
 
-    $navDiv.html('  <nav class="navbar navbar-dark bg-inverse">\n        <div class="container">\n          <a class="navbar-brand" href="/">[ ' + displayText + ' ] in the Middle</a>\n          <button class="navbar-toggler hidden-sm-up" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar2" aria-controls="exCollapsingNavbar2" aria-expanded="false" aria-label="Toggle navigation">\n            &#9776;\n          </button>\n          <div class="collapse navbar-toggleable-xs" id="exCollapsingNavbar2">\n            <ul class="nav navbar-nav">\n            ' + navHtml + '\n            </ul>\n          </div>\n        </div>\n      </nav>');
+    $navDiv.html('\n      <nav class="navbar navbar-dark bg-inverse">\n        <div class="container">\n          <a class="navbar-brand" href="/">[ ' + displayText + ' ] in the Middle</a>\n          <button class="navbar-toggler hidden-sm-up" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar2" aria-controls="exCollapsingNavbar2" aria-expanded="false" aria-label="Toggle navigation">\n            &#9776;\n          </button>\n          <div class="collapse navbar-toggleable-xs" id="exCollapsingNavbar2">\n            <ul class="nav navbar-nav">\n            ' + navHtml + '\n            </ul>\n          </div>\n        </div>\n      </nav>');
   }
   navBarInit();
 
   function landingPage() {
-    $landing.html('\n      <div class="container">\n        <h1>Welcome</h1>\n        <p>We\'ve made finding somewhere to hang out with your mates super easy. Whether you\'re looking for a bite to eat, or your planning a trip to the zoo, we\'ve got you covered.</p>\n        <button id="landingGetStarted" class="btn btn-secondary">Get started</button>\n      </div>');
+    $landing.html('\n      <div class="container" id="mainLanding">\n        <h1>(  Drink  ||  Shop  ||  Do  )</h1>\n        <h2>What ever you\'re up to,<br> meet your friends in the middle.</h2>\n        <button id="landingGetStarted" class="btn btn-primary">Get started</button>\n      </div>');
   }
 
   function landingRegForm() {
@@ -422,7 +457,7 @@ $(function () {
   }
 
   function showResourceForm() {
-    $main.prepend('\n      <ul class="nav nav-tabs">\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'restaurant\'>Restaurant</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'bar\'>Bar</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'cafe\'>Cafe</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'casino\'>Casino</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'night_club\'>Night Club</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'movie_theater\'>Theater</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'shopping_mall\'>Shopping</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'clothing_store\'>Clothes</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'florist\'>Florist</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'casino\'>Zoo</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'park\'>Park</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'spa\'>Spa</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'gym\'>Gym</a>\n        </li>\n      </ul>');
+    $main.prepend('\n      <ul class="nav nav-tabs">\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'restaurant\'>Restaurant</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'bar\'>Bar</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'cafe\'>Cafe</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'casino\'>Casino</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'night_club\'>Night Club</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'movie_theater\'>Theater</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'shopping_mall\'>Shopping</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'clothing_store\'>Clothes</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'florist\'>Florist</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'zoo\'>Zoo</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'park\'>Park</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'spa\'>Spa</a>\n        </li>\n        <li class="nav-item">\n          <a class="nav-link" id="resource" data-id=\'gym\'>Gym</a>\n        </li>\n      </ul>');
   }
 
   function updateResourceChoice() {
