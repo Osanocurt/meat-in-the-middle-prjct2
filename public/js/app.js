@@ -68,7 +68,9 @@ $(function () {
   }
 
   function restoreSidePanel() {
-    $sidePanel.css("height", "87vh").css("margin-top", "-116px");
+    if (uniqueId !== 0 && !$("#travelModeDiv").css("visibility", "hidden")) {
+      $sidePanel.css("height", "87vh").css("margin-top", "-116px");
+    }
     $("#travelModeDiv").css("visibility", "hidden");
     $friendCarouselDiv.css("visibility", "hidden");
     people = [];
@@ -250,6 +252,10 @@ $(function () {
   }
 
   function getFriends() {
+    if (uniqueId !== 0 && people !== []) {
+      $sidePanel.css("height", "87vh").css("margin-top", "-116px");
+    }
+
     $("#travelModeDiv").css("visibility", "hidden");
     $friendCarouselDiv.css("visibility", "hidden");
 
@@ -470,9 +476,20 @@ $(function () {
   }
 
   function updateResourceChoice() {
-    if (uniqueId !== 0) {
-      restoreSidePanel();
+    if (people !== []) {
+      if (venueChosen !== null) {
+        $sidePanel.css("height", "87vh").css("margin-top", "-116px");
+      }
+      $("#travelModeDiv").css("visibility", "hidden");
+      $friendCarouselDiv.css("visibility", "hidden");
+      people = [];
+      allResults = [];
+      markerId = [];
+      venueMarkers = [];
+      latLngList = [];
+      uniqueId = 0;
     }
+
     resource = $(this).data('id');
     mapInit();
     showUserForm();
