@@ -171,6 +171,13 @@ $(function () {
     mapInit();
     showUserForm();
     navBarInit();
+    var navLinks = $(".nav-link");
+
+    for (var i = 2; i < navLinks.length; i++) {
+      if ($(navLinks[i]).attr('data-id') === resource) {
+        $(navLinks[i]).addClass('active');
+      }
+    }
   }
 
   function showRegisterForm() {

@@ -291,6 +291,13 @@ $(() =>{
     mapInit();
     showUserForm();
     navBarInit();
+    let navLinks = $(".nav-link");
+
+    for (var i = 2; i < navLinks.length; i++){
+      if ($(navLinks[i]).attr('data-id') === resource){
+         $(navLinks[i]).addClass('active');
+      }
+    }
   }
 
   function showRegisterForm() {
@@ -771,7 +778,8 @@ let mapStyle = [
 
   function updateResourceChoice(){
     if (uniqueId !== 0 ) {
-    restoreSidePanel();}
+      restoreSidePanel();
+    }
     resource = $(this).data('id');
     mapInit();
     showUserForm();
