@@ -699,7 +699,7 @@ let mapStyle = [
   function showResourceForm(){
     $main.prepend(`
 
-      <ul class="nav nav-tabs">
+      <ul class="nav nav-pills">
         <li class="nav-item">
           <a class="nav-link" id="resource" data-id='restaurant'>Restaurant</a>
         </li>
@@ -762,7 +762,8 @@ let mapStyle = [
   }
 
   function updateResourceChoice(){
-    if (uniqueId !==0) {restoreSidePanel();}
+    if (uniqueId !== 0 ) {
+    restoreSidePanel();}
     resource = $(this).data('id');
     mapInit();
     showUserForm();
