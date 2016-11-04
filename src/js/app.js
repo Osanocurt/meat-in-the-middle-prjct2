@@ -774,7 +774,7 @@ let mapStyle = [
           <a class="dropdown-item" id="resource" data-id='shopping_mall'>Shopping</a>
           <a class="dropdown-item" id="resource" data-id='clothing_store'>Clothes</a>
           <a class="dropdown-item" id="resource" data-id='florist'>Florist</a>
-          <a class="dropdown-item" id="resource" data-id='casino'>Zoo</a>
+          <a class="dropdown-item" id="resource" data-id='zoo'>Zoo</a>
           <a class="dropdown-item" id="resource" data-id='spa'>Spa</a>
           <a class="dropdown-item" id="resource" data-id='gym'>Gym</a>
         </div>

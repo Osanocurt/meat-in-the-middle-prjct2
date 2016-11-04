@@ -20,7 +20,9 @@ const users = [
     email: 'caroline@example.com',
     friends:[{
       name: "Elliot Brock",
-      address: "Bleecker Street"
+      address: "Whitechapel Rd, London E1, UK",
+      lat: 51.518343,
+      lng: -0.06309090000002016
     }],
     password: 'password',
     passwordConfirmation: 'password'
