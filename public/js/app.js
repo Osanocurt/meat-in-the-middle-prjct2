@@ -470,7 +470,9 @@ $(function () {
   }
 
   function updateResourceChoice() {
-    restoreSidePanel();
+    if (uniqueId !== 0) {
+      restoreSidePanel();
+    }
     resource = $(this).data('id');
     mapInit();
     showUserForm();

@@ -415,6 +415,7 @@ $(() =>{
 
   function getFriends() {
     $("#travelModeDiv").css("visibility", "hidden");
+    $sidePanel.css("height", "87vh").css("margin-top", "-116px");
     $friendCarouselDiv.css("visibility", "hidden");
 
 
@@ -762,7 +763,7 @@ let mapStyle = [
   }
 
   function updateResourceChoice(){
-    restoreSidePanel();
+    if (uniqueId !== 0) {restoreSidePanel();}
     resource = $(this).data('id');
     mapInit();
     showUserForm();
