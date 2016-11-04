@@ -185,6 +185,10 @@ $(function () {
     $sidePanel.html('\n      <h2>Login</h2>\n      <form method="post" action="/api/login" data-target="showUserForm">\n        <div class="form-group">\n          <input class="form-control" name="email" placeholder="Email">\n        </div>\n        <div class="form-group">\n          <input class="form-control" type="password" name="password" placeholder="Password">\n        </div>\n        <button class="btn btn-primary">Login</button>\n      </form>\n    ');
   }
 
+  function showErr() {
+    $landing.prepend('\n      <div class="errorMessage">\n        <p>Opps! Something went wrong. Try again.</p>\n      </div>\n    ');
+  }
+
   function showFriendEditForm(friend) {
     if (event) event.preventDefault();
     var userId = localStorage.getItem('id');
@@ -243,8 +247,7 @@ $(function () {
           } else if (nextView === 'viewProfile') {
             getFriends();
           }
-        });
-        // .fail(showLoginForm);
+        }).fail(showErr);
       })();
     }
   }

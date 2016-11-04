@@ -333,6 +333,14 @@ $(() =>{
     `);
   }
 
+  function showErr(){
+    $landing.prepend(`
+      <div class="errorMessage">
+        <p>Opps! Something went wrong. Try again.</p>
+      </div>
+    `);
+  }
+
   function showFriendEditForm(friend) {
     if(event) event.preventDefault();
     let userId = localStorage.getItem('id');
@@ -408,8 +416,8 @@ $(() =>{
         } else if (nextView === 'viewProfile') {
           getFriends();
         }
-      });
-      // .fail(showLoginForm);
+      })
+      .fail(showErr);
     }
   }
 
