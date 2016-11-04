@@ -340,13 +340,18 @@ $(function () {
         if (token) return jqXHR.setRequestHeader('Authorization', 'Bearer ' + token);
       }
     }).done(function (user) {
-      var $row = $('<div class="row form-panel"><h3>Add Saved Friends</h3></div>');
-      friends.forEach(function (friend) {
-        $row.append('\n            <div class="card friends-list">\n              <div class="card-block">\n                <div class="col-sm-6">\n                  <h4 class="card-title">' + friend.name + '</h4>\n                  <p class="card-title">' + friend.address + '</p>\n                </div>\n                <div class="col-sm-6">\n                  <button class="btn btn-success addFriend" data-target="addToMap" data-id="' + friend._id + '">Add</button>\n                </div>\n              </div>\n            </div>\n        ');
-      });
+      var $row = void 0;
+      if (friends.length === 0) {
+        $row = $('<div class="row form-panel"></div>');
+      } else {
+        $row = $('<div class="row form-panel"><h3>Add Saved Friends</h3></div>');
+        friends.forEach(function (friend) {
+          $row.append('\n              <div class="card friends-list">\n                <div class="card-block">\n                  <div class="col-sm-6">\n                    <h4 class="card-title">' + friend.name + '</h4>\n                    <p class="card-title">' + friend.address + '</p>\n                  </div>\n                  <div class="col-sm-6">\n                    <button class="btn btn-success addFriend" data-target="addToMap" data-id="' + friend._id + '">Add</button>\n                  </div>\n                </div>\n              </div>\n          ');
+        });
+      }
       $sidePanel.html($row);
       showFriendForm();
-    });
+    }).fail(showErr);
   }
 
   function deleteFriend() {

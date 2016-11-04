@@ -534,25 +534,31 @@ $(() =>{
       }
     })
     .done((user) => {
-      let $row = $(`<div class="row form-panel"><h3>Add Saved Friends</h3></div>`);
-      friends.forEach((friend) => {
-        $row.append(`
-            <div class="card friends-list">
-              <div class="card-block">
-                <div class="col-sm-6">
-                  <h4 class="card-title">${friend.name}</h4>
-                  <p class="card-title">${friend.address}</p>
-                </div>
-                <div class="col-sm-6">
-                  <button class="btn btn-success addFriend" data-target="addToMap" data-id="${friend._id}">Add</button>
+      let $row;
+      if (friends.length === 0) {
+        $row = $(`<div class="row form-panel"></div>`);
+      } else {
+        $row = $(`<div class="row form-panel"><h3>Add Saved Friends</h3></div>`);
+        friends.forEach((friend) => {
+          $row.append(`
+              <div class="card friends-list">
+                <div class="card-block">
+                  <div class="col-sm-6">
+                    <h4 class="card-title">${friend.name}</h4>
+                    <p class="card-title">${friend.address}</p>
+                  </div>
+                  <div class="col-sm-6">
+                    <button class="btn btn-success addFriend" data-target="addToMap" data-id="${friend._id}">Add</button>
+                  </div>
                 </div>
               </div>
-            </div>
-        `);
-      });
+          `);
+        });
+      }
       $sidePanel.html($row);
       showFriendForm();
-    });
+    })
+    .fail(showErr);
   }
 
   function deleteFriend() {
