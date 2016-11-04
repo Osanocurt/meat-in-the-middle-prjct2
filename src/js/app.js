@@ -291,6 +291,13 @@ $(() =>{
     mapInit();
     showUserForm();
     navBarInit();
+    let navLinks = $(".nav-link");
+
+    for (var i = 2; i < navLinks.length; i++){
+      if ($(navLinks[i]).attr('data-id') === resource){
+         $(navLinks[i]).addClass('active');
+      }
+    }
   }
 
   function showRegisterForm() {
@@ -330,6 +337,14 @@ $(() =>{
         </div>
         <button class="btn btn-primary">Login</button>
       </form>
+    `);
+  }
+
+  function showErr(){
+    $landing.prepend(`
+      <div class="errorMessage">
+        <p>Opps! Something went wrong. Try again.</p>
+      </div>
     `);
   }
 
@@ -408,8 +423,8 @@ $(() =>{
         } else if (nextView === 'viewProfile') {
           getFriends();
         }
-      });
-      // .fail(showLoginForm);
+      })
+      .fail(showErr);
     }
   }
 
@@ -522,25 +537,31 @@ $(() =>{
       }
     })
     .done((user) => {
-      let $row = $(`<div class="row form-panel"><h3>Add Saved Friends</h3></div>`);
-      friends.forEach((friend) => {
-        $row.append(`
-            <div class="card friends-list">
-              <div class="card-block">
-                <div class="col-sm-6">
-                  <h4 class="card-title">${friend.name}</h4>
-                  <p class="card-title">${friend.address}</p>
-                </div>
-                <div class="col-sm-6">
-                  <button class="btn btn-success addFriend" data-target="addToMap" data-id="${friend._id}">Add</button>
+      let $row;
+      if (friends.length === 0) {
+        $row = $(`<div class="row form-panel"></div>`);
+      } else {
+        $row = $(`<div class="row form-panel"><h3>Add Saved Friends</h3></div>`);
+        friends.forEach((friend) => {
+          $row.append(`
+              <div class="card friends-list">
+                <div class="card-block">
+                  <div class="col-sm-6">
+                    <h4 class="card-title">${friend.name}</h4>
+                    <p class="card-title">${friend.address}</p>
+                  </div>
+                  <div class="col-sm-6">
+                    <button class="btn btn-success addFriend" data-target="addToMap" data-id="${friend._id}">Add</button>
+                  </div>
                 </div>
               </div>
-            </div>
-        `);
-      });
+          `);
+        });
+      }
       $sidePanel.html($row);
       showFriendForm();
-    });
+    })
+    .fail(showErr);
   }
 
   function deleteFriend() {
@@ -702,7 +723,7 @@ let mapStyle = [
   function showResourceForm(){
     $main.prepend(`
 
-      <ul class="nav nav-tabs">
+      <ul class="nav nav-pills">
         <li class="nav-item">
           <a class="nav-link" id="resource" data-id='restaurant'>Restaurant</a>
         </li>
@@ -765,6 +786,7 @@ let mapStyle = [
   }
 
   function updateResourceChoice(){
+<<<<<<< HEAD
     if (people !== []) {
       if (venueChosen !== null)
       {$sidePanel.css("height", "87vh").css("margin-top", "-116px");}
@@ -778,6 +800,11 @@ let mapStyle = [
       uniqueId = 0;
     }
 
+=======
+    if (uniqueId !== 0 ) {
+      restoreSidePanel();
+    }
+>>>>>>> development
     resource = $(this).data('id');
     mapInit();
     showUserForm();
@@ -846,7 +873,7 @@ let mapStyle = [
         <h3>Add New Friend</h3>
         <input id="pac-input" class="controls" type="text" placeholder="Where's your friend?">
         <form id="friendLocation" data-target="current" method="post" action="/api/users/${userId}/friends">
-          <input id="input-name" name="name" class='controls' placeholder="What's thier name?">
+          <input id="input-name" name="name" class='controls' placeholder="What's their name?">
           <input type='hidden' id="input-location" name="address">
           <input type='hidden' id="input-lat" name="lat">
           <input type='hidden' id="input-lng" name="lng">
@@ -1159,11 +1186,11 @@ let mapStyle = [
             <h4 class="chooseStart" data-lat="${people[0].lat}" data-lng="${people[0].lng}">Your directions</h4>
           </div>
         </div>
-        <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+        <a class="left carousel-control" style="color:#00A6FB; background-image:none" href="#carousel-example-generic" role="button" data-slide="prev">
           <span class="icon-prev" aria-hidden="true"></span>
           <span class="sr-only">Previous</span>
         </a>
-        <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+        <a class="right carousel-control" style="color:#00A6FB; background-image:none" href="#carousel-example-generic" role="button" data-slide="next">
           <span class="icon-next" aria-hidden="true"></span>
           <span class="sr-only">Next</span>
         </a>
