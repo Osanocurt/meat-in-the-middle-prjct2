@@ -291,6 +291,13 @@ $(() =>{
     mapInit();
     showUserForm();
     navBarInit();
+    let navLinks = $(".nav-link");
+
+    for (var i = 2; i < navLinks.length; i++){
+      if ($(navLinks[i]).attr('data-id') === resource){
+         $(navLinks[i]).addClass('active');
+      }
+    }
   }
 
   function showRegisterForm() {
@@ -330,6 +337,14 @@ $(() =>{
         </div>
         <button class="btn btn-primary">Login</button>
       </form>
+    `);
+  }
+
+  function showErr(){
+    $landing.prepend(`
+      <div class="errorMessage">
+        <p>Opps! Something went wrong. Try again.</p>
+      </div>
     `);
   }
 
@@ -408,8 +423,8 @@ $(() =>{
         } else if (nextView === 'viewProfile') {
           getFriends();
         }
-      });
-      // .fail(showLoginForm);
+      })
+      .fail(showErr);
     }
   }
 
@@ -763,7 +778,8 @@ let mapStyle = [
 
   function updateResourceChoice(){
     if (uniqueId !== 0 ) {
-    restoreSidePanel();}
+      restoreSidePanel();
+    }
     resource = $(this).data('id');
     mapInit();
     showUserForm();

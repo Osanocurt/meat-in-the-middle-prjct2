@@ -10,6 +10,14 @@ body, html {
   }
 }
 
+.errorMessage {
+  background-color: $brand-pink;
+  color: $brand-grey;
+  position: absolute;
+  text-align: center;
+  padding-top: 10px;
+  width: 100%;
+}
 #map {
 
   height: 87vh;
