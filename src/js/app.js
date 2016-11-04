@@ -863,7 +863,6 @@ let mapStyle = [
     if(event) event.preventDefault();
     $sidePanel.prepend(
       `<div class="form-panel">
-        <button id="go" class="btn btn-primary">Go!</button>
         <h3>Add New Friend</h3>
         <input id="pac-input" class="controls" type="text" placeholder="Where's your friend?">
         <form id="friendLocation" data-target="current" method="post" action="/api/users/${userId}/friends">
@@ -874,6 +873,7 @@ let mapStyle = [
           <button class="btn btn-info" id="friendSaveLocation">Save</button>
         </form>
         <button id="addAFriend" data-target='friendLocation' class="btn btn-secondary">Add another friend</button>
+        <button id="go" class="btn btn-primary">Go!</button>
       </div>
     `);
     createSearchBar();
