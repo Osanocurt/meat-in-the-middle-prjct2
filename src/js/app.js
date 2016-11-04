@@ -786,7 +786,6 @@ let mapStyle = [
   }
 
   function updateResourceChoice(){
-<<<<<<< HEAD
     if (people !== []) {
       if (venueChosen !== null)
       {$sidePanel.css("height", "87vh").css("margin-top", "-116px");}
@@ -800,11 +799,6 @@ let mapStyle = [
       uniqueId = 0;
     }
 
-=======
-    if (uniqueId !== 0 ) {
-      restoreSidePanel();
-    }
->>>>>>> development
     resource = $(this).data('id');
     mapInit();
     showUserForm();
