@@ -51,10 +51,10 @@ const users = [
     username: "Elliot",
     email: 'lex@example.com',
     friends:[{
-      name: "Adolf Hitler",
+      name: "Joseph Barton",
       // lat: "51.5199128",
       // lng: "-0.0772997",
-      address: "Bellend Drive"
+      address: "Relay Street"
   }],
     password: 'password',
     passwordConfirmation: 'password'
